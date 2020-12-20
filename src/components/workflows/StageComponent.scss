@@ -1,0 +1,23 @@
+.stage {
+  padding: 1em;
+  border: solid black 1px;
+}
+
+.stage__duration {
+}
+
+.stage__steps-list {
+  padding: 0.5em 0 0 0;
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+
+  justify-items: stretch;
+  align-items: stretch;
+}
+
+.stage__steps-item {
+}
