@@ -6,18 +6,18 @@ import Env from '../../model/workflows/Env'
 import './StepComponent.scss'
 
 export class StepProps {
-    constructor(public name: string, public namespace: string, public target: Target, public env: Env[]) {
-    }
+  constructor (public name: string, public namespace: string, public target: Target, public env: Env[]) {
+  }
 }
 
 export default class StepComponent extends React.Component<StepProps> {
-    render() {
-        let envVariables = this.props.env.map((e, i) => (
+  render () {
+    const envVariables = this.props.env.map((e, i) => (
             <li key={i} className="step__env-item">
                 <EnvComponent name={e.name} value={e.value}/>
             </li>
-        ))
-        return (
+    ))
+    return (
             <div className="step">
                 <p className="step__name">{this.props.name}</p>
                 <p className="step__namespace">{this.props.namespace}</p>
@@ -25,6 +25,6 @@ export default class StepComponent extends React.Component<StepProps> {
                                  label={this.props.target.label}/>
                 <ul className="step__env-list">{envVariables}</ul>
             </div>
-        )
-    }
+    )
+  }
 }
