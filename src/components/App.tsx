@@ -1,47 +1,34 @@
 import React from 'react'
 import './App.css'
-import WorkflowComponent from './workflows/WorkflowComponent'
-import Stage from '../model/workflows/Stage'
-import Step from '../model/workflows/Step'
-import Target from '../model/workflows/Target'
-import Env from '../model/workflows/Env'
+import { Route, Switch } from 'react-router'
+import { BrowserRouter, Link } from 'react-router-dom'
+import WorkflowCreator from './workflows/WorkflowCreator'
+import WorkflowWatcher from './workflows/WorkflowWatcher'
 
 export default class App extends React.Component {
   render () {
-    const ns = 'default'
-
-    const targets = [
-      new Target(ns, 'app=postgres', 'deployment'),
-      new Target(ns, 'app=backend', 'deployment'),
-      new Target(ns, 'app=frontend', 'deployment')
-    ]
-
-    const env = [
-      new Env('DURATION', '60'),
-      new Env('PERCENTAGE', '90'),
-      new Env('LATENCY', '300')
-    ]
-
-    const duration = new Date(0, 0, 0, 0, 1)
-
-    const stages = [
-      new Stage([
-        new Step('1-1', ns, targets[0], []),
-        new Step('1-2', ns, targets[1], [env[0], env[1]]),
-        new Step('1-3', ns, targets[0], [])
-      ], duration),
-      new Stage([
-        new Step('2-1', ns, targets[0], [env[1], env[2]]),
-        new Step('2-2', ns, targets[1], [env[0], env[2]]),
-        new Step('2-3', ns, targets[0], [env[1], env[2]])
-      ], duration),
-      new Stage([
-        new Step('3-1', ns, targets[0], [env[1], env[2]]),
-        new Step('3-2', ns, targets[1], [env[0], env[1], env[2]]),
-        new Step('3-3', ns, targets[0], [])
-      ], duration)
-    ]
-
-    return <WorkflowComponent stages={stages}/>
+    const server = 'localhost:8811'
+    return (
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/workflows/create">
+            <WorkflowCreator serverURL={server}/>
+          </Route>
+          <Route exact path="/workflows/watch/:namespace/:name">
+            <WorkflowWatcher serverURL={server}/>
+          </Route>
+          <Route exact path="/workflows">
+            <h1>Workflows</h1>
+            <Link to="/workflows/create">Create new</Link>
+          </Route>
+          <Route exact path="/">
+            <h1>Home page</h1>
+            <Link to="/workflows">
+              Workflows
+            </Link>
+          </Route>
+        </Switch>
+      </BrowserRouter>
+    )
   }
 }
