@@ -41,6 +41,10 @@ export default class WorkflowCreator extends React.Component<Props, State> {
   private async handlePreview (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     try {
+      this.setState({
+        preview: ''
+      })
+
       const params = new URLSearchParams()
       params.append('seed', this.state.seed.toString())
       params.append('stages', this.state.stages.toString())
@@ -63,6 +67,10 @@ export default class WorkflowCreator extends React.Component<Props, State> {
   private async handleRun (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     try {
+      this.setState({
+        preview: ''
+      })
+
       const form = new FormData()
       form.append('seed', this.state.seed.toString())
       form.append('stages', this.state.stages.toString())
@@ -76,10 +84,6 @@ export default class WorkflowCreator extends React.Component<Props, State> {
         console.log(response.statusText)
         return
       }
-
-      this.setState({
-        preview: await response.text()
-      })
     } catch (error: any) {
       console.log(error)
     }
