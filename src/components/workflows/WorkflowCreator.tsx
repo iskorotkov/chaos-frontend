@@ -10,11 +10,6 @@ export class State {
   preview!: string
 }
 
-class Request {
-  seed!: number
-  stages!: number
-}
-
 export default class WorkflowCreator extends React.Component<Props, State> {
   constructor (props: Props) {
     super(props)
@@ -23,8 +18,6 @@ export default class WorkflowCreator extends React.Component<Props, State> {
     this.handleRun = this.handleRun.bind(this)
     this.handleSeed = this.handleSeed.bind(this)
     this.handleStages = this.handleStages.bind(this)
-    this.createRequest = this.createRequest.bind(this)
-    this.encodeRequest = this.encodeRequest.bind(this)
 
     this.state = {
       seed: 0,
@@ -45,15 +38,14 @@ export default class WorkflowCreator extends React.Component<Props, State> {
     })
   }
 
-  // noinspection JSMethodCanBeStatic
-  private encodeRequest (request: Request) {
-    return `seed=${request.seed}&stages=${request.stages}`
-  }
-
   private async handlePreview (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     try {
-      const response = await fetch(`http://${this.props.serverURL}/api/v1/workflows?${this.encodeRequest(this.createRequest())}`)
+      const params = new URLSearchParams()
+      params.append('seed', this.state.seed.toString())
+      params.append('stages', this.state.stages.toString())
+
+      const response = await fetch(`http://${this.props.serverURL}/api/v1/workflows?${params}`)
 
       if (!response.ok) {
         console.log(response.statusText)
@@ -65,13 +57,6 @@ export default class WorkflowCreator extends React.Component<Props, State> {
       })
     } catch (error: any) {
       console.log(error)
-    }
-  }
-
-  private createRequest (): Request {
-    return {
-      seed: this.state.seed,
-      stages: this.state.stages
     }
   }
 
