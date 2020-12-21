@@ -1,22 +1,22 @@
 .stage {
+  border: solid #000 1px;
   padding: 1em;
-  border: solid black 1px;
 }
 
 .stage__duration {
 }
 
 .stage__steps-list {
-  padding: 0.5em 0 0 0;
-  list-style: none;
+  align-items: stretch;
 
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px;
   grid-auto-rows: minmax(100px, auto);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 
   justify-items: stretch;
-  align-items: stretch;
+  list-style: none;
+  padding: 0.5em 0 0;
 }
 
 .stage__steps-item {
