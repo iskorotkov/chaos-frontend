@@ -14,7 +14,7 @@ export default class App extends React.Component {
           <Route exact path="/workflows/create">
             <WorkflowCreator serverURL={server}/>
           </Route>
-          <Route exact path="/workflows/watch/:namespace/:name">
+          <Route exact path="/workflows/:namespace/:name">
             <WorkflowWatcher serverURL={server}/>
           </Route>
           <Route exact path="/workflows">
