@@ -1,11 +1,13 @@
-import Step from '../../model/workflows/Step'
 import React from 'react'
 import './StageComponent.scss'
 import StepComponent from './StepComponent'
+import { Step } from '../../model/Workflows'
+import moment from 'moment/moment'
+import 'moment-duration-format'
 
 export class StageProps {
-  constructor (public steps: Step[], public duration: Date) {
-  }
+  steps!: Step[]
+  duration!: moment.Duration
 }
 
 export default class StageComponent extends React.Component<StageProps> {
@@ -13,11 +15,11 @@ export default class StageComponent extends React.Component<StageProps> {
     const steps = this.props.steps.map(s => (
             <li key={s.name} className="stage__steps-item">
                 <StepComponent name={s.name} namespace={s.namespace} target={s.target}
-                               env={s.env}/>
+                               parameters={s.parameters}/>
             </li>))
     return (
             <div className="stage">
-                <span className="stage__duration">Duration: {this.props.duration.toTimeString()}</span>
+                <span className="stage__duration">Duration: {this.props.duration.seconds()}s</span>
                 <ul className="stage__steps-list">
                     {steps}
                 </ul>

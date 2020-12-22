@@ -1,11 +1,10 @@
-import Stage from '../../model/workflows/Stage'
 import React from 'react'
 import StageComponent from './StageComponent'
 import './WorkflowComponent.scss'
+import { Stage } from '../../model/Workflows'
 
 export class WorkflowProps {
-  constructor (public stages: Stage[]) {
-  }
+  stages!: Stage[]
 }
 
 export default class WorkflowComponent extends React.Component<WorkflowProps> {

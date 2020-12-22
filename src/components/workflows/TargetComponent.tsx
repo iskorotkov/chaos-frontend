@@ -2,8 +2,9 @@ import React from 'react'
 import './TargetComponent.scss'
 
 export class TargetProps {
-  constructor (public label: string, public namespace: string, public kind: string) {
-  }
+  label!: string
+  namespace!: string
+  kind!: string
 }
 
 export default class TargetComponent extends React.Component<TargetProps> {

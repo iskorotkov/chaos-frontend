@@ -1,4 +1,7 @@
 import React from 'react'
+import WorkflowComponent from './WorkflowComponent'
+import { Workflow } from '../../model/Workflows'
+import { toModel, WorkflowDTO } from '../../dto/Workflows'
 
 export class Props {
   serverURL!: string
@@ -7,7 +10,7 @@ export class Props {
 export class State {
   seed!: number
   stages!: number
-  preview!: string
+  workflow?: Workflow
 }
 
 export default class WorkflowCreator extends React.Component<Props, State> {
@@ -22,7 +25,7 @@ export default class WorkflowCreator extends React.Component<Props, State> {
     this.state = {
       seed: 0,
       stages: 3,
-      preview: ''
+      workflow: undefined
     }
   }
 
@@ -41,10 +44,6 @@ export default class WorkflowCreator extends React.Component<Props, State> {
   private async handlePreview (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     try {
-      this.setState({
-        preview: ''
-      })
-
       const params = new URLSearchParams()
       params.append('seed', this.state.seed.toString())
       params.append('stages', this.state.stages.toString())
@@ -56,8 +55,11 @@ export default class WorkflowCreator extends React.Component<Props, State> {
         return
       }
 
+      const dto = JSON.parse(await response.text()) as WorkflowDTO
+      const model = toModel(dto)
+
       this.setState({
-        preview: await response.text()
+        workflow: model
       })
     } catch (error: any) {
       console.log(error)
@@ -67,10 +69,6 @@ export default class WorkflowCreator extends React.Component<Props, State> {
   private async handleRun (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     try {
-      this.setState({
-        preview: ''
-      })
-
       const form = new FormData()
       form.append('seed', this.state.seed.toString())
       form.append('stages', this.state.stages.toString())
@@ -90,12 +88,6 @@ export default class WorkflowCreator extends React.Component<Props, State> {
   }
 
   render () {
-    const preview = this.state.preview !== ''
-      ? (<div>
-        <pre>{this.state.preview}</pre>
-      </div>)
-      : (<div>No preview available</div>)
-
     return (
       <>
         <h1>Create workflow</h1>
@@ -122,7 +114,9 @@ export default class WorkflowCreator extends React.Component<Props, State> {
 
         </form>
 
-        {preview}
+        {this.state.workflow
+          ? (<WorkflowComponent stages={this.state.workflow.stages}/>)
+          : (<></>)}
       </>
     )
   }

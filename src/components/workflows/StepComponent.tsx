@@ -1,20 +1,21 @@
 import React from 'react'
 import TargetComponent from './TargetComponent'
-import EnvComponent from './EnvComponent'
-import Target from '../../model/workflows/Target'
-import Env from '../../model/workflows/Env'
+import ParameterComponent from './ParameterComponent'
 import './StepComponent.scss'
+import { Parameter, Target } from '../../model/Workflows'
 
 export class StepProps {
-  constructor (public name: string, public namespace: string, public target: Target, public env: Env[]) {
-  }
+  name!: string
+  namespace!: string
+  target!: Target
+  parameters!: Parameter[]
 }
 
 export default class StepComponent extends React.Component<StepProps> {
   render () {
-    const envVariables = this.props.env.map((e, i) => (
+    const parameters = this.props.parameters.map((e, i) => (
             <li key={i} className="step__env-item">
-                <EnvComponent name={e.name} value={e.value}/>
+                <ParameterComponent name={e.name} value={e.value}/>
             </li>
     ))
     return (
@@ -23,7 +24,7 @@ export default class StepComponent extends React.Component<StepProps> {
                 <p className="step__namespace">{this.props.namespace}</p>
                 <TargetComponent namespace={this.props.target.namespace} kind={this.props.target.kind}
                                  label={this.props.target.label}/>
-                <ul className="step__env-list">{envVariables}</ul>
+                <ul className="step__env-list">{parameters}</ul>
             </div>
     )
   }
