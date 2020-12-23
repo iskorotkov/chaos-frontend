@@ -7,7 +7,7 @@ import WorkflowWatcher from './workflows/WorkflowWatcher'
 
 export default class App extends React.Component {
   render () {
-    const server = 'localhost:8811'
+    const server = '192.168.49.2:30196'
     return (
       <BrowserRouter>
         <Switch>
