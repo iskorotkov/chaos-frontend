@@ -12,8 +12,8 @@ export class StageProps {
 
 export default class StageComponent extends React.Component<StageProps> {
   render () {
-    const steps = this.props.steps.map(s => (
-            <li key={s.name} className="stage__steps-item">
+    const steps = this.props.steps.map((s, i) => (
+            <li key={i} className="stage__steps-item">
                 <StepComponent name={s.name} namespace={s.namespace} target={s.target}
                                parameters={s.parameters}/>
             </li>))
