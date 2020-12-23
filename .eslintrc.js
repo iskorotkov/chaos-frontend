@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
     'standard'
   ],
   parser: '@typescript-eslint/parser',
@@ -23,5 +24,10 @@ module.exports = {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': ['error'],
     'no-useless-constructor': 'off'
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
   }
 }
