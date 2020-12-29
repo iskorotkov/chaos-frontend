@@ -1,0 +1,83 @@
+/* stylelint-disable */
+.stages-list {
+}
+
+/* stylelint-enable */
+
+.stage {
+  border: solid #000 1px;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+/* stylelint-disable */
+.stage-duration {
+}
+
+/* stylelint-enable */
+
+.steps-list {
+  align-items: stretch;
+
+  display: grid;
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  justify-items: stretch;
+  list-style: none;
+  padding: 0.5em 0 0;
+}
+
+.step {
+  border: solid #000 1px;
+
+  height: 100%;
+  overflow: hidden;
+  padding: 0.5em;
+  width: 100%;
+}
+
+.step-name {
+  margin: 0;
+}
+
+.step-namespace {
+  margin: 0;
+}
+
+/* stylelint-disable */
+.step-parameters-list {
+}
+
+/* stylelint-enable */
+
+/* stylelint-disable */
+.step-parameter {
+}
+
+/* stylelint-enable */
+
+/* stylelint-disable */
+.step-target {
+}
+
+/* stylelint-enable */
+
+.step-target-name {
+  margin: 0;
+}
+
+.step-target-namespace {
+  margin: 0;
+}
+
+.step-target-kind {
+  margin: 0;
+}
+
+/* stylelint-disable */
+.parameter {
+}
+
+/* stylelint-enable */

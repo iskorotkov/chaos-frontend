@@ -1,34 +1,41 @@
 import React from 'react'
-import './App.css'
 import { Route, Switch } from 'react-router'
 import { BrowserRouter, Link } from 'react-router-dom'
-import WorkflowCreator from './workflows/WorkflowCreator'
-import WorkflowWatcher from './workflows/WorkflowWatcher'
+import CreateWorkflowPage from './workflows/CreateWorkflowPage'
+import WatchWorkflowPage from './workflows/WatchWorkflowPage'
 
-export default class App extends React.Component {
-  render () {
-    const server = '192.168.49.2:30196'
+export default function App () {
+  const server = process.env.REACT_APP_SERVER_ADDRESS
+
+  if (server === undefined) {
     return (
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/workflows/create">
-            <WorkflowCreator serverURL={server}/>
-          </Route>
-          <Route exact path="/workflows/:namespace/:name">
-            <WorkflowWatcher serverURL={server}/>
-          </Route>
-          <Route exact path="/workflows">
-            <h1>Workflows</h1>
-            <Link to="/workflows/create">Create new</Link>
-          </Route>
-          <Route exact path="/">
-            <h1>Home page</h1>
-            <Link to="/workflows">
-              Workflows
-            </Link>
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <>
+        <h1>Could not connect to backend</h1>
+        <p>Set SERVER_ADDRESS environment variable to point to backend server.</p>
+      </>
     )
   }
+
+  return (
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/workflows/create">
+          <CreateWorkflowPage serverURL={server}/>
+        </Route>
+        <Route exact path="/workflows/:namespace/:name">
+          <WatchWorkflowPage/>
+        </Route>
+        <Route exact path="/workflows">
+          <h1>Workflows</h1>
+          <Link to="/workflows/create">Create new</Link>
+        </Route>
+        <Route exact path="/">
+          <h1>Home page</h1>
+          <Link to="/workflows">
+            Workflows
+          </Link>
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  )
 }
