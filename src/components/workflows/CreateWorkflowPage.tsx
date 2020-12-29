@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { toModel, WorkflowDTO } from '../../dto/Workflows'
+import { CreateWorkflowDTO, PreviewWorkflowDTO, toWorkflow } from '../../dto/Workflows'
 import { Workflow } from '../../model/Workflows'
 import WorkflowPreview from './WorkflowPreview'
+import { useHistory } from 'react-router'
 
 export default function CreateWorkflowPage (props: {
   serverURL: string
@@ -9,6 +10,7 @@ export default function CreateWorkflowPage (props: {
   const [seed, setSeed] = useState(0)
   const [stages, setStages] = useState(3)
   const [workflow, setWorkflow] = useState(null as Workflow | null)
+  const history = useHistory()
 
   const handleSeedChanged = (e: React.ChangeEvent<HTMLInputElement>) => setSeed(parseInt(e.target.value))
   const handleStagesChanged = (e: React.ChangeEvent<HTMLInputElement>) => setStages(parseInt(e.target.value))
@@ -33,8 +35,8 @@ export default function CreateWorkflowPage (props: {
         return
       }
 
-      const dto = JSON.parse(await response.text()) as WorkflowDTO
-      const model = toModel(dto)
+      const dto = JSON.parse(await response.text()) as PreviewWorkflowDTO
+      const model = toWorkflow(dto?.scenario)
 
       setWorkflow(model)
     } catch (error: any) {
@@ -55,6 +57,10 @@ export default function CreateWorkflowPage (props: {
         console.log(response.statusText)
         return
       }
+
+      const dto = JSON.parse(await response.text()) as CreateWorkflowDTO
+
+      history.push(`/workflows/${dto.namespace}/${dto.name}`)
     } catch (error: any) {
       console.log(error)
     }

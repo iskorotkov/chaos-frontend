@@ -1,12 +1,17 @@
-import { Stage, Step, Target, Workflow } from '../model/Workflows'
-import moment from 'moment'
+import { Workflow } from '../model/Workflows'
+import moment from 'moment/moment'
 
-export interface WorkflowDTO {
-  scenario?: ScenarioDTO
-  workflow?: string
+/* eslint-disable no-unused-vars */
+export interface PreviewWorkflowDTO {
+  scenario?: WorkflowDTO
 }
 
-export interface ScenarioDTO {
+export interface CreateWorkflowDTO {
+  name?: string
+  namespace?: string
+}
+
+export interface WorkflowDTO {
   stages?: StageDTO[]
 }
 
@@ -37,24 +42,40 @@ export interface TargetDTO {
   annotations?: Map<string, string>
 }
 
-export function toModel (workflow: WorkflowDTO): Workflow {
-  return <Workflow>{
-    stages: workflow.scenario?.stages?.map(stage => {
-      const duration = stage.duration
-        ? moment.duration(stage.duration / 1e6, 'milliseconds')
-        : moment.duration(0, 'milliseconds')
+/* eslint-enable no-unused-vars */
 
-      return <Stage>{
-        duration: duration,
-        steps: stage.actions?.map(action => <Step>{
-          name: action.info?.name,
-          lethal: action.info?.lethal,
-          target: <Target>{
-            label: action.target?.appLabel,
-            kind: action.info?.affectingNode ? 'node' : 'deployment/pod/container',
-            namespace: 'unknown'
-          },
-          parameters: []
+export function toWorkflow (dto?: WorkflowDTO): Workflow {
+  if (!dto?.stages) {
+    throw new Error('scenario stages were not provided')
+  }
+
+  return {
+    stages: dto.stages.map(stage => {
+      if (stage.actions === undefined || stage.duration === undefined) {
+        throw new Error('stage actions and/or duration was/were not provided')
+      }
+
+      return {
+        duration: moment.duration(stage.duration / 1e6, 'milliseconds'),
+        steps: stage.actions.map(action => {
+          if (action.info?.name === undefined || action.info.lethal === undefined) {
+            throw new Error('action info was not provided')
+          }
+
+          if (action.target?.appLabel === undefined) {
+            throw new Error('action target was not provided')
+          }
+
+          return {
+            name: action.info.name,
+            lethal: action.info.lethal,
+            target: {
+              label: action.target.appLabel,
+              kind: action.info.affectingNode ? 'node' : 'deployment/pod/container',
+              namespace: 'unknown'
+            },
+            parameters: []
+          }
         })
       }
     })

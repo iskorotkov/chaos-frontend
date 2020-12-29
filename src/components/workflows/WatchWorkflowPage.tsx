@@ -1,17 +1,17 @@
-import { Link } from 'react-router-dom'
-import React, { useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import React from 'react'
 
 export default function WatchWorkflowPage () {
-  const [status] = useState('')
-  const [link] = useState('')
+  const { namespace, name } = useParams<{ namespace: string, name: string }>()
 
   return (
     <>
       <h1>Success</h1>
       <p>Generated workflow was successfully submitted.</p>
-      <ul>{status}</ul>
 
-      <div><Link to={link}>See workflow progress</Link></div>
+      <p>Workflow: {name}</p>
+      <p>Namespace: {namespace}</p>
+
       <div><Link to="/workflows">Go back to workflows page</Link></div>
       <div><Link to="/">Go back to home page</Link></div>
     </>
