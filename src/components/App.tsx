@@ -23,7 +23,7 @@ export default function App () {
           <CreateWorkflowPage serverURL={server}/>
         </Route>
         <Route exact path="/workflows/:namespace/:name">
-          <WatchWorkflowPage/>
+          <WatchWorkflowPage serverURL={server}/>
         </Route>
         <Route exact path="/workflows">
           <h1>Workflows</h1>
