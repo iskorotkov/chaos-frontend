@@ -10,6 +10,7 @@
     "@types/node": "^12.19.9",
     "@types/react": "^16.14.2",
     "@types/react-dom": "^16.9.10",
+    "classnames": "^2.2.6",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "node-sass": "^4.0.0",
@@ -50,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.11",
     "@types/moment-duration-format": "^2.2.2",
     "@types/react-copy-to-clipboard": "^5.0.0",
     "@types/react-redux": "^7.1.12",
