@@ -1,6 +1,7 @@
 import { Workflow } from '../../model/Workflows'
 import React from 'react'
 import './WorkflowPreview.scss'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 export default function WorkflowPreview (props: {
   workflow: Workflow
@@ -27,6 +28,10 @@ export default function WorkflowPreview (props: {
                     <li key={i} className="step-parameter">{parameter.name}={parameter.value}</li>
                   ))}
                 </ul>
+
+                <CopyToClipboard text={step.manifest}>
+                  <button className="step-copy-button">Copy as YAML</button>
+                </CopyToClipboard>
               </li>))}
           </ul>
         </li>

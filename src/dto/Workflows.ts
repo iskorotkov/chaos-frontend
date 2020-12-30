@@ -1,5 +1,6 @@
 import { Workflow } from '../model/Workflows'
 import moment from 'moment/moment'
+import YAML from 'yaml'
 
 /* eslint-disable no-unused-vars */
 export interface PreviewWorkflowDTO {
@@ -23,6 +24,7 @@ export interface StageDTO {
 export interface ActionDTO {
   info?: InfoDTO
   target?: TargetDTO
+  engine?: object
 }
 
 export interface InfoDTO {
@@ -66,9 +68,14 @@ export function toWorkflow (dto?: WorkflowDTO): Workflow {
             throw new Error('action target was not provided')
           }
 
+          if (action.engine === undefined) {
+            throw new Error('manifest was not provided')
+          }
+
           return {
             name: action.info.name,
             lethal: action.info.lethal,
+            manifest: YAML.stringify(action.engine),
             target: {
               label: action.target.appLabel,
               kind: action.info.affectingNode ? 'node' : 'deployment/pod/container',

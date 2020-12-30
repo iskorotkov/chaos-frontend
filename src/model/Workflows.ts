@@ -14,6 +14,7 @@ export interface Step {
   lethal: boolean
   target: Target
   parameters: Parameter[]
+  manifest: string
 }
 
 export interface Target {
