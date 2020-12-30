@@ -1,0 +1,51 @@
+.stage {
+  border: solid #000 1px;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
+.stepsList {
+  align-items: stretch;
+
+  display: grid;
+  gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+
+  justify-items: stretch;
+  list-style: none;
+  padding: 0.5em 0 0;
+}
+
+.step {
+  border: solid #000 1px;
+
+  height: 100%;
+  overflow: hidden;
+  padding: 0.5em;
+  width: 100%;
+}
+
+.stepName {
+  margin: 0;
+}
+
+.stepNamespace {
+  margin: 0;
+}
+
+.targetName {
+  margin: 0;
+}
+
+.targetNamespace {
+  margin: 0;
+}
+
+.targetKind {
+  margin: 0;
+}
+
+.copyButton {
+  width: 100%;
+}
