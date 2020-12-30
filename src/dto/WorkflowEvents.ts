@@ -1,17 +1,17 @@
-import { WorkflowEvent, Stage, Step } from '../model/WorkflowEvents'
+import { Stage, Step, WorkflowEvent } from '../model/WorkflowEvents'
 
 export interface StepDTO {
   name?: string,
   type?: string,
   phase?: string,
-  startedAt?: Date,
-  finishedAt?: Date
+  startedAt?: string,
+  finishedAt?: string
 }
 
 export interface StageDTO {
   phase?: string,
-  startedAt?: Date,
-  finishedAt?: Date,
+  startedAt?: string,
+  finishedAt?: string,
   steps?: StepDTO[]
 }
 
@@ -19,10 +19,10 @@ export interface WorkflowEventDTO {
   name?: string,
   namespace?: string,
   type?: string,
-  labels?: Map<string, string>,
+  labels?: object,
   phase?: string,
-  startedAt?: Date,
-  finishedAt?: Date,
+  startedAt?: string,
+  finishedAt?: string,
   stages?: StageDTO[]
 }
 
@@ -37,11 +37,13 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
   }
 
   return {
-    finishedAt: dto.finishedAt,
-    labels: dto.labels,
     name: dto.name,
     namespace: dto.namespace,
     phase: dto.phase ?? 'Created',
+    startedAt: new Date(dto.startedAt),
+    finishedAt: new Date(dto.finishedAt),
+    labels: new Map<string, string>(Object.entries(dto.labels)),
+    type: dto.type,
     stages: dto.stages?.map((stage): Stage => {
       if (stage.startedAt === undefined ||
         stage.finishedAt === undefined ||
@@ -51,8 +53,8 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
       }
 
       return {
-        startedAt: stage.startedAt,
-        finishedAt: stage.finishedAt,
+        startedAt: new Date(stage.startedAt),
+        finishedAt: new Date(stage.finishedAt),
         phase: stage.phase,
         steps: stage.steps.map((step): Step => {
           if (step.name === undefined ||
@@ -67,13 +69,11 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
             name: step.name,
             type: step.type,
             phase: step.phase,
-            startedAt: step.startedAt,
-            finishedAt: step.finishedAt
+            startedAt: new Date(step.startedAt),
+            finishedAt: new Date(step.finishedAt)
           }
         })
       }
-    }) ?? [],
-    startedAt: dto.startedAt,
-    type: dto.type
+    }) ?? []
   }
 }
