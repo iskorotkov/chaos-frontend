@@ -1,0 +1,13 @@
+.eslintcache
+.eslintrc.js
+.stylelintrc.json
+.gitignore
+README.md
+
+.git
+.github
+.idea
+.vscode
+build
+deploy
+node_modules

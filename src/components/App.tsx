@@ -5,16 +5,7 @@ import CreateWorkflowPage from './workflows/CreateWorkflowPage'
 import WatchWorkflowPage from './workflows/WatchWorkflowPage'
 
 export default function App () {
-  const server = process.env.REACT_APP_SERVER_ADDRESS
-
-  if (server === undefined) {
-    return (
-      <>
-        <h1>Could not connect to backend</h1>
-        <p>Set SERVER_ADDRESS environment variable to point to backend server.</p>
-      </>
-    )
-  }
+  const server = process.env.HOSTNAME ?? 'localhost'
 
   return (
     <BrowserRouter>
