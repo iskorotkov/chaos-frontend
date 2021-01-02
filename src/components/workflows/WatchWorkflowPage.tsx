@@ -5,14 +5,13 @@ import { toWorkflowEvent, WorkflowEventDTO } from '../../dto/WorkflowEvents'
 import WorkflowStatus from './WorkflowStatus'
 
 export default function WatchWorkflowPage (props: {
-  serverURL: string
+  server: string
 }) {
   const { namespace, name } = useParams<{ namespace: string, name: string }>()
   const didUnmount = useRef(false)
 
-  const {
-    lastJsonMessage
-  } = useWebSocket(`ws://${props.serverURL}/api/v1/workflows/${namespace}/${name}`, {
+  const url = `ws://${props.server}/api/v1/workflows/${namespace}/${name}`
+  const { lastJsonMessage } = useWebSocket(url, {
     retryOnError: true,
     reconnectAttempts: 5,
     reconnectInterval: 5000,

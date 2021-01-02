@@ -5,16 +5,15 @@ import CreateWorkflowPage from './workflows/CreateWorkflowPage'
 import WatchWorkflowPage from './workflows/WatchWorkflowPage'
 
 export default function App () {
-  const server = process.env.HOSTNAME ?? 'localhost'
-
+  const server = document.location.host
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/workflows/create">
-          <CreateWorkflowPage serverURL={server}/>
+          <CreateWorkflowPage server={server}/>
         </Route>
         <Route exact path="/workflows/:namespace/:name">
-          <WatchWorkflowPage serverURL={server}/>
+          <WatchWorkflowPage server={server}/>
         </Route>
         <Route exact path="/workflows">
           <h1>Workflows</h1>

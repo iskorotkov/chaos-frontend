@@ -5,7 +5,7 @@ import WorkflowPreview from './WorkflowPreview'
 import { useHistory } from 'react-router'
 
 export default function CreateWorkflowPage (props: {
-  serverURL: string
+  server: string
 }) {
   const [seed, setSeed] = useState(0)
   const [stages, setStages] = useState(3)
@@ -22,13 +22,13 @@ export default function CreateWorkflowPage (props: {
     return params
   }
 
-  const serverAddress = () => `http://${props.serverURL}/api/v1/workflows`
+  const url = `http://${props.server}/api/v1/workflows`
 
   async function handlePreview (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
     try {
       const params = createForm()
-      const response = await fetch(`${serverAddress()}?${params}`)
+      const response = await fetch(`${url}?${params}`)
 
       if (!response.ok) {
         console.log(response.statusText)
@@ -48,7 +48,7 @@ export default function CreateWorkflowPage (props: {
     e.preventDefault()
     try {
       const params = createForm()
-      const response = await fetch(serverAddress(), {
+      const response = await fetch(url, {
         method: 'POST',
         body: params
       })
