@@ -30,7 +30,7 @@ export default function WorkflowStatus (props: {
               [styles.stageSucceeded]: stage.phase === 'Succeeded',
               [styles.stageFailed]: stage.phase === 'Failed'
             })}>
-              <p className={styles.stageName}>Stage #{index} - {stage.phase}</p>
+              <p className={styles.stageName}>Stage #{index + 1} - {stage.phase}</p>
               <p className={styles.stageTime}>{formatDate(stage.startedAt)} - {formatDate(stage.finishedAt)}</p>
 
               <ul className={styles.stepsList}>
