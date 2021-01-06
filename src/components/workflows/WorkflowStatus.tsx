@@ -15,8 +15,18 @@ export default function WorkflowStatus (props: {
       <p>{workflow.namespace}/{workflow.name} - {workflow.phase}</p>
       <p>{formatDate(workflow.startedAt)} - {formatDate(workflow.finishedAt)}</p>
 
+      <p>Labels:</p>
       <ul>
         {Array.from(workflow.labels.entries()).map(([key, value]) => {
+          return (
+            <li key={key} className={styles.label}>{key}: {value}</li>
+          )
+        })}
+      </ul>
+
+      <p>Annotations:</p>
+      <ul>
+        {Array.from(workflow.annotations.entries()).map(([key, value]) => {
           return (
             <li key={key} className={styles.label}>{key}: {value}</li>
           )

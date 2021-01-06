@@ -18,6 +18,7 @@ export interface WorkflowEvent {
   namespace: string,
   type: string,
   labels: Map<string, string>,
+  annotations: Map<string, string>,
   phase: string,
   startedAt: Date,
   finishedAt: Date,

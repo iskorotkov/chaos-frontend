@@ -20,6 +20,7 @@ export interface WorkflowEventDTO {
   namespace?: string,
   type?: string,
   labels?: object,
+  annotations?: object,
   phase?: string,
   startedAt?: string,
   finishedAt?: string,
@@ -32,7 +33,8 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
     dto.namespace === undefined ||
     dto.name === undefined ||
     dto.labels === undefined ||
-    dto.finishedAt === undefined) {
+    dto.finishedAt === undefined ||
+    dto.annotations === undefined) {
     throw new Error('one of the event properties was undefined')
   }
 
@@ -43,6 +45,7 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
     startedAt: new Date(dto.startedAt),
     finishedAt: new Date(dto.finishedAt),
     labels: new Map<string, string>(Object.entries(dto.labels)),
+    annotations: new Map<string, string>(Object.entries(dto.annotations)),
     type: dto.type,
     stages: dto.stages?.map((stage): Stage => {
       if (stage.startedAt === undefined ||
