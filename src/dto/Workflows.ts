@@ -22,15 +22,11 @@ export interface StageDTO {
 }
 
 export interface ActionDTO {
-  info?: InfoDTO
+  name?: string
+  severity?: string
+  scale?: string
   target?: TargetDTO
   engine?: object
-}
-
-export interface InfoDTO {
-  name?: string
-  lethal?: boolean
-  affectingNode?: boolean
 }
 
 export interface TargetDTO {
@@ -60,7 +56,9 @@ export function toWorkflow (dto?: WorkflowDTO): Workflow {
       return {
         duration: moment.duration(stage.duration / 1e6, 'milliseconds'),
         steps: stage.actions.map(action => {
-          if (action.info?.name === undefined || action.info.lethal === undefined) {
+          if (action.name === undefined ||
+            action.severity === undefined ||
+            action.scale === undefined) {
             throw new Error('action info was not provided')
           }
 
@@ -73,13 +71,12 @@ export function toWorkflow (dto?: WorkflowDTO): Workflow {
           }
 
           return {
-            name: action.info.name,
-            lethal: action.info.lethal,
+            name: action.name,
+            severity: action.severity,
+            scale: action.scale,
             manifest: YAML.stringify(action.engine),
             target: {
-              label: action.target.appLabel,
-              kind: action.info.affectingNode ? 'node' : 'deployment/pod/container',
-              namespace: 'unknown'
+              label: action.target.appLabel
             },
             parameters: []
           }

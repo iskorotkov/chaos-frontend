@@ -4,6 +4,8 @@ export interface StepDTO {
   name?: string,
   type?: string,
   phase?: string,
+  labels?: object,
+  annotations?: object,
   startedAt?: string,
   finishedAt?: string
 }
@@ -63,6 +65,8 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
           if (step.name === undefined ||
             step.type === undefined ||
             step.phase === undefined ||
+            step.labels === undefined ||
+            step.annotations === undefined ||
             step.startedAt === undefined ||
             step.finishedAt === undefined) {
             throw new Error('one of the step properties was undefined')
@@ -72,6 +76,8 @@ export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
             name: step.name,
             type: step.type,
             phase: step.phase,
+            labels: new Map<string, string>(Object.entries(step.labels)),
+            annotations: new Map<string, string>(Object.entries(step.annotations)),
             startedAt: new Date(step.startedAt),
             finishedAt: new Date(step.finishedAt)
           }

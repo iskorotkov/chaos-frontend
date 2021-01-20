@@ -19,8 +19,6 @@ export default function WorkflowPreview (props: {
 
                 <div>
                   <p className={styles.targetName}>{step.target.label}</p>
-                  <p className={styles.targetNamespace}>{step.target.namespace}</p>
-                  <p className={styles.targetKind}>{step.target.kind}</p>
                 </div>
 
                 <ul>

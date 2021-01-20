@@ -31,7 +31,7 @@ export default function CreateWorkflowPage (props: {
       const response = await fetch(`${url}?${params}`)
 
       if (!response.ok) {
-        console.log(response.statusText)
+        console.error(response.statusText)
         return
       }
 
@@ -40,7 +40,7 @@ export default function CreateWorkflowPage (props: {
 
       setWorkflow(model)
     } catch (error: any) {
-      console.log(error)
+      console.error(error)
     }
   }
 
@@ -54,7 +54,7 @@ export default function CreateWorkflowPage (props: {
       })
 
       if (!response.ok) {
-        console.log(response.statusText)
+        console.error(response.statusText)
         return
       }
 
@@ -62,7 +62,7 @@ export default function CreateWorkflowPage (props: {
 
       history.push(`/workflows/${dto.namespace}/${dto.name}`)
     } catch (error: any) {
-      console.log(error)
+      console.error(error)
     }
   }
 

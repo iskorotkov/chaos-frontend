@@ -11,16 +11,15 @@ export interface Stage {
 
 export interface Step {
   name: string
-  lethal: boolean
+  severity: string
+  scale: string
   target: Target
   parameters: Parameter[]
   manifest: string
 }
 
 export interface Target {
-  namespace: string
   label: string
-  kind: string
 }
 
 export interface Parameter {
