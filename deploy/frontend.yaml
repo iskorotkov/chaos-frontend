@@ -3,6 +3,59 @@ kind: Namespace
 metadata:
   name: chaos-framework
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: chaos-framework
+data:
+  default.conf: |
+    upstream scheduler {
+      server scheduler:8811;
+    }
+
+    upstream workflows {
+      server workflows:8811;
+    }
+
+    server {
+      listen 80 default_server;
+
+      charset utf-8;
+      access_log /var/log/nginx/host.access.log main;
+
+      # Scheduler backend API
+      location ~* /api/v\d+/workflows/(create|preview) {
+        proxy_pass https://scheduler;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_connection;
+      }
+
+      # Workflows backend API
+      location ~* /api/v\d+/workflows/.* {
+        proxy_pass https://workflows;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection $http_connection;
+      }
+
+      # React app
+      location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri /index.html;
+      }
+
+      error_page 404 /404.html;
+      error_page 500 502 503 504 /50x.html;
+      location = /50x.html {
+        root /usr/share/nginx/html;
+      }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,7 +74,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: iskorotkov/chaos-frontend:v0.3.2
+          image: iskorotkov/chaos-frontend:v0.4.0-alpha.3
           resources:
             limits:
               cpu: 200m
@@ -29,6 +82,17 @@ spec:
           ports:
             - name: web
               containerPort: 80
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d/
+              name: config
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: frontend-config
+            items:
+              - key: default.conf
+                path: default.conf
 ---
 apiVersion: v1
 kind: Service
