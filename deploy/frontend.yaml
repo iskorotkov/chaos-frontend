@@ -77,8 +77,8 @@ spec:
           image: iskorotkov/chaos-frontend:v0.4.0-alpha.3
           resources:
             limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 100m
+              memory: 64Mi
           ports:
             - name: web
               containerPort: 80
@@ -103,5 +103,6 @@ spec:
   selector:
     app: frontend
   ports:
-    - port: 80
+    - name: web
+      port: 80
       targetPort: 80
