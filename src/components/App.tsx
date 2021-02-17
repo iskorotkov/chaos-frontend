@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch } from 'react-router'
-import { BrowserRouter, Link } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom'
 import CreateWorkflowPage from './workflows/CreateWorkflowPage'
 import WatchWorkflowPage from './workflows/WatchWorkflowPage'
 
@@ -9,21 +9,11 @@ export default function App () {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/workflows/create">
+        <Route exact path="/">
           <CreateWorkflowPage server={server}/>
         </Route>
-        <Route exact path="/workflows/:namespace/:name">
+        <Route exact path="/:namespace/:name">
           <WatchWorkflowPage server={server}/>
-        </Route>
-        <Route exact path="/workflows">
-          <h1>Workflows</h1>
-          <Link to="/workflows/create">Create new</Link>
-        </Route>
-        <Route exact path="/">
-          <h1>Home page</h1>
-          <Link to="/workflows">
-            Workflows
-          </Link>
         </Route>
       </Switch>
     </BrowserRouter>

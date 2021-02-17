@@ -28,16 +28,20 @@ export default function CreateWorkflowPage (props: {
     e.preventDefault()
     try {
       const params = createForm()
-      const response = await fetch(`${url}?${params}`)
+      const response = await fetch(`${url}/preview?${params}`)
 
       if (!response.ok) {
-        console.error(response.statusText)
+        console.error(`Server returned error: ${response.statusText}`)
         return
       }
 
       const dto = JSON.parse(await response.text()) as PreviewWorkflowDTO
-      const model = toWorkflow(dto?.scenario)
+      if (!dto?.scenario) {
+        console.error(`Returned response is invalid: ${await response.text()}`)
+        return
+      }
 
+      const model = toWorkflow(dto?.scenario)
       setWorkflow(model)
     } catch (error: any) {
       console.error(error)
@@ -48,7 +52,7 @@ export default function CreateWorkflowPage (props: {
     e.preventDefault()
     try {
       const params = createForm()
-      const response = await fetch(url, {
+      const response = await fetch(`${url}/create`, {
         method: 'POST',
         body: params
       })
@@ -59,8 +63,12 @@ export default function CreateWorkflowPage (props: {
       }
 
       const dto = JSON.parse(await response.text()) as CreateWorkflowDTO
+      if (!dto?.name || !dto?.namespace) {
+        console.error(`Returned response is invalid: ${await response.text()}`)
+        return
+      }
 
-      history.push(`/workflows/${dto.namespace}/${dto.name}`)
+      history.push(`/${dto.namespace}/${dto.name}`)
     } catch (error: any) {
       console.error(error)
     }

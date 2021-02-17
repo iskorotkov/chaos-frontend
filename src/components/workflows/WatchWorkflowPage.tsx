@@ -10,7 +10,7 @@ export default function WatchWorkflowPage (props: {
   const { namespace, name } = useParams<{ namespace: string, name: string }>()
   const didUnmount = useRef(false)
 
-  const url = `ws://${props.server}/api/v1/workflows/${namespace}/${name}`
+  const url = `ws://${props.server}/api/v1/workflows/watch/${namespace}/${name}`
   const { lastJsonMessage } = useWebSocket(url, {
     retryOnError: true,
     reconnectAttempts: 5,
@@ -43,9 +43,7 @@ export default function WatchWorkflowPage (props: {
 
       {workflowStatus()}
 
-      <div><Link to="/workflows/create">Create another workflow</Link></div>
-      <div><Link to="/workflows">Go back to workflows page</Link></div>
-      <div><Link to="/">Go back to home page</Link></div>
+      <div><Link to="/">Create another workflow</Link></div>
     </>
   )
 }
