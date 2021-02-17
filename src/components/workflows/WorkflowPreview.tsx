@@ -15,15 +15,14 @@ export default function WorkflowPreview (props: {
           <ul className={styles.stepsList}>
             {stage.steps.map((step, i) => (
               <li key={i} className={styles.step}>
-                <p className={styles.stepName}>{step.name}</p>
-
-                <div>
-                  <p className={styles.targetName}>{step.target.label}</p>
-                </div>
+                <p className={styles.stepName}>Name: {step.name}</p>
+                <p className={styles.scale} >Scale: {step.scale}</p>
+                <p className={styles.severity} >Severity: {step.severity}</p>
+                <p className={styles.targetName}>Label: {step.target.label}</p>
 
                 <ul>
                   {step.parameters.map((parameter, i) => (
-                    <li key={i}>{parameter.name}={parameter.value}</li>
+                    <li key={i} className={styles.parameter}>{parameter.name}={parameter.value}</li>
                   ))}
                 </ul>
 
