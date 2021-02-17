@@ -2,6 +2,7 @@ import { WorkflowEvent } from '../../model/WorkflowEvents'
 import React from 'react'
 import styles from './WorkflowStatus.module.scss'
 import classNames from 'classnames'
+import MetadataList from './MetadataList'
 
 export default function WorkflowStatus (props: {
   workflow: WorkflowEvent
@@ -15,23 +16,8 @@ export default function WorkflowStatus (props: {
       <p>{workflow.namespace}/{workflow.name} - {workflow.phase}</p>
       <p>{formatDate(workflow.startedAt)} - {formatDate(workflow.finishedAt)}</p>
 
-      <p>Labels:</p>
-      <ul>
-        {Array.from(workflow.labels.entries()).map(([key, value]) => {
-          return (
-            <li key={key} className={styles.label}>{key}: {value}</li>
-          )
-        })}
-      </ul>
-
-      <p>Annotations:</p>
-      <ul>
-        {Array.from(workflow.annotations.entries()).map(([key, value]) => {
-          return (
-            <li key={key} className={styles.label}>{key}: {value}</li>
-          )
-        })}
-      </ul>
+      <MetadataList title={'Labels'} data={workflow.labels}/>
+      <MetadataList title={'Annotations'} data={workflow.annotations}/>
 
       <ol>
         {workflow.stages.map((stage, index) => {
@@ -53,6 +39,9 @@ export default function WorkflowStatus (props: {
                       <p className={styles.stepName}>{step.name} - {step.phase}</p>
                       <p className={styles.stepTime}>{formatDate(step.startedAt)} - {formatDate(step.finishedAt)}</p>
                       <p className={styles.stepType}>{step.type}</p>
+
+                      <MetadataList title={'Labels'} data={step.labels}/>
+                      <MetadataList title={'Annotations'} data={step.annotations}/>
                     </li>
                   )
                 })}
