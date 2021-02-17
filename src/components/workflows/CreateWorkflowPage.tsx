@@ -15,14 +15,16 @@ export default function CreateWorkflowPage (props: {
   const handleSeedChanged = (e: React.ChangeEvent<HTMLInputElement>) => setSeed(parseInt(e.target.value))
   const handleStagesChanged = (e: React.ChangeEvent<HTMLInputElement>) => setStages(parseInt(e.target.value))
 
+  const url = `http://${props.server}/api/v1/workflows`
+
+  const preview = workflow ? <WorkflowPreview workflow={workflow}/> : null
+
   function createForm () {
     const params = new URLSearchParams()
     params.append('seed', seed.toString())
     params.append('stages', stages.toString())
     return params
   }
-
-  const url = `http://${props.server}/api/v1/workflows`
 
   async function handlePreview (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault()
@@ -73,8 +75,6 @@ export default function CreateWorkflowPage (props: {
       console.error(error)
     }
   }
-
-  const preview = workflow ? <WorkflowPreview workflow={workflow}/> : null
 
   return (
     <>
