@@ -26,7 +26,7 @@ data:
 
       # Scheduler backend API
       location ~* /api/v\d+/workflows/(create|preview) {
-        proxy_pass https://scheduler;
+        proxy_pass http://scheduler;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header Upgrade $http_upgrade;
@@ -34,8 +34,8 @@ data:
       }
 
       # Workflows backend API
-      location ~* /api/v\d+/workflows/.* {
-        proxy_pass https://workflows;
+      location ~* /api/v\d+/workflows/watch {
+        proxy_pass http://workflows;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header Upgrade $http_upgrade;
