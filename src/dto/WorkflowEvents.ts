@@ -30,58 +30,31 @@ export interface WorkflowEventDTO {
 }
 
 export function toWorkflowEvent (dto: WorkflowEventDTO): WorkflowEvent {
-  if (dto.type === undefined ||
-    dto.startedAt === undefined ||
-    dto.namespace === undefined ||
-    dto.name === undefined ||
-    dto.labels === undefined ||
-    dto.finishedAt === undefined ||
-    dto.annotations === undefined) {
-    throw new Error('one of the event properties was undefined')
-  }
-
   return {
-    name: dto.name,
-    namespace: dto.namespace,
+    name: dto.name ?? '-',
+    namespace: dto.namespace ?? '-',
     phase: dto.phase ?? 'Created',
-    startedAt: new Date(dto.startedAt),
-    finishedAt: new Date(dto.finishedAt),
-    labels: new Map<string, string>(Object.entries(dto.labels)),
-    annotations: new Map<string, string>(Object.entries(dto.annotations)),
-    type: dto.type,
+    startedAt: new Date(dto.startedAt ?? Date.now()),
+    finishedAt: new Date(dto.finishedAt ?? Date.now()),
+    labels: new Map<string, string>(Object.entries(dto.labels ?? {})),
+    annotations: new Map<string, string>(Object.entries(dto.annotations ?? {})),
+    type: dto.type ?? '-',
     stages: dto.stages?.map((stage): Stage => {
-      if (stage.startedAt === undefined ||
-        stage.finishedAt === undefined ||
-        stage.phase === undefined ||
-        stage.steps === undefined) {
-        throw new Error('one of the stage properties was undefined')
-      }
-
       return {
-        startedAt: new Date(stage.startedAt),
-        finishedAt: new Date(stage.finishedAt),
-        phase: stage.phase,
-        steps: stage.steps.map((step): Step => {
-          if (step.name === undefined ||
-            step.type === undefined ||
-            step.phase === undefined ||
-            step.labels === undefined ||
-            step.annotations === undefined ||
-            step.startedAt === undefined ||
-            step.finishedAt === undefined) {
-            throw new Error('one of the step properties was undefined')
-          }
-
+        startedAt: new Date(stage.startedAt ?? Date.now()),
+        finishedAt: new Date(stage.finishedAt ?? Date.now()),
+        phase: stage.phase ?? '-',
+        steps: stage.steps?.map((step): Step => {
           return {
-            name: step.name,
-            type: step.type,
-            phase: step.phase,
-            labels: new Map<string, string>(Object.entries(step.labels)),
-            annotations: new Map<string, string>(Object.entries(step.annotations)),
-            startedAt: new Date(step.startedAt),
-            finishedAt: new Date(step.finishedAt)
+            name: step.name ?? '-',
+            type: step.type ?? '-',
+            phase: step.phase ?? '-',
+            labels: new Map<string, string>(Object.entries(step.labels ?? {})),
+            annotations: new Map<string, string>(Object.entries(step.annotations ?? {})),
+            startedAt: new Date(step.startedAt ?? Date.now()),
+            finishedAt: new Date(step.finishedAt ?? Date.now())
           }
-        })
+        }) ?? []
       }
     }) ?? []
   }

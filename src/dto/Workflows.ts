@@ -31,7 +31,6 @@ export interface ActionDTO {
 
 export interface TargetDTO {
   pod?: string
-  deployment?: string
   node?: string
   mainContainer?: string
   containers?: string[]
@@ -42,46 +41,24 @@ export interface TargetDTO {
 
 /* eslint-enable no-unused-vars */
 
-export function toWorkflow (dto?: WorkflowDTO): Workflow {
-  if (!dto?.stages) {
-    throw new Error('scenario stages were not provided')
-  }
-
+export function toWorkflow (dto: WorkflowDTO): Workflow {
   return {
-    stages: dto.stages.map(stage => {
-      if (stage.actions === undefined || stage.duration === undefined) {
-        throw new Error('stage actions and/or duration was/were not provided')
-      }
-
+    stages: dto.stages?.map(stage => {
       return {
-        duration: moment.duration(stage.duration / 1e6, 'milliseconds'),
-        steps: stage.actions.map(action => {
-          if (action.name === undefined ||
-            action.severity === undefined ||
-            action.scale === undefined) {
-            throw new Error('action info was not provided')
-          }
-
-          if (action.target?.appLabel === undefined) {
-            throw new Error('action target was not provided')
-          }
-
-          if (action.engine === undefined) {
-            throw new Error('manifest was not provided')
-          }
-
+        duration: moment.duration((stage.duration ?? 0) / 1e6, 'milliseconds'),
+        steps: stage.actions?.map(action => {
           return {
-            name: action.name,
-            severity: action.severity,
-            scale: action.scale,
-            manifest: YAML.stringify(action.engine),
+            name: action.name ?? '-',
+            severity: action.severity ?? '-',
+            scale: action.scale ?? '-',
+            manifest: YAML.stringify(action.engine ?? ''),
             target: {
-              label: action.target.appLabel
+              label: action.target?.appLabel ?? '-'
             },
             parameters: []
           }
-        })
+        }) ?? []
       }
-    })
+    }) ?? []
   }
 }
