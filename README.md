@@ -1,12 +1,6 @@
 # Chaos Frontend
 
-It's a frontend for Chaos Framework — a resilience testing platform.
-
-This app allows you to:
-
-- generate and preview chaos tests
-- execute chaos tests
-- watch test progress
+It's a frontend for Chaos Framework — a resilience testing platform. This web app allows you to generate, preview, execute and monitor chaos tests.
 
 - [Chaos Frontend](#chaos-frontend)
   - [Structure](#structure)
