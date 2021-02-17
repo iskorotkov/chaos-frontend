@@ -1,8 +1,19 @@
 {
   "name": "chaos-frontend",
   "version": "0.1.0",
+  "author": {
+    "name": "Ivan Korotkov",
+    "email": "korotkov.ivan.s@gmail.com",
+    "url": "https://github.com/iskorotkov"
+  },
+  "description": "It's a frontend for Chaos Framework — a resilience testing platform",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iskorotkov/chaos-frontend"
+  },
   "private": true,
   "dependencies": {
+    "@testing-library/dom": "^7.29.4",
     "classnames": "^2.2.6",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
@@ -15,6 +26,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-use-websocket": "^2.2.0",
+    "redux": "^4.0.5",
     "web-vitals": "^0.2.4",
     "yaml": "^1.10.0"
   },
