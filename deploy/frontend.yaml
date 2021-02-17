@@ -74,7 +74,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: iskorotkov/chaos-frontend:v0.4.0-alpha.3
+          image: iskorotkov/chaos-frontend:v0.4.0
           resources:
             limits:
               cpu: 100m
