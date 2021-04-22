@@ -1,4 +1,4 @@
-FROM nginx:alpine as base
+FROM nginx:1.20-alpine as base
 
 FROM node:14 as build
 WORKDIR /app
