@@ -1,0 +1,21 @@
+name: Stylelint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Stylelint
+        uses: actions-hub/stylelint@v1.1.3
+        env:
+          PATTERN: "**/*.scss"
