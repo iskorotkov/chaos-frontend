@@ -1,9 +1,9 @@
-import { WorkflowEvent } from '../model/WorkflowEvents'
+import { WorkflowUpdate } from '../model/workflowUpdates'
 import React from 'react'
 import MetadataList from './MetadataList'
 
 export default function WorkflowStatus (props: {
-  workflow: WorkflowEvent
+  workflow: WorkflowUpdate
 }) {
   const { workflow } = props
 

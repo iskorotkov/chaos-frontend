@@ -1,4 +1,4 @@
-import { Workflow } from '../model/Workflows'
+import { Workflow } from '../model/workflows'
 import React from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
@@ -12,7 +12,7 @@ export default function WorkflowPreview (props: {
           <span>Duration: {stage.duration.seconds()}s</span>
 
           <ul>
-            {stage.steps.map((step, i) => (
+            {stage.actions.map((step, i) => (
               <li key={i}>
                 <p>Name: {step.name}</p>
                 <p>Scale: {step.scale}</p>

@@ -5,11 +5,11 @@ export interface Workflow {
 }
 
 export interface Stage {
-  steps: Step[]
+  actions: Action[]
   duration: moment.Duration
 }
 
-export interface Step {
+export interface Action {
   name: string
   severity: string
   scale: string

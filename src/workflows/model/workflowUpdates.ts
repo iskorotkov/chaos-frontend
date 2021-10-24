@@ -15,7 +15,7 @@ export interface Stage {
   steps: Step[]
 }
 
-export interface WorkflowEvent {
+export interface WorkflowUpdate {
   name: string,
   namespace: string,
   type: string,

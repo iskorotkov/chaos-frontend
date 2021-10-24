@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import React, { useEffect, useRef } from 'react'
 import useWebSocket from 'react-use-websocket'
-import { toWorkflowEvent, WorkflowEventDTO } from '../dto/WorkflowEvents'
+import { toWorkflowEvent, WorkflowEventReadDTO } from '../dto/workflowUpdates'
 import WorkflowStatus from './WorkflowStatus'
 
 export default function WatchWorkflowPage (props: {
@@ -28,7 +28,7 @@ export default function WatchWorkflowPage (props: {
 
   const workflowStatus = () => {
     if (lastJsonMessage !== null) {
-      const dto = lastJsonMessage as WorkflowEventDTO
+      const dto = lastJsonMessage as WorkflowEventReadDTO
       const workflow = toWorkflowEvent(dto)
       return (<WorkflowStatus workflow={workflow}/>)
     } else {

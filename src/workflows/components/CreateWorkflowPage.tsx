@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { CreateWorkflowDTO, PreviewWorkflowDTO, toWorkflow } from '../dto/Workflows'
-import { Workflow } from '../model/Workflows'
+import { WorkflowCreateResponse, WorkflowPreviewResponse, toWorkflow } from '../dto/workflows'
+import { Workflow } from '../model/workflows'
 import WorkflowPreview from './WorkflowPreview'
 import { useHistory } from 'react-router'
 
@@ -37,13 +37,13 @@ export default function CreateWorkflowPage (props: {
         return
       }
 
-      const dto = JSON.parse(await response.text()) as PreviewWorkflowDTO
-      if (!dto?.scenario) {
+      const dto = JSON.parse(await response.text()) as WorkflowPreviewResponse
+      if (!dto?.workflow) {
         console.error(`Returned response is invalid: ${await response.text()}`)
         return
       }
 
-      const model = toWorkflow(dto?.scenario)
+      const model = toWorkflow(dto?.workflow)
       setWorkflow(model)
     } catch (error: any) {
       console.error(error)
@@ -64,7 +64,7 @@ export default function CreateWorkflowPage (props: {
         return
       }
 
-      const dto = JSON.parse(await response.text()) as CreateWorkflowDTO
+      const dto = JSON.parse(await response.text()) as WorkflowCreateResponse
       if (!dto?.name || !dto?.namespace) {
         console.error(`Returned response is invalid: ${await response.text()}`)
         return
