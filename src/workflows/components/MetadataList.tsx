@@ -1,4 +1,3 @@
-import styles from './MetadataList.module.scss'
 import React from 'react'
 
 export default function MetadataList (props: {
@@ -11,7 +10,7 @@ export default function MetadataList (props: {
       <ul>
         {Array.from(props.data.entries()).map(([key, value]) => {
           return (
-            <li key={key} className={styles.label}>{key}: {value}</li>
+            <li key={key}>{key}: {value}</li>
           )
         })}
       </ul>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { CreateWorkflowDTO, PreviewWorkflowDTO, toWorkflow } from '../../dto/Workflows'
-import { Workflow } from '../../model/Workflows'
+import { CreateWorkflowDTO, PreviewWorkflowDTO, toWorkflow } from '../dto/Workflows'
+import { Workflow } from '../model/Workflows'
 import WorkflowPreview from './WorkflowPreview'
 import { useHistory } from 'react-router'
 

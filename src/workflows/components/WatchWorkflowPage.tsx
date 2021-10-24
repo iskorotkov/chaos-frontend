@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import React, { useEffect, useRef } from 'react'
 import useWebSocket from 'react-use-websocket'
-import { toWorkflowEvent, WorkflowEventDTO } from '../../dto/WorkflowEvents'
+import { toWorkflowEvent, WorkflowEventDTO } from '../dto/WorkflowEvents'
 import WorkflowStatus from './WorkflowStatus'
 
 export default function WatchWorkflowPage (props: {
