@@ -4,7 +4,7 @@ import 'normalize.css'
 import '@fontsource/clear-sans'
 import '@fontsource/cascadia-code'
 import './index.css'
-import App from './App'
+import { App } from './App'
 import reportWebVitals from './reportWebVitals'
 
 ReactDOM.render(
