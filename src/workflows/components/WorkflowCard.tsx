@@ -1,14 +1,9 @@
-import { StyledCard } from '../../lib/components/Card'
-import { StyledIndicator } from '../../lib/components/Indicator'
+import { Card, CardTitle } from '../../lib/components/Card'
+import { Indicator } from '../../lib/components/Indicator'
 import { SuccessIndicatorIcon } from '../../lib/components/IndicatorIcon'
 import { CancelButton, PauseButton, ViewButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
-
-const WorkflowName = styled.h2`
-  padding: 0;
-  margin: 0 0 0.5em 0;
-`
 
 const WorkflowProperties = styled.ul`
   list-style: none;
@@ -31,12 +26,12 @@ const WorkflowActions = styled.ul`
 `
 
 export const WorkflowCard = () => (
-  <StyledCard>
-    <WorkflowName>Workflow 1vwppi3h</WorkflowName>
+  <Card>
+    <CardTitle>Workflow 1vwppi3h</CardTitle>
 
-    <StyledIndicator text="completed">
+    <Indicator text="completed">
       <SuccessIndicatorIcon/>
-    </StyledIndicator>
+    </Indicator>
 
     <WorkflowProperties>
       <WorkflowProperty>Namespace: 12312</WorkflowProperty>
@@ -49,5 +44,5 @@ export const WorkflowCard = () => (
       <li><PauseButton>Pause ||</PauseButton></li>
       <li><CancelButton>Cancel X</CancelButton></li>
     </WorkflowActions>
-  </StyledCard>
+  </Card>
 )

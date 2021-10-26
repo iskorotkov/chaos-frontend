@@ -1,7 +1,9 @@
 import { ColorType, theme } from '../../theme'
 import styled, { css } from 'styled-components'
 
-const Button = (props: { type: ColorType, filled: boolean }) => styled.button`
+const Button = (props: { type: ColorType, filled: boolean }) => styled.button.attrs(() => ({
+  type: 'button'
+}))`
   box-shadow: ${theme.shadows.primary};
   padding: 0.25em;
   width: 6em;
@@ -18,9 +20,16 @@ const Button = (props: { type: ColorType, filled: boolean }) => styled.button`
                     color: ${theme.colors.type[props.type]};
                   `
   }
+  
+  &:focus {
+    outline: solid 0.2em ${theme.colors.type.primary}; // TODO: Move outline width to theme.
+  }
 `
 
 export const CreateButton = Button({ type: 'success', filled: true })
 export const ViewButton = Button({ type: 'primary', filled: true })
 export const CancelButton = Button({ type: 'danger', filled: false })
 export const PauseButton = Button({ type: 'change', filled: false })
+export const BackButton = Button({ type: 'primary', filled: false })
+export const RunButton = Button({ type: 'success', filled: true })
+export const RefreshButton = Button({ type: 'primary', filled: false })

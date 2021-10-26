@@ -1,21 +1,19 @@
 import styled from 'styled-components'
 import { theme } from '../../theme'
 
-export const StyledSearch = styled.input`
-  flex: 1;
+export const Input = styled.input`
+  padding: calc(0.25em + 0.15em) 0.75em; // TODO: Link Input padding to Button padding + border.
   color: ${theme.colors.text.dark};
   box-shadow: ${theme.shadows.primary};
   border-radius: ${theme.borders.radius.primary};
   border: none;
-  // TODO: Use real search image.
-  background-image: url('logo192.png');
-  background-position: 1em 0.3em;
-  background-size: 1.5em;
-  background-repeat: no-repeat;
-  object-fit: contain;
-  padding-left: 3.5em;
+  outline: none;
 
   &:focus {
     outline: solid 0.2em ${theme.colors.type.primary}; // TODO: Move outline width to theme.
   }
+`
+
+export const InputExpanded = styled(Input)`
+  flex: 1;
 `

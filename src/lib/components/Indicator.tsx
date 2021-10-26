@@ -12,7 +12,7 @@ const IndicatorWrapper = styled.div`
   gap: 0.3em;
 `
 
-export const StyledIndicator = (props: { children: React.Component, text: string }) => (
+export const Indicator = (props: { children: React.Component, text: string }) => (
   <IndicatorWrapper>
     {props.children}
     <div>{props.text}</div>

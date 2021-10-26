@@ -5,11 +5,12 @@ export const theme = {
     text: {
       light: '#e5e5e5',
       dark: '#464646',
-      muted: '#b7b7b7'
+      muted: '#9e9e9e'
     },
     background: {
       primary: '#4e6cb7',
-      light: '#f8f8f8'
+      light: '#f8f8f8',
+      muted: '#d0d0d0'
     },
     type: {
       primary: '#4e6cb7',

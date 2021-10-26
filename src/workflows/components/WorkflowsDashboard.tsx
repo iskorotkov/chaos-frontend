@@ -8,6 +8,7 @@ import { WorkflowCard } from './WorkflowCard'
 const ActionsRow = styled.div`
   display: flex;
   margin: 0.5em 0;
+  gap: 0.5em;
 `
 
 const Workflows = styled.ul`
