@@ -4,6 +4,7 @@ import { theme } from '../../theme'
 export const StyledSearch = styled.input`
   flex: 1;
   margin-right: 0.5em;
+  color: ${theme.colors.text.dark};
   box-shadow: ${theme.shadows.primary};
   border-radius: ${theme.borders.radius.primary};
   border: none;

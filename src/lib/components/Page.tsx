@@ -4,6 +4,7 @@ import { theme } from '../../theme'
 export const Page = styled.div`
   flex-flow: column nowrap;
   height: 100vh;
+  color: ${theme.colors.text.dark};
 `
 
 export const Header = styled.header`

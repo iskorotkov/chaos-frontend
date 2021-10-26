@@ -1,7 +1,7 @@
 import { actionDtoToModel, createMapper, targetDtoToModel } from './mapper'
 import { Mapper } from '@dynamic-mapper/mapper'
 import { ActionDto, TargetDto } from './workflows/dto/workflows'
-import { Target } from './workflows/model/workflows'
+import { Target } from './workflows/models/workflows'
 
 let mapper: Mapper
 

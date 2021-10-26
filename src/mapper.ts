@@ -1,6 +1,6 @@
 import { MapperConfiguration, MappingPair } from '@dynamic-mapper/mapper'
 import { ActionDto, StageDto, TargetDto, WorkflowPreviewResponse } from './workflows/dto/workflows'
-import { Action, Stage, Target, Workflow } from './workflows/model/workflows'
+import { Action, Stage, Target, Workflow } from './workflows/models/workflows'
 import { duration } from 'moment'
 
 export const workflowDtoToModel = new MappingPair<WorkflowPreviewResponse, Workflow>()
