@@ -1,4 +1,4 @@
-import { StyledSearch } from '../../lib/components/Search'
+import { Search } from '../../lib/components/Search'
 import { CreateButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
@@ -7,7 +7,6 @@ import { WorkflowCard } from './WorkflowCard'
 
 const ActionsRow = styled.div`
   display: flex;
-  margin: 0.5em 0;
   gap: 0.5em;
 `
 
@@ -25,9 +24,9 @@ export const WorkflowsDashboard = () => (
 
     <Main>
       <ActionsRow>
-        <StyledSearch type="text" placeholder="type to search..."/>
+        <Search placeholder="type to search..."/>
 
-        <CreateButton>New {/* TODO: Add arrow icon. */ '+'}</CreateButton>
+        <CreateButton>New <i className="fas fa-plus"/></CreateButton>
       </ActionsRow>
 
       <Workflows>

@@ -11,9 +11,16 @@ export const FormField = styled.div`
   align-items: stretch;
 `
 
+export const CompactFormField = styled(FormField)`
+  margin: 0;
+`
+
 export const FormLabel = styled.label`
   padding: calc(0.25em + 0.15em) 0; // TODO: Link FormLabel padding to Button padding + border.
-  display: block;
+`
+
+export const CompactFormLabel = styled(FormLabel)`
+  padding: 0.15em; // TODO: Remove constant mystically linked to checkbox height.
 `
 
 export const FormLabelFixed = styled(FormLabel)`

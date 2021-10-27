@@ -30,6 +30,8 @@ const ClickableBox = styled.span`
   background-color: ${theme.colors.type.primary};
   color: ${theme.colors.text.light};
   position: relative;
+  top: 50%;
+  transform: translate(0, -50%);
 
   &:focus {
     outline: solid 0.2em ${theme.colors.type.primary}; // TODO: Move outline width to theme.
@@ -41,22 +43,23 @@ const ClickableBox = styled.span`
   `}
 `
 
-const CheckboxIcon = styled.span`
+const CheckboxIcon = styled.i`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  ${props => props.indeterminate
-          ? '~'
-          : props.checked && 'v'};
 `
 
+// TODO: Add outline to native checkbox.
 export const Checkbox = (props: { checked?: boolean, indeterminate?: boolean }) => (
   <Container>
     <CheckboxElement/>
     <ClickableBox checked={props.checked ?? false} indeterminate={props.indeterminate ?? false}>
-      <CheckboxIcon/>
+      <CheckboxIcon className={
+        props.indeterminate
+          ? 'fas fa-minus'
+          : props.checked && 'fas fa-check'
+      }/>
     </ClickableBox>
   </Container>
 )

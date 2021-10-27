@@ -25,6 +25,7 @@ export const PageName = styled.h1`
 `
 
 export const Main = styled.main`
-  max-width: calc(800em / 16);
+  max-width: 50em;
   margin: 0 auto;
+  padding: 0.5em 0;
 `

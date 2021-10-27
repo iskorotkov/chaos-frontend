@@ -3,13 +3,21 @@ import React from 'react'
 import styled from 'styled-components'
 import { BackButton, RefreshButton, RunButton } from '../../lib/components/Button'
 import { Input } from '../../lib/components/Input'
-import { Card, CardTitle } from '../../lib/components/Card'
-import { FormField, FormLabelFixed, FormLabelMuted, FormVerticalBlock } from '../../lib/components/Form'
+import { Card, CardTitle, CompactCard } from '../../lib/components/Card'
+import {
+  CompactFormField,
+  CompactFormLabel,
+  FormField,
+  FormLabel,
+  FormLabelFixed,
+  FormLabelMuted,
+  FormVerticalBlock
+} from '../../lib/components/Form'
 import { Checkbox } from '../../lib/components/Checkbox'
+import { theme } from '../../theme'
 
 const ActionsRow = styled.div`
   display: flex;
-  margin: 0.5em 0;
   gap: 0.5em;
   justify-content: space-between;
 `
@@ -21,6 +29,47 @@ const StagesNumberField = styled(Input).attrs(() => ({
   max: 100
 }))``
 
+const Section = styled.div`
+  margin: 0 -5em;
+  padding: 0 5em;
+  
+  &:not(:last-of-type) {
+    border-bottom: ${theme.borders.style.separator};
+  }
+`
+
+const SectionContent = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 1em 0 1em 2em;
+  gap: 1em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
+  grid-auto-rows: 1fr;
+  place-items: stretch;
+`
+
+const SectionItem = styled.li`
+  display: flex;
+`
+
+const SectionItemCard = styled(CompactCard)`
+  justify-self: stretch;
+  align-self: stretch;
+  flex: 1;
+`
+
+const SectionCard = (props: { checked: boolean, title: string }) => (
+  <SectionItem>
+    <SectionItemCard>
+      <CompactFormField>
+        <Checkbox checked={props.checked}/>
+        <CompactFormLabel>{props.title}</CompactFormLabel>
+      </CompactFormField>
+    </SectionItemCard>
+  </SectionItem>
+)
+
 export const WorkflowsCreationForm = () => (
   <Page>
     <Header>
@@ -29,8 +78,8 @@ export const WorkflowsCreationForm = () => (
 
     <Main>
       <ActionsRow>
-        <BackButton>{'<-'} Back</BackButton>
-        <RunButton>Run {'|>'}</RunButton>
+        <BackButton><i className="fas fa-arrow-left"/> Back</BackButton>
+        <RunButton>Run <i className="fas fa-caret-right"/></RunButton>
       </ActionsRow>
 
       <form>
@@ -52,7 +101,7 @@ export const WorkflowsCreationForm = () => (
             <FormLabelFixed for="random-seed-input">Random seed</FormLabelFixed>
             <Input id="random-seed-input" type="number" value="0"/>
 
-            <RefreshButton>Random @</RefreshButton>
+            <RefreshButton>Random <i className="fas fa-sync"/></RefreshButton>
           </FormField>
 
           <FormField>
@@ -77,13 +126,99 @@ export const WorkflowsCreationForm = () => (
 
         <Card>
           <CardTitle>Failures</CardTitle>
-          <Checkbox checked={true}/>
-          <Checkbox checked={false}/>
-          <Checkbox indeterminate={true}/>
+
+          <Section>
+            <FormField>
+              <Checkbox indeterminate={true}/>
+              <FormLabel>Network failures</FormLabel>
+            </FormField>
+
+            <SectionContent>
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={false} title={'network packet drop'}/>
+              <SectionCard checked={true} title={'network loss'}/>
+
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={true} title={'network packet drop'}/>
+              <SectionCard checked={false} title={'network loss'}/>
+            </SectionContent>
+          </Section>
+
+          <Section>
+            <FormField>
+              <Checkbox indeterminate={true}/>
+              <FormLabel>Delete failures</FormLabel>
+            </FormField>
+
+            <SectionContent>
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={false} title={'network packet drop'}/>
+              <SectionCard checked={true} title={'network loss'}/>
+            </SectionContent>
+          </Section>
+
+          <Section>
+            <FormField>
+              <Checkbox indeterminate={true}/>
+              <FormLabel>Filesystem failures</FormLabel>
+            </FormField>
+
+            <SectionContent>
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={false} title={'network packet drop'}/>
+              <SectionCard checked={true} title={'network loss'}/>
+            </SectionContent>
+          </Section>
         </Card>
 
         <Card>
           <CardTitle>Targets</CardTitle>
+
+          <Section>
+            <FormField>
+              <Checkbox indeterminate={true}/>
+              <FormLabel>Deployments</FormLabel>
+            </FormField>
+
+            <SectionContent>
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={false} title={'network packet drop'}/>
+              <SectionCard checked={true} title={'network loss'}/>
+            </SectionContent>
+          </Section>
+
+          <Section>
+            <FormField>
+              <Checkbox indeterminate={true}/>
+              <FormLabel>Stateful sets</FormLabel>
+            </FormField>
+
+            <SectionContent>
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={false} title={'network packet drop'}/>
+              <SectionCard checked={true} title={'network loss'}/>
+            </SectionContent>
+          </Section>
+
+          <Section>
+            <FormField>
+              <Checkbox indeterminate={true}/>
+              <FormLabel>Daemon sets</FormLabel>
+            </FormField>
+
+            <SectionContent>
+              <SectionCard checked={true} title={'network latency'}/>
+              <SectionCard checked={false} title={'network jitter'}/>
+              <SectionCard checked={false} title={'network packet drop'}/>
+              <SectionCard checked={true} title={'network loss'}/>
+            </SectionContent>
+          </Section>
         </Card>
       </form>
     </Main>

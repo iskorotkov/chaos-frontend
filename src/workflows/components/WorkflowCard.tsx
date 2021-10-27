@@ -40,9 +40,9 @@ export const WorkflowCard = () => (
     </WorkflowProperties>
 
     <WorkflowActions>
-      <li><ViewButton>View {'->'}</ViewButton></li>
-      <li><PauseButton>Pause ||</PauseButton></li>
-      <li><CancelButton>Cancel X</CancelButton></li>
+      <li><ViewButton>View <i className="fas fa-arrow-right"/></ViewButton></li>
+      <li><PauseButton>Pause <i className="fas fa-pause"/></PauseButton></li>
+      <li><CancelButton>Cancel <i className="fas fa-times"/></CancelButton></li>
     </WorkflowActions>
   </Card>
 )

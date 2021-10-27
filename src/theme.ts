@@ -26,6 +26,9 @@ export const theme = {
     radius: {
       primary: '0.25em',
       big: '0.4em'
+    },
+    style: {
+      separator: 'solid 0.1em #d8d8d8'
     }
   }
 }

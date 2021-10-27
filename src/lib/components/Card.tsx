@@ -7,7 +7,15 @@ export const Card = styled.article`
   color: ${theme.colors.text.dark};
   border-radius: ${theme.borders.radius.primary};
   position: relative;
-  margin-top: 0.5em;
+  margin: 0.5em 0;
+  overflow: hidden;
+`
+
+export const CompactCard = styled(Card)`
+  padding: 0.5em 1em;
+  margin: 0;
+  display: flex;
+  align-items: center;
 `
 
 export const CardTitle = styled.h2`
