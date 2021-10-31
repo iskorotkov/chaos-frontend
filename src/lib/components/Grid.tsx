@@ -1,7 +1,5 @@
 import styled from 'styled-components'
 import { CompactCard } from './Card'
-import { CompactFormField, CompactFormLabel } from './Form'
-import { Checkbox } from './Checkbox'
 import React from 'react'
 
 export const Grid = styled.ul`
@@ -15,23 +13,20 @@ export const Grid = styled.ul`
   place-items: stretch;
 `
 
-const GridItemWrapper = styled.li`
+const GridItem = styled.li`
   display: flex;
 `
 
-const CheckboxCard = styled(CompactCard)`
+const CardWrapper = styled(CompactCard)`
   justify-self: stretch;
   align-self: stretch;
   flex: 1;
 `
 
-export const GridCard = (props: { checked: boolean, title: string }) => (
-  <GridItemWrapper>
-    <CheckboxCard>
-      <CompactFormField>
-        <Checkbox checked={props.checked}/>
-        <CompactFormLabel>{props.title}</CompactFormLabel>
-      </CompactFormField>
-    </CheckboxCard>
-  </GridItemWrapper>
+export const GridCard = (props: { children: React.Component }) => (
+  <GridItem>
+    <CardWrapper>
+      {props.children}
+    </CardWrapper>
+  </GridItem>
 )

@@ -4,7 +4,15 @@ import styled from 'styled-components'
 import { BackButton, RefreshButton, RunButton } from '../../lib/components/Button'
 import { Input } from '../../lib/components/Input'
 import { Card, CardTitle } from '../../lib/components/Card'
-import { FormField, FormLabel, FormLabelFixed, FormLabelMuted, FormVerticalBlock } from '../../lib/components/Form'
+import {
+  CompactFormField,
+  CompactFormLabel,
+  FormField,
+  FormLabel,
+  FormLabelFixed,
+  FormLabelMuted,
+  FormVerticalBlock
+} from '../../lib/components/Form'
 import { Checkbox } from '../../lib/components/Checkbox'
 import { Section } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
@@ -21,6 +29,15 @@ const StagesNumberField = styled(Input).attrs(() => ({
   min: 0,
   max: 100
 }))``
+
+const CheckboxCard = (props: { checked: boolean, title: string }) => (
+  <GridCard>
+    <CompactFormField>
+      <Checkbox checked={props.checked}/>
+      <CompactFormLabel>{props.title}</CompactFormLabel>
+    </CompactFormField>
+  </GridCard>
+)
 
 export const WorkflowsCreationForm = () => (
   <Page>
@@ -86,15 +103,15 @@ export const WorkflowsCreationForm = () => (
             </FormField>
 
             <Grid>
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={false} title={'network packet drop'}/>
-              <GridCard checked={true} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={false} title={'network packet drop'}/>
+              <CheckboxCard checked={true} title={'network loss'}/>
 
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={true} title={'network packet drop'}/>
-              <GridCard checked={false} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={true} title={'network packet drop'}/>
+              <CheckboxCard checked={false} title={'network loss'}/>
             </Grid>
           </Section>
 
@@ -105,10 +122,10 @@ export const WorkflowsCreationForm = () => (
             </FormField>
 
             <Grid>
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={false} title={'network packet drop'}/>
-              <GridCard checked={true} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={false} title={'network packet drop'}/>
+              <CheckboxCard checked={true} title={'network loss'}/>
             </Grid>
           </Section>
 
@@ -119,10 +136,10 @@ export const WorkflowsCreationForm = () => (
             </FormField>
 
             <Grid>
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={false} title={'network packet drop'}/>
-              <GridCard checked={true} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={false} title={'network packet drop'}/>
+              <CheckboxCard checked={true} title={'network loss'}/>
             </Grid>
           </Section>
         </Card>
@@ -137,10 +154,10 @@ export const WorkflowsCreationForm = () => (
             </FormField>
 
             <Grid>
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={false} title={'network packet drop'}/>
-              <GridCard checked={true} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={false} title={'network packet drop'}/>
+              <CheckboxCard checked={true} title={'network loss'}/>
             </Grid>
           </Section>
 
@@ -151,10 +168,10 @@ export const WorkflowsCreationForm = () => (
             </FormField>
 
             <Grid>
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={false} title={'network packet drop'}/>
-              <GridCard checked={true} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={false} title={'network packet drop'}/>
+              <CheckboxCard checked={true} title={'network loss'}/>
             </Grid>
           </Section>
 
@@ -165,10 +182,10 @@ export const WorkflowsCreationForm = () => (
             </FormField>
 
             <Grid>
-              <GridCard checked={true} title={'network latency'}/>
-              <GridCard checked={false} title={'network jitter'}/>
-              <GridCard checked={false} title={'network packet drop'}/>
-              <GridCard checked={true} title={'network loss'}/>
+              <CheckboxCard checked={true} title={'network latency'}/>
+              <CheckboxCard checked={false} title={'network jitter'}/>
+              <CheckboxCard checked={false} title={'network packet drop'}/>
+              <CheckboxCard checked={true} title={'network loss'}/>
             </Grid>
           </Section>
         </Card>

@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router'
 import { BrowserRouter } from 'react-router-dom'
 import { WorkflowsDashboard } from './workflows/components/WorkflowsDashboard'
 import { WorkflowsCreationForm } from './workflows/components/WorkflowsCreationForm'
+import { ViewWorkflow } from './workflows/components/ViewWorkflow'
 
 export function App () {
   return (
@@ -15,10 +16,10 @@ export function App () {
           <WorkflowsCreationForm/>
         </Route>
         <Route exact path="/preview">
-          <p>Preview workflow</p>
+          <ViewWorkflow preview={true}/>
         </Route>
         <Route exact path="/view/:namespace/:name">
-          <p>View workflow</p>
+          <ViewWorkflow preview={false}/>
         </Route>
       </Switch>
     </BrowserRouter>
