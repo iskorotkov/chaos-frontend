@@ -3,18 +3,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { BackButton, RefreshButton, RunButton } from '../../lib/components/Button'
 import { Input } from '../../lib/components/Input'
-import { Card, CardTitle, CompactCard } from '../../lib/components/Card'
-import {
-  CompactFormField,
-  CompactFormLabel,
-  FormField,
-  FormLabel,
-  FormLabelFixed,
-  FormLabelMuted,
-  FormVerticalBlock
-} from '../../lib/components/Form'
+import { Card, CardTitle } from '../../lib/components/Card'
+import { FormField, FormLabel, FormLabelFixed, FormLabelMuted, FormVerticalBlock } from '../../lib/components/Form'
 import { Checkbox } from '../../lib/components/Checkbox'
-import { theme } from '../../theme'
+import { Section } from '../../lib/components/Section'
+import { Grid, GridCard } from '../../lib/components/Grid'
 
 const ActionsRow = styled.div`
   display: flex;
@@ -28,47 +21,6 @@ const StagesNumberField = styled(Input).attrs(() => ({
   min: 0,
   max: 100
 }))``
-
-const Section = styled.div`
-  margin: 0 -5em;
-  padding: 0 5em;
-  
-  &:not(:last-of-type) {
-    border-bottom: ${theme.borders.style.separator};
-  }
-`
-
-const SectionContent = styled.ul`
-  list-style: none;
-  margin: 0;
-  padding: 1em 0 1em 2em;
-  gap: 1em;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
-  grid-auto-rows: 1fr;
-  place-items: stretch;
-`
-
-const SectionItem = styled.li`
-  display: flex;
-`
-
-const SectionItemCard = styled(CompactCard)`
-  justify-self: stretch;
-  align-self: stretch;
-  flex: 1;
-`
-
-const SectionCard = (props: { checked: boolean, title: string }) => (
-  <SectionItem>
-    <SectionItemCard>
-      <CompactFormField>
-        <Checkbox checked={props.checked}/>
-        <CompactFormLabel>{props.title}</CompactFormLabel>
-      </CompactFormField>
-    </SectionItemCard>
-  </SectionItem>
-)
 
 export const WorkflowsCreationForm = () => (
   <Page>
@@ -133,17 +85,17 @@ export const WorkflowsCreationForm = () => (
               <FormLabel>Network failures</FormLabel>
             </FormField>
 
-            <SectionContent>
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={false} title={'network packet drop'}/>
-              <SectionCard checked={true} title={'network loss'}/>
+            <Grid>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={false} title={'network packet drop'}/>
+              <GridCard checked={true} title={'network loss'}/>
 
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={true} title={'network packet drop'}/>
-              <SectionCard checked={false} title={'network loss'}/>
-            </SectionContent>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={true} title={'network packet drop'}/>
+              <GridCard checked={false} title={'network loss'}/>
+            </Grid>
           </Section>
 
           <Section>
@@ -152,12 +104,12 @@ export const WorkflowsCreationForm = () => (
               <FormLabel>Delete failures</FormLabel>
             </FormField>
 
-            <SectionContent>
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={false} title={'network packet drop'}/>
-              <SectionCard checked={true} title={'network loss'}/>
-            </SectionContent>
+            <Grid>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={false} title={'network packet drop'}/>
+              <GridCard checked={true} title={'network loss'}/>
+            </Grid>
           </Section>
 
           <Section>
@@ -166,12 +118,12 @@ export const WorkflowsCreationForm = () => (
               <FormLabel>Filesystem failures</FormLabel>
             </FormField>
 
-            <SectionContent>
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={false} title={'network packet drop'}/>
-              <SectionCard checked={true} title={'network loss'}/>
-            </SectionContent>
+            <Grid>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={false} title={'network packet drop'}/>
+              <GridCard checked={true} title={'network loss'}/>
+            </Grid>
           </Section>
         </Card>
 
@@ -184,12 +136,12 @@ export const WorkflowsCreationForm = () => (
               <FormLabel>Deployments</FormLabel>
             </FormField>
 
-            <SectionContent>
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={false} title={'network packet drop'}/>
-              <SectionCard checked={true} title={'network loss'}/>
-            </SectionContent>
+            <Grid>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={false} title={'network packet drop'}/>
+              <GridCard checked={true} title={'network loss'}/>
+            </Grid>
           </Section>
 
           <Section>
@@ -198,12 +150,12 @@ export const WorkflowsCreationForm = () => (
               <FormLabel>Stateful sets</FormLabel>
             </FormField>
 
-            <SectionContent>
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={false} title={'network packet drop'}/>
-              <SectionCard checked={true} title={'network loss'}/>
-            </SectionContent>
+            <Grid>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={false} title={'network packet drop'}/>
+              <GridCard checked={true} title={'network loss'}/>
+            </Grid>
           </Section>
 
           <Section>
@@ -212,12 +164,12 @@ export const WorkflowsCreationForm = () => (
               <FormLabel>Daemon sets</FormLabel>
             </FormField>
 
-            <SectionContent>
-              <SectionCard checked={true} title={'network latency'}/>
-              <SectionCard checked={false} title={'network jitter'}/>
-              <SectionCard checked={false} title={'network packet drop'}/>
-              <SectionCard checked={true} title={'network loss'}/>
-            </SectionContent>
+            <Grid>
+              <GridCard checked={true} title={'network latency'}/>
+              <GridCard checked={false} title={'network jitter'}/>
+              <GridCard checked={false} title={'network packet drop'}/>
+              <GridCard checked={true} title={'network loss'}/>
+            </Grid>
           </Section>
         </Card>
       </form>
