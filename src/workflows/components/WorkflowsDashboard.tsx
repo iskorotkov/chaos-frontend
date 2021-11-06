@@ -23,7 +23,6 @@ export const WorkflowsDashboard = () => {
   const [workflows, setWorkflows] = useState<WorkflowStatus[]>([])
   const [query, setQuery] = useState('')
 
-  // TODO: Cache requested workflows.
   useEffect(() => {
     axios(`${backendAddress()}/api/v1/workflows`)
       .then(res => res.data as WorkflowStatus[])
