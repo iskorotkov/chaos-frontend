@@ -1,6 +1,7 @@
 {
   "name": "chaos-frontend",
   "version": "0.1.0",
+  "type": "module",
   "author": {
     "name": "Ivan Korotkov",
     "email": "korotkov.ivan.s@gmail.com",
@@ -34,6 +35,7 @@
     "yaml": "^1.10.2"
   },
   "devDependencies": {
+    "@swc/core": "^1.2.106",
     "@testing-library/dom": "^8.10.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
@@ -61,6 +63,7 @@
     "jest": "26.6.0",
     "stylelint": "^14.0.0",
     "stylelint-config-standard": "^23.0.0",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
   },
   "scripts": {
@@ -68,7 +71,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "preinstall": "npx only-allow pnpm"
+    "preinstall": "npx only-allow pnpm",
+    "start-mock": "NODE_OPTIONS=\"--loader ts-node/esm\" ts-node src/mock/index.ts"
   },
   "browserslist": {
     "production": [
