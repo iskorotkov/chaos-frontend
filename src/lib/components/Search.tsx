@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { theme } from '../../theme'
-import React, { FormEventHandler } from 'react'
+import React, { FormEvent, FormEventHandler } from 'react'
 
 const Container = styled.div`
   position: relative;
@@ -31,7 +31,7 @@ const SearchIcon = styled.i`
 `
 
 export const Search = (props: { value: string, onInput: FormEventHandler<HTMLInputElement>, placeholder?: string }) => {
-  const onInput = (e: InputEvent) => props.onInput(e)
+  const onInput = (e: FormEvent<HTMLInputElement>) => props.onInput(e)
 
   return (
     <Container>

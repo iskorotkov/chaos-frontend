@@ -40,7 +40,7 @@ const ElapsedSpan = styled.span`
 `
 
 const formatTime = (datetime: Date) => {
-  const elapsed = moment.duration(new Date() - new Date(datetime))
+  const elapsed = moment.duration(new Date().valueOf() - new Date(datetime).valueOf())
 
   return (
     <span>
@@ -49,7 +49,7 @@ const formatTime = (datetime: Date) => {
   )
 }
 
-const indicatorForStatus = status => {
+const indicatorForStatus = (status: string) => {
   switch (status) {
     case 'running':
       return <ChangeIndicatorIcon/>

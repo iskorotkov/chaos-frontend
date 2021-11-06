@@ -1,6 +1,6 @@
 import { Search } from '../../lib/components/Search'
 import { CreateButton } from '../../lib/components/Button'
-import React, { useEffect, useState } from 'react'
+import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import axios from 'axios'
@@ -19,6 +19,14 @@ const Workflows = styled.ul`
   padding: 0;
 `
 
+const matchWorkflow = (workflow: WorkflowStatus, re: RegExp) => {
+  return re.test(workflow.namespace) ||
+    re.test(workflow.name) ||
+    re.test(workflow.status) ||
+    re.test(workflow.startedAt.toLocaleString()) ||
+    (workflow.finishedAt && re.test(workflow.finishedAt.toLocaleString()))
+}
+
 export const WorkflowsDashboard = () => {
   const [workflows, setWorkflows] = useState<WorkflowStatus[]>([])
   const [query, setQuery] = useState('')
@@ -28,27 +36,19 @@ export const WorkflowsDashboard = () => {
       .then(res => res.data as WorkflowStatus[])
       .then(workflows => workflows.map(w => {
         return {
+          ...w,
           createdAt: new Date(w.startedAt),
-          finishedAt: new Date(w.finishedAt),
-          ...w
+          finishedAt: new Date(w.finishedAt)
         }
       }))
       .then(workflows => setWorkflows(workflows))
       .catch(err => console.error(err))
   }, [])
 
-  const onSearchInput = (e: InputEvent) => setQuery(e.target.value)
-
-  const re = new RegExp(query, 'ig')
-  const matchWorkflow = w => {
-    return re.test(w.namespace) ||
-      re.test(w.name) ||
-      re.test(w.startedAt.toLocaleString()) ||
-      (w.finishedAt && re.test(w.finishedAt.toLocaleString()))
-  }
+  const onSearchInput = (e: FormEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)
 
   const workflowsCards = workflows
-    .filter(matchWorkflow)
+    .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
     .map(w =>
       <li key={`${w.namespace}-${w.name}`}><WorkflowCard workflow={w}/></li>)
 

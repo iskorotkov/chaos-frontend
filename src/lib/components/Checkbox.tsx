@@ -22,7 +22,7 @@ const CheckboxElement = styled.input.attrs(() => ({
   transform: translate(-50%, -50%);
 `
 
-const ClickableBox = styled.span`
+const ClickableBox = styled.span<{ indeterminate: boolean, checked: boolean }>`
   display: block;
   width: 1.5em;
   height: 1.5em;
@@ -43,7 +43,7 @@ const ClickableBox = styled.span`
   `}
 `
 
-const CheckboxIcon = styled.i`
+const CheckboxIcon = styled.i<{ className: string }>`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -58,7 +58,9 @@ export const Checkbox = (props: { checked?: boolean, indeterminate?: boolean }) 
       <CheckboxIcon className={
         props.indeterminate
           ? 'fas fa-minus'
-          : props.checked && 'fas fa-check'
+          : props.checked
+            ? 'fas fa-check'
+            : ''
       }/>
     </ClickableBox>
   </Container>
