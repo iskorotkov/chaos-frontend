@@ -1,8 +1,8 @@
 import * as http from 'http'
-import { WorkflowStatus } from '../workflows/dtos/workflows'
-import { Failure } from '../workflows/dtos/failures'
-import { Target } from '../workflows/dtos/targets'
-import { Namespace } from '../workflows/dtos/namespaces'
+import { WorkflowStatus } from '../workflows/types/workflows'
+import { Failure } from '../workflows/types/failures'
+import { Target } from '../workflows/types/targets'
+import { Namespace } from '../workflows/types/namespaces'
 
 const port = 8080
 
