@@ -1,9 +1,17 @@
 import { Card, CardTitle } from '../../lib/components/Card'
 import { Indicator } from '../../lib/components/Indicator'
-import { SuccessIndicatorIcon } from '../../lib/components/IndicatorIcon'
+import {
+  ChangeIndicatorIcon,
+  DangerIndicatorIcon,
+  PrimaryIndicatorIcon,
+  SuccessIndicatorIcon
+} from '../../lib/components/IndicatorIcon'
 import { CancelButton, PauseButton, ViewButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
+import { WorkflowStatus } from '../types/workflows'
+import { theme } from '../../theme'
+import moment from 'moment'
 
 const WorkflowProperties = styled.ul`
   list-style: none;
@@ -25,24 +33,57 @@ const WorkflowActions = styled.ul`
   align-content: end;
 `
 
-export const WorkflowCard = () => (
-  <Card>
-    <CardTitle>Workflow 1vwppi3h</CardTitle>
+const DatetimeSpan = styled.span``
 
-    <Indicator text="completed">
-      <SuccessIndicatorIcon/>
+const ElapsedSpan = styled.span`
+  color: ${theme.colors.text.muted};
+`
+
+const formatTime = (datetime: Date) => {
+  const elapsed = moment.duration(new Date() - new Date(datetime))
+
+  return (
+    <span>
+      <DatetimeSpan>{datetime.toLocaleString()}</DatetimeSpan> <ElapsedSpan>({elapsed.humanize()} ago)</ElapsedSpan>
+    </span>
+  )
+}
+
+const indicatorForStatus = status => {
+  switch (status) {
+    case 'running':
+      return <ChangeIndicatorIcon/>
+    case 'succeeded':
+      return <SuccessIndicatorIcon/>
+    case 'failed':
+      return <DangerIndicatorIcon/>
+    default:
+      console.error(`unknown status: ${status}`)
+      return <PrimaryIndicatorIcon/>
+  }
+}
+
+export const WorkflowCard = (props: { workflow: WorkflowStatus }) => (
+  <Card>
+    <CardTitle>Workflow {props.workflow.name}</CardTitle>
+
+    <Indicator text={props.workflow.status}>
+      {indicatorForStatus(props.workflow.status)}
     </Indicator>
 
     <WorkflowProperties>
-      <WorkflowProperty>Namespace: 12312</WorkflowProperty>
-      <WorkflowProperty>Started at: 12gregerg</WorkflowProperty>
-      <WorkflowProperty>Finished at: 342vre</WorkflowProperty>
+      <WorkflowProperty>Namespace: {props.workflow.namespace}</WorkflowProperty>
+      <WorkflowProperty>Started at: {formatTime(props.workflow.startedAt)}</WorkflowProperty>
+      {props.workflow.finishedAt &&
+          <WorkflowProperty>Finished at: {formatTime(props.workflow.finishedAt)}</WorkflowProperty>}
     </WorkflowProperties>
 
     <WorkflowActions>
       <li><ViewButton>View <i className="fas fa-arrow-right"/></ViewButton></li>
-      <li><PauseButton>Pause <i className="fas fa-pause"/></PauseButton></li>
-      <li><CancelButton>Cancel <i className="fas fa-times"/></CancelButton></li>
+      {props.workflow.status === 'running' && <>
+          <li><PauseButton>Pause <i className="fas fa-pause"/></PauseButton></li>
+          <li><CancelButton>Cancel <i className="fas fa-times"/></CancelButton></li>
+      </>}
     </WorkflowActions>
   </Card>
 )

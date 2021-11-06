@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { theme } from '../../theme'
-import React from 'react'
+import React, { FormEventHandler } from 'react'
 
 const Container = styled.div`
   position: relative;
@@ -30,9 +30,13 @@ const SearchIcon = styled.i`
   transform: translate(-50%, -50%);
 `
 
-export const Search = (props: { placeholder?: string }) => (
-  <Container>
-    <SearchIcon className="fas fa-search"/>
-    <SearchInput type="text" placeholder={props.placeholder}/>
-  </Container>
-)
+export const Search = (props: { value: string, onInput: FormEventHandler<HTMLInputElement>, placeholder?: string }) => {
+  const onInput = (e: InputEvent) => props.onInput(e)
+
+  return (
+    <Container>
+      <SearchIcon className="fas fa-search"/>
+      <SearchInput type="text" value={props.value} placeholder={props.placeholder} onInput={onInput}/>
+    </Container>
+  )
+}
