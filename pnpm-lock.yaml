@@ -34,6 +34,7 @@ specifiers:
   moment: ^2.29.1
   moment-duration-format: ^2.3.2
   normalize.css: ^8.0.1
+  plur: ^5.0.0
   react: ^17.0.2
   react-copy-to-clipboard: ^5.0.4
   react-dom: ^17.0.2
@@ -59,6 +60,7 @@ dependencies:
   moment: 2.29.1
   moment-duration-format: 2.3.2
   normalize.css: 8.0.1
+  plur: 5.0.0
   react: 17.0.2
   react-copy-to-clipboard: 5.0.4_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
@@ -7631,6 +7633,11 @@ packages:
     engines: {node: '>= 0.10'}
     dev: false
 
+  /irregular-plurals/3.3.0:
+    resolution: {integrity: sha512-MVBLKUTangM3EfRPFROhmWQQKRDsrgI83J8GS3jXy+OwYqiR2/aoWndYQ5416jLE3uaGgLH7ncme3X9y09gZ3g==}
+    engines: {node: '>=8'}
+    dev: false
+
   /is-absolute-url/2.1.0:
     resolution: {integrity: sha1-UFMN+4T8yap9vnhS6Do3uTufKqY=}
     engines: {node: '>=0.10.0'}
@@ -9843,6 +9850,13 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       find-up: 3.0.0
+    dev: false
+
+  /plur/5.0.0:
+    resolution: {integrity: sha512-ss4dt57ih2p5jIMA+oOsghldeHtpm7pvGgIB92dqLOCPy1CoHeC0FXBdevMUzXI8CsnCfl+ctIdATK0wNdz2Jw==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      irregular-plurals: 3.3.0
     dev: false
 
   /pnp-webpack-plugin/1.6.4_typescript@4.4.4:

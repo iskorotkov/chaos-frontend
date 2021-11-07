@@ -15,7 +15,7 @@ export const CompactFormField = styled(FormField)`
   margin: 0;
 `
 
-export const FormLabel = styled.label<{ for?: string }>`
+export const FormLabel = styled.label`
   padding: calc(0.25em + 0.15em) 0; // TODO: Link FormLabel padding to Button padding + border.
 `
 

@@ -7,28 +7,16 @@ const Container = styled.div`
   display: inline-block;
 `
 
-const CheckboxElement = styled.input.attrs(() => ({
-  type: 'checkbox',
-  value: '',
-  checked: true,
-  indeterminate: false
-}))`
-  visibility: hidden;
-  position: absolute;
-
-  // Center checkbox.
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`
-
-const ClickableBox = styled.span<{ indeterminate: boolean, checked: boolean }>`
+const ClickableBox = styled.button<{ indeterminate: boolean, checked: boolean }>`
   display: block;
   width: 1.5em;
   height: 1.5em;
   border-radius: 0.25em;
   background-color: ${theme.colors.type.primary};
   color: ${theme.colors.text.light};
+  border: none;
+  padding: 0;
+  margin: 0;
   position: relative;
   top: 50%;
   transform: translate(0, -50%);
@@ -43,7 +31,7 @@ const ClickableBox = styled.span<{ indeterminate: boolean, checked: boolean }>`
   `}
 `
 
-const CheckboxIcon = styled.i<{ className: string }>`
+const CheckboxIcon = styled.i`
   position: absolute;
   top: 50%;
   left: 50%;
@@ -51,17 +39,22 @@ const CheckboxIcon = styled.i<{ className: string }>`
 `
 
 // TODO: Add outline to native checkbox.
-export const Checkbox = (props: { checked?: boolean, indeterminate?: boolean }) => (
-  <Container>
-    <CheckboxElement/>
-    <ClickableBox checked={props.checked ?? false} indeterminate={props.indeterminate ?? false}>
-      <CheckboxIcon className={
-        props.indeterminate
+export const Checkbox = (props: { checked?: boolean, indeterminate?: boolean, readOnly?: boolean, onToggled?: (value: boolean) => void }) => {
+  const onClick = () => props.onToggled?.call(null, !props.checked)
+
+  return (
+    <Container>
+      <ClickableBox type="button"
+        disabled={props.readOnly ?? false}
+        checked={props.checked ?? false}
+        indeterminate={props.indeterminate ?? false}
+        onClick={onClick}>
+        <CheckboxIcon className={props.indeterminate
           ? 'fas fa-minus'
           : props.checked
             ? 'fas fa-check'
-            : ''
-      }/>
-    </ClickableBox>
-  </Container>
-)
+            : ''} />
+      </ClickableBox>
+    </Container>
+  )
+}

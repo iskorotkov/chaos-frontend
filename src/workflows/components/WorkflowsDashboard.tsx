@@ -41,16 +41,17 @@ export const WorkflowsDashboard = () => {
           finishedAt: new Date(w.finishedAt)
         }
       }))
-      .then(workflows => setWorkflows(workflows))
-      .catch(err => console.error(err))
+      .then(setWorkflows)
+      .catch(console.error)
   }, [])
 
   const onSearchInput = (e: FormEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)
 
   const workflowsCards = workflows
     .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
-    .map(w =>
-      <li key={`${w.namespace}-${w.name}`}><WorkflowCard workflow={w}/></li>)
+    .map(w => (
+      <li key={`${w.namespace}-${w.name}`}><WorkflowCard workflow={w} /></li>
+    ))
 
   return (
     <Page>
@@ -60,9 +61,9 @@ export const WorkflowsDashboard = () => {
 
       <Main>
         <ActionsRow>
-          <Search value={query} placeholder="type to search..." onInput={onSearchInput}/>
+          <Search value={query} placeholder="type to search..." onInput={onSearchInput} />
 
-          <CreateButton>New <i className="fas fa-plus"/></CreateButton>
+          <CreateButton>New <i className="fas fa-plus" /></CreateButton>
         </ActionsRow>
 
         <Workflows>

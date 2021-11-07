@@ -1,5 +1,5 @@
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
-import React from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { BackButton, RefreshButton, RunButton } from '../../lib/components/Button'
 import { Input } from '../../lib/components/Input'
@@ -16,6 +16,17 @@ import {
 import { Checkbox } from '../../lib/components/Checkbox'
 import { Section } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
+import { Target } from '../types/targets'
+import { Namespace } from '../types/namespaces'
+import { Failure } from '../types/failures'
+import { backendAddress } from '../../config'
+import axios from 'axios'
+import plur from 'plur'
+
+const stagesRange = {
+  min: 0,
+  max: 100
+}
 
 const ActionsRow = styled.div`
   display: flex;
@@ -25,176 +36,252 @@ const ActionsRow = styled.div`
 
 const StagesNumberField = styled(Input).attrs(() => ({
   type: 'number',
-  value: 1,
-  min: 0,
-  max: 100
+  min: stagesRange.min,
+  max: stagesRange.max
 }))``
 
-const CheckboxCard = (props: { checked: boolean, title: string }) => (
+const CheckboxCard = (props: { checked: boolean, title: string, onToggled: (value: boolean) => void }) => (
   <GridCard>
     <CompactFormField>
-      <Checkbox checked={props.checked}/>
+      <Checkbox checked={props.checked} onToggled={props.onToggled} />
       <CompactFormLabel>{props.title}</CompactFormLabel>
     </CompactFormField>
   </GridCard>
 )
 
-export const WorkflowsCreationForm = () => (
-  <Page>
-    <Header>
-      <PageName>Chaos Framework / Create a new workflow</PageName>
-    </Header>
+const toFirstUpperCase = (s: string) => {
+  if (s.length !== 0) {
+    s = s[0].toUpperCase() + s.slice(1)
+  }
 
-    <Main>
-      <ActionsRow>
-        <BackButton><i className="fas fa-arrow-left"/> Back</BackButton>
-        <RunButton>Run <i className="fas fa-caret-right"/></RunButton>
-      </ActionsRow>
+  return s
+}
 
-      <form>
-        <Card>
-          <CardTitle>Settings</CardTitle>
+const clamp = (x: number, min: number, max: number) => x < min
+  ? min
+  : x > max
+    ? max
+    : x
 
-          <FormField>
-            <FormLabelFixed for="namespace-input">Namespace</FormLabelFixed>
-            <Input id="namespace-input" type="text" required list="namespaces"
-                   placeholder="select namespace..."/>
-          </FormField>
+export const WorkflowsCreationForm = () => {
+  const [targets, setTargets] = useState<Target[]>([])
+  const [failures, setFailures] = useState<Failure[]>([])
+  const [namespaces, setNamespaces] = useState<Namespace[]>([])
 
-          <FormField>
-            <FormLabelFixed for="name-input">Name</FormLabelFixed>
-            <Input id="name-input" type="text" required placeholder="enter name..."/>
-          </FormField>
+  const [seed, setSeed] = useState(0)
+  const [stages, setStages] = useState({ single: 1, similar: 1, mixed: 1 })
+  const [namespace, setNamespace] = useState('')
+  const [enabledTargets, setEnabledTargets] = useState(new Set<Target>())
+  const [enabledFailures, setEnabledFailures] = useState(new Set<Failure>())
 
-          <FormField>
-            <FormLabelFixed for="random-seed-input">Random seed</FormLabelFixed>
-            <Input id="random-seed-input" type="number" value="0"/>
+  useEffect(() => {
+    axios(`${backendAddress()}/api/v1/targets`)
+      .then(res => res.data as Target[])
+      .then(t => {
+        setTargets(t)
+        setEnabledTargets(new Set(t))
+      })
+      .catch(console.error)
+  }, [])
 
-            <RefreshButton>Random <i className="fas fa-sync"/></RefreshButton>
-          </FormField>
+  useEffect(() => {
+    axios(`${backendAddress()}/api/v1/failures`)
+      .then(res => res.data as Failure[])
+      .then(f => {
+        setFailures(f)
+        setEnabledFailures(new Set(f))
+      })
+      .catch(console.error)
+  }, [])
 
-          <FormField>
-            <FormLabelFixed>Number of stages</FormLabelFixed>
+  useEffect(() => {
+    axios(`${backendAddress()}/api/v1/namespaces`)
+      .then(res => res.data as Namespace[])
+      .then(setNamespaces)
+      .catch(console.error)
+  }, [])
 
-            <FormVerticalBlock>
-              <StagesNumberField id="stages-with-single-failure-input"/>
-              <FormLabelMuted for="stages-with-single-failure-input">stages with single failure</FormLabelMuted>
-            </FormVerticalBlock>
+  const groupedTargets = new Map<string, Target[]>()
+  for (const target of targets) {
+    const group = groupedTargets.get(target.type)
+    if (group) {
+      group.push(target)
+    } else {
+      groupedTargets.set(target.type, [target])
+    }
+  }
 
-            <FormVerticalBlock>
-              <StagesNumberField id="stages-with-similar-failures-input"/>
-              <FormLabelMuted for="stages-with-similar-failures-input">stages with similar failures</FormLabelMuted>
-            </FormVerticalBlock>
+  const groupedFailures = new Map<string, Failure[]>()
+  for (const failure of failures) {
+    const group = groupedFailures.get(failure.type)
+    if (group) {
+      group.push(failure)
+    } else {
+      groupedFailures.set(failure.type, [failure])
+    }
+  }
 
-            <FormVerticalBlock>
-              <StagesNumberField id="stages-with-mixed-failures-input"/>
-              <FormLabelMuted for="stages-with-mixed-failures-input">stages with mixed failures</FormLabelMuted>
-            </FormVerticalBlock>
-          </FormField>
-        </Card>
+  const randomizeSeed = () => setSeed(Math.floor(Math.random() * 1_000_000))
 
-        <Card>
-          <CardTitle>Failures</CardTitle>
+  const onSeedChanged = (e: ChangeEvent) => {
+    const value = (e.target as HTMLInputElement).value
+    if (value.match(/[0-9]+/)) {
+      setSeed(parseInt(value))
+    }
+  }
 
-          <Section>
+  const onStageCountChanged = (e: ChangeEvent, key: string) => {
+    const value = (e.target as HTMLInputElement).value
+    if (value.match(/[0-9]+/)) {
+      setStages({
+        ...stages,
+        [key]: clamp(parseInt(value), stagesRange.min, stagesRange.max)
+      })
+    }
+  }
+
+  const onFailureToggled = (failure: Failure, value: boolean) => {
+    setEnabledFailures(orig => {
+      const copy = new Set(orig.keys())
+      if (value) {
+        copy.add(failure)
+      } else {
+        copy.delete(failure)
+      }
+      return copy
+    })
+  }
+
+  const onTargetToggled = (target: Target, value: boolean) => {
+    setEnabledTargets(orig => {
+      const copy = new Set(orig.keys())
+      if (value) {
+        copy.add(target)
+      } else {
+        copy.delete(target)
+      }
+      return copy
+    })
+  }
+
+  const onFailureGroupToggled = (group: string, failures: Failure[]) => {
+    for (const failure of failures) {
+      onFailureToggled(failure, !failures.every(f => enabledFailures.has(f)))
+    }
+  }
+
+  const onTargetGroupToggled = (group: string, targets: Target[]) => {
+    for (const target of targets) {
+      onTargetToggled(target, !targets.every(t => enabledTargets.has(t)))
+    }
+  }
+
+  return (
+    <Page>
+      <Header>
+        <PageName>Chaos Framework / Create a new workflow</PageName>
+      </Header>
+
+      <Main>
+        <ActionsRow>
+          <BackButton><i className="fas fa-arrow-left" /> Back</BackButton>
+          <RunButton>Run <i className="fas fa-caret-right" /></RunButton>
+        </ActionsRow>
+
+        <form>
+          <Card>
+            <CardTitle>Settings</CardTitle>
+
             <FormField>
-              <Checkbox indeterminate={true}/>
-              <FormLabel>Network failures</FormLabel>
+              <FormLabelFixed htmlFor="namespace-input">Namespace</FormLabelFixed>
+              <Input id="namespace-input" type="text" required list="namespaces" value={namespace}
+                placeholder="select namespace..." onChange={e => setNamespace((e.target as HTMLInputElement).value)} />
             </FormField>
 
-            <Grid>
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={false} title={'network packet drop'}/>
-              <CheckboxCard checked={true} title={'network loss'}/>
-
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={true} title={'network packet drop'}/>
-              <CheckboxCard checked={false} title={'network loss'}/>
-            </Grid>
-          </Section>
-
-          <Section>
             <FormField>
-              <Checkbox indeterminate={true}/>
-              <FormLabel>Delete failures</FormLabel>
+              <FormLabelFixed htmlFor="random-seed-input">Random seed</FormLabelFixed>
+              <Input id="random-seed-input" type="number" value={seed} onChange={onSeedChanged} />
+
+              <RefreshButton onClick={randomizeSeed}>Random <i className="fas fa-sync" /></RefreshButton>
             </FormField>
 
-            <Grid>
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={false} title={'network packet drop'}/>
-              <CheckboxCard checked={true} title={'network loss'}/>
-            </Grid>
-          </Section>
-
-          <Section>
             <FormField>
-              <Checkbox indeterminate={true}/>
-              <FormLabel>Filesystem failures</FormLabel>
+              <FormLabelFixed>Number of stages</FormLabelFixed>
+
+              <FormVerticalBlock>
+                <StagesNumberField id="stages-with-single-failure-input" value={stages.single} onChange={e => onStageCountChanged(e, 'single')} />
+                <FormLabelMuted htmlFor="stages-with-single-failure-input">stages with single failure</FormLabelMuted>
+              </FormVerticalBlock>
+
+              <FormVerticalBlock>
+                <StagesNumberField id="stages-with-similar-failures-input" value={stages.similar} onChange={e => onStageCountChanged(e, 'similar')} />
+                <FormLabelMuted htmlFor="stages-with-similar-failures-input">stages with similar failures</FormLabelMuted>
+              </FormVerticalBlock>
+
+              <FormVerticalBlock>
+                <StagesNumberField id="stages-with-mixed-failures-input" value={stages.mixed} onChange={e => onStageCountChanged(e, 'mixed')} />
+                <FormLabelMuted htmlFor="stages-with-mixed-failures-input">stages with mixed failures</FormLabelMuted>
+              </FormVerticalBlock>
             </FormField>
+          </Card>
 
-            <Grid>
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={false} title={'network packet drop'}/>
-              <CheckboxCard checked={true} title={'network loss'}/>
-            </Grid>
-          </Section>
-        </Card>
+          <Card>
+            <CardTitle>Failures</CardTitle>
 
-        <Card>
-          <CardTitle>Targets</CardTitle>
+            {Array.from(groupedFailures.entries()).map(([group, failures]) => (
+              <Section key={group}>
+                <FormField>
+                  <Checkbox
+                    checked={failures.every(f => enabledFailures.has(f))}
+                    onToggled={() => onFailureGroupToggled(group, failures)}
+                    indeterminate={!failures.every(f => enabledFailures.has(f)) && failures.some(f => enabledFailures.has(f))} />
+                  <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
+                </FormField>
 
-          <Section>
-            <FormField>
-              <Checkbox indeterminate={true}/>
-              <FormLabel>Deployments</FormLabel>
-            </FormField>
+                <Grid>
+                  {failures.map(f => (
+                    <CheckboxCard key={f.name}
+                      checked={enabledFailures.has(f)}
+                      title={toFirstUpperCase(f.name) + ' (' + f.scale + ' / ' + f.severity + ')'}
+                      onToggled={value => onFailureToggled(f, value)} />
+                  ))}
+                </Grid>
+              </Section>
+            ))}
+          </Card>
 
-            <Grid>
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={false} title={'network packet drop'}/>
-              <CheckboxCard checked={true} title={'network loss'}/>
-            </Grid>
-          </Section>
+          <Card>
+            <CardTitle>Targets</CardTitle>
 
-          <Section>
-            <FormField>
-              <Checkbox indeterminate={true}/>
-              <FormLabel>Stateful sets</FormLabel>
-            </FormField>
+            {Array.from(groupedTargets.entries()).map(([group, targets]) => (
+              <Section key={group}>
+                <FormField>
+                  <Checkbox
+                    checked={targets.every(t => enabledTargets.has(t))}
+                    onToggled={() => onTargetGroupToggled(group, targets)}
+                    indeterminate={!targets.every(t => enabledTargets.has(t)) && targets.some(t => enabledTargets.has(t))} />
+                  <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
+                </FormField>
 
-            <Grid>
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={false} title={'network packet drop'}/>
-              <CheckboxCard checked={true} title={'network loss'}/>
-            </Grid>
-          </Section>
+                <Grid>
+                  {targets.map(t => (
+                    <CheckboxCard key={t.name}
+                      checked={enabledTargets.has(t)}
+                      title={t.name + ' (' + t.count + ')'}
+                      onToggled={value => onTargetToggled(t, value)} />
+                  ))}
+                </Grid>
+              </Section>
+            ))}
+          </Card>
+        </form>
+      </Main>
 
-          <Section>
-            <FormField>
-              <Checkbox indeterminate={true}/>
-              <FormLabel>Daemon sets</FormLabel>
-            </FormField>
-
-            <Grid>
-              <CheckboxCard checked={true} title={'network latency'}/>
-              <CheckboxCard checked={false} title={'network jitter'}/>
-              <CheckboxCard checked={false} title={'network packet drop'}/>
-              <CheckboxCard checked={true} title={'network loss'}/>
-            </Grid>
-          </Section>
-        </Card>
-      </form>
-    </Main>
-
-    <datalist id="namespaces">
-      <option selected>chaos-app</option>
-      <option>default</option>
-    </datalist>
-  </Page>
-)
+      <datalist id="namespaces">
+        {namespaces.map((ns, i) => (
+          <option key={ns.name}>{ns.name}</option>
+        ))}
+      </datalist>
+    </Page>
+  )
+}
