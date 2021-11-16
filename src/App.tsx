@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Switch } from 'react-router'
+import { Redirect, Route, Switch } from 'react-router'
 import { BrowserRouter } from 'react-router-dom'
 import { WorkflowsDashboard } from './workflows/components/WorkflowsDashboard'
 import { WorkflowsCreationForm } from './workflows/components/WorkflowsCreationForm'
@@ -10,16 +10,19 @@ export function App () {
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
-          <WorkflowsDashboard/>
+          <WorkflowsDashboard />
         </Route>
         <Route exact path="/create">
-          <WorkflowsCreationForm/>
+          <WorkflowsCreationForm />
         </Route>
         <Route exact path="/preview">
-          <ViewWorkflow preview={true}/>
+          <ViewWorkflow preview={true} />
         </Route>
         <Route exact path="/view/:namespace/:name">
-          <ViewWorkflow preview={false}/>
+          <ViewWorkflow preview={false} />
+        </Route>
+        <Route>
+          <Redirect to="/" />
         </Route>
       </Switch>
     </BrowserRouter>
