@@ -9,20 +9,15 @@ const Button = (props: { type: ColorType, filled: boolean }) => styled.button.at
   width: 6em;
   border: 0.15em solid ${theme.colors.type[props.type]};
   border-radius: ${theme.borders.radius.primary};
-  ${
-          props.filled
-                  ? css`
-                    background-color: ${theme.colors.type[props.type]};
-                    color: ${theme.colors.text.light};
-                  `
-                  : css`
-                    background-color: transparent;
-                    color: ${theme.colors.type[props.type]};
-                  `
+  ${props.filled
+    ? css`background-color: ${theme.colors.type[props.type]};
+          color: ${theme.colors.text.light};`
+    : css`background-color: transparent;
+          color: ${theme.colors.type[props.type]};`
   }
-  
+
   &:focus {
-    outline: solid 0.2em ${theme.colors.type.primary}; // TODO: Move outline width to theme.
+    outline: solid 0.2em ${theme.colors.type[props.type]}; // TODO: Move outline width to theme.
   }
 `
 
