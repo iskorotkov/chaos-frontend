@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CreateWorkflowDTO, PreviewWorkflowDTO, toWorkflow } from '../../dto/Workflows'
 import { Workflow } from '../../model/Workflows'
 import WorkflowPreview from './WorkflowPreview'
-import { useHistory } from 'react-router'
+import { useNavigate } from 'react-router'
 
 export default function CreateWorkflowPage (props: {
   server: string
@@ -10,7 +10,7 @@ export default function CreateWorkflowPage (props: {
   const [seed, setSeed] = useState(0)
   const [stages, setStages] = useState(3)
   const [workflow, setWorkflow] = useState(null as Workflow | null)
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const handleSeedChanged = (e: React.ChangeEvent<HTMLInputElement>) => setSeed(parseInt(e.target.value))
   const handleStagesChanged = (e: React.ChangeEvent<HTMLInputElement>) => setStages(parseInt(e.target.value))
@@ -70,7 +70,7 @@ export default function CreateWorkflowPage (props: {
         return
       }
 
-      history.push(`/${dto.namespace}/${dto.name}`)
+      navigate(`/${dto.namespace}/${dto.name}`)
     } catch (error: any) {
       console.error(error)
     }

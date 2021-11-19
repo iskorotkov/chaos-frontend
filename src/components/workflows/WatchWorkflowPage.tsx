@@ -7,7 +7,7 @@ import WorkflowStatus from './WorkflowStatus'
 export default function WatchWorkflowPage (props: {
   server: string
 }) {
-  const { namespace, name } = useParams<{ namespace: string, name: string }>()
+  const { namespace, name } = useParams()
   const didUnmount = useRef(false)
 
   const url = `ws://${props.server}/api/v1/workflows/watch/${namespace}/${name}`

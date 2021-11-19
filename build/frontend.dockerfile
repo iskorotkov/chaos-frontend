@@ -1,13 +1,13 @@
 FROM nginx:alpine as base
 
-FROM node:14 as build
+FROM node:16-alpine as build
 WORKDIR /app
 
-COPY ["package.json", "yarn.lock", "./"]
-RUN yarn install --immutable
+COPY ["package.json", "pnpm-lock.yaml", "./"]
+RUN npm install --global pnpm && pnpm ci
 
 COPY . .
-RUN yarn run build
+RUN pnpm run build
 
 FROM base as run
 COPY --from=build /app/build /usr/share/nginx/html/
