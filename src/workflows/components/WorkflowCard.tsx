@@ -6,12 +6,13 @@ import {
   PrimaryIndicatorIcon,
   SuccessIndicatorIcon
 } from '../../lib/components/IndicatorIcon'
-import { CancelButton, PauseButton, ViewButton } from '../../lib/components/Button'
+import { CancelButton, PauseButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
 import { WorkflowStatus } from '../types/workflows'
 import { theme } from '../../theme'
 import moment from 'moment'
+import { ViewLink } from '../../lib/components/Link'
 
 const WorkflowProperties = styled.ul`
   list-style: none;
@@ -79,7 +80,7 @@ export const WorkflowCard = (props: { workflow: WorkflowStatus }) => (
     </WorkflowProperties>
 
     <WorkflowActions>
-      <li><ViewButton>View <i className="fas fa-arrow-right"/></ViewButton></li>
+      <li><ViewLink href="/view/x/y">View <i className="fas fa-arrow-right"/></ViewLink></li>
       {props.workflow.status === 'running' && <>
           <li><PauseButton>Pause <i className="fas fa-pause"/></PauseButton></li>
           <li><CancelButton>Cancel <i className="fas fa-times"/></CancelButton></li>

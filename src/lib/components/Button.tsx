@@ -6,14 +6,15 @@ const Button = (props: { type: ColorType, filled: boolean }) => styled.button.at
 }))`
   box-shadow: ${theme.shadows.primary};
   padding: 0.25em;
+  margin: 0;
   width: 6em;
   border: 0.15em solid ${theme.colors.type[props.type]};
   border-radius: ${theme.borders.radius.primary};
   ${props.filled
     ? css`background-color: ${theme.colors.type[props.type]};
-          color: ${theme.colors.text.light};`
+            color: ${theme.colors.text.light};`
     : css`background-color: transparent;
-          color: ${theme.colors.type[props.type]};`
+            color: ${theme.colors.type[props.type]};`
   }
 
   &:focus {
@@ -28,3 +29,4 @@ export const PauseButton = Button({ type: 'change', filled: false })
 export const BackButton = Button({ type: 'primary', filled: false })
 export const RunButton = Button({ type: 'success', filled: true })
 export const RefreshButton = Button({ type: 'primary', filled: false })
+export const PreviewButton = Button({ type: 'primary', filled: false })

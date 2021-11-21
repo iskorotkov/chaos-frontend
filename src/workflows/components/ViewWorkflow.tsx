@@ -6,7 +6,8 @@ import { Card, CardTitle } from '../../lib/components/Card'
 import { Section, SectionTitle } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
 import { ChangeIndicatorIcon } from '../../lib/components/IndicatorIcon'
-import { BackButton, CancelButton, PauseButton, RunButton } from '../../lib/components/Button'
+import { CancelButton, PauseButton } from '../../lib/components/Button'
+import { BackLink, RunLink } from '../../lib/components/Link'
 
 const ActionsRowForPreview = styled.div`
   display: flex;
@@ -51,11 +52,11 @@ export const ViewWorkflow = (props: { preview: boolean }) => {
   const actionsRow =
     props.preview
       ? <ActionsRowForPreview>
-        <BackButton><i className="fas fa-arrow-left"/> Back</BackButton>
-        <RunButton>Run <i className="fas fa-caret-right"/></RunButton>
+        <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
+        <RunLink href="/view/x/y">Run <i className="fas fa-caret-right"/></RunLink>
       </ActionsRowForPreview>
       : <ActionsRowForView>
-        <BackButton><i className="fas fa-arrow-left"/> Back</BackButton>
+        <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
         <PauseButton>Pause <i className="fas fa-pause"/></PauseButton>
         <CancelButton>Cancel <i className="fas fa-times"/></CancelButton>
       </ActionsRowForView>

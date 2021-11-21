@@ -1,5 +1,4 @@
 import { Search } from '../../lib/components/Search'
-import { CreateButton } from '../../lib/components/Button'
 import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
@@ -7,6 +6,7 @@ import axios from 'axios'
 import { backendAddress } from '../../config'
 import { WorkflowCard } from './WorkflowCard'
 import { WorkflowStatus } from '../types/workflows'
+import { CreateLink } from '../../lib/components/Link'
 
 const ActionsRow = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ export const WorkflowsDashboard = () => {
   const workflowsCards = workflows
     .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
     .map(w => (
-      <li key={`${w.namespace}-${w.name}`}><WorkflowCard workflow={w} /></li>
+      <li key={`${w.namespace}-${w.name}`}><WorkflowCard workflow={w}/></li>
     ))
 
   return (
@@ -61,9 +61,9 @@ export const WorkflowsDashboard = () => {
 
       <Main>
         <ActionsRow>
-          <Search value={query} placeholder="type to search..." onInput={onSearchInput} />
+          <Search value={query} placeholder="type to search..." onInput={onSearchInput}/>
 
-          <CreateButton>New <i className="fas fa-plus" /></CreateButton>
+          <CreateLink href="/create">New <i className="fas fa-plus"/></CreateLink>
         </ActionsRow>
 
         <Workflows>

@@ -1,7 +1,7 @@
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { BackButton, RefreshButton, RunButton } from '../../lib/components/Button'
+import { RefreshButton } from '../../lib/components/Button'
 import { Input } from '../../lib/components/Input'
 import { Card, CardTitle } from '../../lib/components/Card'
 import {
@@ -22,6 +22,7 @@ import { Failure } from '../types/failures'
 import { backendAddress } from '../../config'
 import axios from 'axios'
 import plur from 'plur'
+import { BackLink, PreviewLink, RunLink } from '../../lib/components/Link'
 
 const stagesRange = {
   min: 0,
@@ -31,7 +32,10 @@ const stagesRange = {
 const ActionsRow = styled.div`
   display: flex;
   gap: 0.5em;
-  justify-content: space-between;
+`
+
+const ActionsRowGroup = styled.div`
+  margin-right: auto;
 `
 
 const StagesNumberField = styled(Input).attrs(() => ({
@@ -43,7 +47,7 @@ const StagesNumberField = styled(Input).attrs(() => ({
 const CheckboxCard = (props: { checked: boolean, title: string, onToggled: (value: boolean) => void }) => (
   <GridCard>
     <CompactFormField>
-      <Checkbox checked={props.checked} onToggled={props.onToggled} />
+      <Checkbox checked={props.checked} onToggled={props.onToggled}/>
       <CompactFormLabel>{props.title}</CompactFormLabel>
     </CompactFormField>
   </GridCard>
@@ -184,8 +188,11 @@ export const WorkflowsCreationForm = () => {
 
       <Main>
         <ActionsRow>
-          <BackButton><i className="fas fa-arrow-left" /> Back</BackButton>
-          <RunButton>Run <i className="fas fa-caret-right" /></RunButton>
+          <ActionsRowGroup>
+            <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
+          </ActionsRowGroup>
+          <PreviewLink href="/preview">Preview <i className="fas fa-search"/></PreviewLink>
+          <RunLink href="/view/x/y">Run <i className="fas fa-caret-right"/></RunLink>
         </ActionsRow>
 
         <form>
@@ -195,31 +202,36 @@ export const WorkflowsCreationForm = () => {
             <FormField>
               <FormLabelFixed htmlFor="namespace-input">Namespace</FormLabelFixed>
               <Input id="namespace-input" type="text" required list="namespaces" value={namespace}
-                placeholder="select namespace..." onChange={e => setNamespace((e.target as HTMLInputElement).value)} />
+                     placeholder="select namespace..."
+                     onChange={e => setNamespace((e.target as HTMLInputElement).value)}/>
             </FormField>
 
             <FormField>
               <FormLabelFixed htmlFor="random-seed-input">Random seed</FormLabelFixed>
-              <Input id="random-seed-input" type="number" value={seed} onChange={onSeedChanged} />
+              <Input id="random-seed-input" type="number" value={seed} onChange={onSeedChanged}/>
 
-              <RefreshButton onClick={randomizeSeed}>Random <i className="fas fa-sync" /></RefreshButton>
+              <RefreshButton onClick={randomizeSeed}>Random <i className="fas fa-sync"/></RefreshButton>
             </FormField>
 
             <FormField>
               <FormLabelFixed>Number of stages</FormLabelFixed>
 
               <FormVerticalBlock>
-                <StagesNumberField id="stages-with-single-failure-input" value={stages.single} onChange={e => onStageCountChanged(e, 'single')} />
+                <StagesNumberField id="stages-with-single-failure-input" value={stages.single}
+                                   onChange={e => onStageCountChanged(e, 'single')}/>
                 <FormLabelMuted htmlFor="stages-with-single-failure-input">stages with single failure</FormLabelMuted>
               </FormVerticalBlock>
 
               <FormVerticalBlock>
-                <StagesNumberField id="stages-with-similar-failures-input" value={stages.similar} onChange={e => onStageCountChanged(e, 'similar')} />
-                <FormLabelMuted htmlFor="stages-with-similar-failures-input">stages with similar failures</FormLabelMuted>
+                <StagesNumberField id="stages-with-similar-failures-input" value={stages.similar}
+                                   onChange={e => onStageCountChanged(e, 'similar')}/>
+                <FormLabelMuted htmlFor="stages-with-similar-failures-input">stages with similar
+                  failures</FormLabelMuted>
               </FormVerticalBlock>
 
               <FormVerticalBlock>
-                <StagesNumberField id="stages-with-mixed-failures-input" value={stages.mixed} onChange={e => onStageCountChanged(e, 'mixed')} />
+                <StagesNumberField id="stages-with-mixed-failures-input" value={stages.mixed}
+                                   onChange={e => onStageCountChanged(e, 'mixed')}/>
                 <FormLabelMuted htmlFor="stages-with-mixed-failures-input">stages with mixed failures</FormLabelMuted>
               </FormVerticalBlock>
             </FormField>
@@ -234,16 +246,16 @@ export const WorkflowsCreationForm = () => {
                   <Checkbox
                     checked={failures.every(f => enabledFailures.has(f))}
                     onToggled={() => onFailureGroupToggled(group, failures)}
-                    indeterminate={!failures.every(f => enabledFailures.has(f)) && failures.some(f => enabledFailures.has(f))} />
+                    indeterminate={!failures.every(f => enabledFailures.has(f)) && failures.some(f => enabledFailures.has(f))}/>
                   <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
                 </FormField>
 
                 <Grid>
                   {failures.map(f => (
                     <CheckboxCard key={f.name}
-                      checked={enabledFailures.has(f)}
-                      title={toFirstUpperCase(f.name) + ' (' + f.scale + ' / ' + f.severity + ')'}
-                      onToggled={value => onFailureToggled(f, value)} />
+                                  checked={enabledFailures.has(f)}
+                                  title={toFirstUpperCase(f.name) + ' (' + f.scale + ' / ' + f.severity + ')'}
+                                  onToggled={value => onFailureToggled(f, value)}/>
                   ))}
                 </Grid>
               </Section>
@@ -259,16 +271,16 @@ export const WorkflowsCreationForm = () => {
                   <Checkbox
                     checked={targets.every(t => enabledTargets.has(t))}
                     onToggled={() => onTargetGroupToggled(group, targets)}
-                    indeterminate={!targets.every(t => enabledTargets.has(t)) && targets.some(t => enabledTargets.has(t))} />
+                    indeterminate={!targets.every(t => enabledTargets.has(t)) && targets.some(t => enabledTargets.has(t))}/>
                   <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
                 </FormField>
 
                 <Grid>
                   {targets.map(t => (
                     <CheckboxCard key={t.name}
-                      checked={enabledTargets.has(t)}
-                      title={t.name + ' (' + t.count + ')'}
-                      onToggled={value => onTargetToggled(t, value)} />
+                                  checked={enabledTargets.has(t)}
+                                  title={t.name + ' (' + t.count + ')'}
+                                  onToggled={value => onTargetToggled(t, value)}/>
                   ))}
                 </Grid>
               </Section>
@@ -278,7 +290,7 @@ export const WorkflowsCreationForm = () => {
       </Main>
 
       <datalist id="namespaces">
-        {namespaces.map((ns, i) => (
+        {namespaces.map(ns => (
           <option key={ns.name}>{ns.name}</option>
         ))}
       </datalist>
