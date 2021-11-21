@@ -22,7 +22,8 @@ const ClickableBox = styled.button<{ indeterminate: boolean, checked: boolean }>
   transform: translate(0, -50%);
 
   &:focus {
-    outline: solid 0.2em ${theme.colors.type.primary}; // TODO: Move outline width to theme.
+    outline: solid ${theme.outline.width} ${theme.colors.type.primary};
+    outline-offset: 0;
   }
 
   // Checkbox is disabled.

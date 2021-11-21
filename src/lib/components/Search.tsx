@@ -19,7 +19,7 @@ const SearchInput = styled.input`
   padding-left: ${iconWidth};
 
   &:focus {
-    outline: solid 0.2em ${theme.colors.type.primary}; // TODO: Move outline width to theme.
+    outline: solid ${theme.outline.width} ${theme.colors.type.primary};
   }
 `
 

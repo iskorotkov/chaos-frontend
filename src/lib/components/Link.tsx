@@ -19,7 +19,8 @@ const Link = (props: { type: ColorType, filled: boolean }) => styled.a`
             color: ${theme.colors.type[props.type]};`
   }
   &:focus {
-    outline: solid 0.2em ${theme.colors.type[props.type]}; // TODO: Move outline width to theme.
+    outline: solid ${theme.outline.width} ${theme.colors.type[props.type]};
+    outline-offset: 0;
   }
 `
 

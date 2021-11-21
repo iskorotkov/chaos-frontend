@@ -30,5 +30,8 @@ export const theme = {
     style: {
       separator: 'solid 0.1em #d8d8d8'
     }
+  },
+  outline: {
+    width: '0.15em'
   }
 }

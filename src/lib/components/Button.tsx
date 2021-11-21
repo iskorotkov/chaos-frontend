@@ -18,7 +18,8 @@ const Button = (props: { type: ColorType, filled: boolean }) => styled.button.at
   }
 
   &:focus {
-    outline: solid 0.2em ${theme.colors.type[props.type]}; // TODO: Move outline width to theme.
+    outline: solid ${theme.outline.width} ${theme.colors.type[props.type]};
+    outline-offset: 0;
   }
 `
 
