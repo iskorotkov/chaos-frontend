@@ -29,16 +29,18 @@ import {
   addTargetById,
   removeFailureById,
   removeTargetById,
+  Seeds,
   selectFailures,
   selectNamespace,
-  selectSeed,
+  selectSeeds,
   selectStages,
   selectTargets,
   setFailuresById,
   setNamespace,
-  setSeed,
+  setSeeds,
   setStages,
-  setTargetsIds
+  setTargetsIds,
+  Stages
 } from '../reducers/createWorkflowForm'
 
 const stagesRange = {
@@ -89,7 +91,7 @@ export const WorkflowsCreationForm = () => {
   const [supportedFailures, setSupportedFailures] = useState<Failure[]>([])
   const [supportedNamespaces, setSupportedNamespaces] = useState<Namespace[]>([])
 
-  const seed = useAppSelector(selectSeed)
+  const seeds = useAppSelector(selectSeeds)
   const namespace = useAppSelector(selectNamespace)
   const stages = useAppSelector(selectStages)
   const enabledTargets = useAppSelector(selectTargets)
@@ -149,16 +151,22 @@ export const WorkflowsCreationForm = () => {
     }
   }
 
-  const randomizeSeed = () => dispatch(setSeed(Math.floor(Math.random() * 1_000_000)))
+  const randomizeSeed = (key: keyof Seeds) => dispatch(setSeeds({
+    ...seeds,
+    [key]: Math.floor(Math.random() * 1_000_000)
+  }))
 
-  const onSeedChanged = (e: ChangeEvent) => {
+  const onSeedChanged = (e: ChangeEvent, key: keyof Seeds) => {
     const value = (e.target as HTMLInputElement).value
     if (value.match(/[0-9]+/)) {
-      dispatch(setSeed(parseInt(value)))
+      dispatch(setSeeds({
+        ...seeds,
+        [key]: parseInt(value)
+      }))
     }
   }
 
-  const onStageCountChanged = (e: ChangeEvent, key: string) => {
+  const onStageCountChanged = (e: ChangeEvent, key: keyof Stages) => {
     const value = (e.target as HTMLInputElement).value
     if (value.match(/[0-9]+/)) {
       dispatch(setStages({
@@ -211,10 +219,21 @@ export const WorkflowsCreationForm = () => {
             </FormField>
 
             <FormField>
-              <FormLabelFixed htmlFor="random-seed-input">Random seed</FormLabelFixed>
-              <Input id="random-seed-input" type="number" value={seed} onChange={onSeedChanged}/>
+              <FormLabelFixed htmlFor="random-seed-input">Random seed for targets</FormLabelFixed>
+              <Input id="random-seed-input" type="number" value={seeds.targets}
+                     onChange={e => onSeedChanged(e, 'targets')}/>
 
-              <RefreshButton onClick={randomizeSeed}>Random <i className="fas fa-sync"/></RefreshButton>
+              <RefreshButton onClick={() => randomizeSeed('targets')}>Random <i
+                className="fas fa-sync"/></RefreshButton>
+            </FormField>
+
+            <FormField>
+              <FormLabelFixed htmlFor="random-seed-input">Random seed for failures</FormLabelFixed>
+              <Input id="random-seed-input" type="number" value={seeds.failures}
+                     onChange={e => onSeedChanged(e, 'failures')}/>
+
+              <RefreshButton onClick={() => randomizeSeed('failures')}>Random <i
+                className="fas fa-sync"/></RefreshButton>
             </FormField>
 
             <FormField>

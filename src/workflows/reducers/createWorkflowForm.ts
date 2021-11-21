@@ -1,13 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RootState } from '../../store'
 
-type Stages = { single: number, similar: number, mixed: number }
+export type Seeds = { targets: number, failures: number }
+
+export type Stages = { single: number, similar: number, mixed: number }
 
 export const slice = createSlice({
   name: 'workflow',
   initialState: {
     namespace: '',
-    seed: 0,
+    seeds: { targets: 0, failures: 0 },
     stages: { single: 3, similar: 3, mixed: 3 },
     targets: <string[]>[],
     failures: <string[]>[]
@@ -16,8 +18,8 @@ export const slice = createSlice({
     setNamespace: (state, action: PayloadAction<string>) => {
       state.namespace = action.payload
     },
-    setSeed: (state, action: PayloadAction<number>) => {
-      state.seed = action.payload
+    setSeeds: (state, action: PayloadAction<Seeds>) => {
+      state.seeds = action.payload
     },
     setStages: (state, action: PayloadAction<Stages>) => {
       state.stages = action.payload
@@ -44,14 +46,14 @@ export const slice = createSlice({
 })
 
 export const selectNamespace = (state: RootState): string => state.createWorkflowForm.namespace
-export const selectSeed = (state: RootState): number => state.createWorkflowForm.seed
+export const selectSeeds = (state: RootState): Seeds => state.createWorkflowForm.seeds
 export const selectStages = (state: RootState): Stages => state.createWorkflowForm.stages
 export const selectTargets = (state: RootState): string[] => state.createWorkflowForm.targets
 export const selectFailures = (state: RootState): string[] => state.createWorkflowForm.failures
 
 export const {
   setNamespace,
-  setSeed,
+  setSeeds,
   setStages,
   setTargetsIds,
   addTargetById,

@@ -24,7 +24,7 @@ export const CompactFormLabel = styled(FormLabel)`
 `
 
 export const FormLabelFixed = styled(FormLabel)`
-  width: 10em;
+  width: 12em;
 `
 
 export const FormLabelMuted = styled(FormLabel)`
