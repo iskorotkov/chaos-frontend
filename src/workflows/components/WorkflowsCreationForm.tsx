@@ -23,6 +23,23 @@ import { backendAddress } from '../../config'
 import axios from 'axios'
 import plur from 'plur'
 import { BackLink, PreviewLink, RunLink } from '../../lib/components/Link'
+import { useAppDispatch, useAppSelector } from '../../store'
+import {
+  addFailureById,
+  addTargetById,
+  removeFailureById,
+  removeTargetById,
+  selectFailures,
+  selectNamespace,
+  selectSeed,
+  selectStages,
+  selectTargets,
+  setFailuresById,
+  setNamespace,
+  setSeed,
+  setStages,
+  setTargetsIds
+} from '../reducers/createWorkflowForm'
 
 const stagesRange = {
   min: 0,
@@ -68,45 +85,52 @@ const clamp = (x: number, min: number, max: number) => x < min
     : x
 
 export const WorkflowsCreationForm = () => {
-  const [targets, setTargets] = useState<Target[]>([])
-  const [failures, setFailures] = useState<Failure[]>([])
-  const [namespaces, setNamespaces] = useState<Namespace[]>([])
+  const [supportedTargets, setSupportedTargets] = useState<Target[]>([])
+  const [supportedFailures, setSupportedFailures] = useState<Failure[]>([])
+  const [supportedNamespaces, setSupportedNamespaces] = useState<Namespace[]>([])
 
-  const [seed, setSeed] = useState(0)
-  const [stages, setStages] = useState({ single: 1, similar: 1, mixed: 1 })
-  const [namespace, setNamespace] = useState('')
-  const [enabledTargets, setEnabledTargets] = useState(new Set<Target>())
-  const [enabledFailures, setEnabledFailures] = useState(new Set<Failure>())
+  const seed = useAppSelector(selectSeed)
+  const namespace = useAppSelector(selectNamespace)
+  const stages = useAppSelector(selectStages)
+  const enabledTargets = useAppSelector(selectTargets)
+  const enabledFailures = useAppSelector(selectFailures)
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     axios(`${backendAddress()}/api/v1/targets`)
       .then(res => res.data as Target[])
-      .then(t => {
-        setTargets(t)
-        setEnabledTargets(new Set(t))
+      .then(targets => {
+        setSupportedTargets(targets)
+        if (enabledTargets.length === 0) {
+          dispatch(setTargetsIds(targets.map(_ => _.id)))
+        }
       })
       .catch(console.error)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     axios(`${backendAddress()}/api/v1/failures`)
       .then(res => res.data as Failure[])
-      .then(f => {
-        setFailures(f)
-        setEnabledFailures(new Set(f))
+      .then(failures => {
+        setSupportedFailures(failures)
+        if (enabledFailures.length === 0) {
+          dispatch(setFailuresById(failures.map(_ => _.id)))
+        }
       })
       .catch(console.error)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     axios(`${backendAddress()}/api/v1/namespaces`)
       .then(res => res.data as Namespace[])
-      .then(setNamespaces)
+      .then(setSupportedNamespaces)
       .catch(console.error)
   }, [])
 
   const groupedTargets = new Map<string, Target[]>()
-  for (const target of targets) {
+  for (const target of supportedTargets) {
     const group = groupedTargets.get(target.type)
     if (group) {
       group.push(target)
@@ -116,7 +140,7 @@ export const WorkflowsCreationForm = () => {
   }
 
   const groupedFailures = new Map<string, Failure[]>()
-  for (const failure of failures) {
+  for (const failure of supportedFailures) {
     const group = groupedFailures.get(failure.type)
     if (group) {
       group.push(failure)
@@ -125,58 +149,38 @@ export const WorkflowsCreationForm = () => {
     }
   }
 
-  const randomizeSeed = () => setSeed(Math.floor(Math.random() * 1_000_000))
+  const randomizeSeed = () => dispatch(setSeed(Math.floor(Math.random() * 1_000_000)))
 
   const onSeedChanged = (e: ChangeEvent) => {
     const value = (e.target as HTMLInputElement).value
     if (value.match(/[0-9]+/)) {
-      setSeed(parseInt(value))
+      dispatch(setSeed(parseInt(value)))
     }
   }
 
   const onStageCountChanged = (e: ChangeEvent, key: string) => {
     const value = (e.target as HTMLInputElement).value
     if (value.match(/[0-9]+/)) {
-      setStages({
+      dispatch(setStages({
         ...stages,
         [key]: clamp(parseInt(value), stagesRange.min, stagesRange.max)
-      })
+      }))
     }
   }
 
-  const onFailureToggled = (failure: Failure, value: boolean) => {
-    setEnabledFailures(orig => {
-      const copy = new Set(orig.keys())
-      if (value) {
-        copy.add(failure)
-      } else {
-        copy.delete(failure)
-      }
-      return copy
-    })
-  }
+  const onFailureToggled = (failure: Failure, value: boolean) => dispatch(value ? addFailureById(failure.id) : removeFailureById(failure.id))
 
-  const onTargetToggled = (target: Target, value: boolean) => {
-    setEnabledTargets(orig => {
-      const copy = new Set(orig.keys())
-      if (value) {
-        copy.add(target)
-      } else {
-        copy.delete(target)
-      }
-      return copy
-    })
-  }
+  const onTargetToggled = (target: Target, value: boolean) => dispatch(value ? addTargetById(target.id) : removeTargetById(target.id))
 
   const onFailureGroupToggled = (group: string, failures: Failure[]) => {
     for (const failure of failures) {
-      onFailureToggled(failure, !failures.every(f => enabledFailures.has(f)))
+      onFailureToggled(failure, !failures.every(f => enabledFailures.some(_ => _ === f.id)))
     }
   }
 
   const onTargetGroupToggled = (group: string, targets: Target[]) => {
     for (const target of targets) {
-      onTargetToggled(target, !targets.every(t => enabledTargets.has(t)))
+      onTargetToggled(target, !targets.every(t => enabledTargets.some(_ => _ === t.id)))
     }
   }
 
@@ -203,7 +207,7 @@ export const WorkflowsCreationForm = () => {
               <FormLabelFixed htmlFor="namespace-input">Namespace</FormLabelFixed>
               <Input id="namespace-input" type="text" required list="namespaces" value={namespace}
                      placeholder="select namespace..."
-                     onChange={e => setNamespace((e.target as HTMLInputElement).value)}/>
+                     onChange={e => dispatch(setNamespace((e.target as HTMLInputElement).value))}/>
             </FormField>
 
             <FormField>
@@ -244,16 +248,16 @@ export const WorkflowsCreationForm = () => {
               <Section key={group}>
                 <FormField>
                   <Checkbox
-                    checked={failures.every(f => enabledFailures.has(f))}
+                    checked={failures.every(f => enabledFailures.some(_ => _ === f.id))}
                     onToggled={() => onFailureGroupToggled(group, failures)}
-                    indeterminate={!failures.every(f => enabledFailures.has(f)) && failures.some(f => enabledFailures.has(f))}/>
+                    indeterminate={!failures.every(f => enabledFailures.some(_ => _ === f.id)) && failures.some(f => enabledFailures.some(_ => _ === f.id))}/>
                   <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
                 </FormField>
 
                 <Grid>
                   {failures.map(f => (
                     <CheckboxCard key={f.name}
-                                  checked={enabledFailures.has(f)}
+                                  checked={enabledFailures.some(_ => _ === f.id)}
                                   title={toFirstUpperCase(f.name) + ' (' + f.scale + ' / ' + f.severity + ')'}
                                   onToggled={value => onFailureToggled(f, value)}/>
                   ))}
@@ -269,16 +273,16 @@ export const WorkflowsCreationForm = () => {
               <Section key={group}>
                 <FormField>
                   <Checkbox
-                    checked={targets.every(t => enabledTargets.has(t))}
+                    checked={targets.every(t => enabledTargets.some(_ => _ === t.id))}
                     onToggled={() => onTargetGroupToggled(group, targets)}
-                    indeterminate={!targets.every(t => enabledTargets.has(t)) && targets.some(t => enabledTargets.has(t))}/>
+                    indeterminate={!targets.every(t => enabledTargets.some(_ => _ === t.id)) && targets.some(t => enabledTargets.some(_ => _ === t.id))}/>
                   <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
                 </FormField>
 
                 <Grid>
                   {targets.map(t => (
                     <CheckboxCard key={t.name}
-                                  checked={enabledTargets.has(t)}
+                                  checked={enabledTargets.some(_ => _ === t.id)}
                                   title={t.name + ' (' + t.count + ')'}
                                   onToggled={value => onTargetToggled(t, value)}/>
                   ))}
@@ -290,7 +294,7 @@ export const WorkflowsCreationForm = () => {
       </Main>
 
       <datalist id="namespaces">
-        {namespaces.map(ns => (
+        {supportedNamespaces.map(ns => (
           <option key={ns.name}>{ns.name}</option>
         ))}
       </datalist>

@@ -4,6 +4,7 @@ specifiers:
   '@dynamic-mapper/mapper': ^1.9.1
   '@fontsource/cascadia-code': ^4.2.1
   '@fontsource/clear-sans': ^4.5.0
+  '@reduxjs/toolkit': ^1.6.2
   '@swc/core': ^1.2.106
   '@testing-library/dom': ^8.10.1
   '@testing-library/jest-dom': ^5.14.1
@@ -44,6 +45,7 @@ specifiers:
   react-scripts: ^4.0.3
   react-use-websocket: ^2.9.1
   redux: ^4.1.1
+  redux-persist: ^6.0.0
   styled-components: ^5.3.3
   stylelint: ^14.0.0
   stylelint-config-standard: ^23.0.0
@@ -56,6 +58,7 @@ dependencies:
   '@dynamic-mapper/mapper': 1.9.1
   '@fontsource/cascadia-code': 4.2.1
   '@fontsource/clear-sans': 4.5.0
+  '@reduxjs/toolkit': 1.6.2_react-redux@7.2.5+react@17.0.2
   axios: 0.23.0
   moment: 2.29.1
   moment-duration-format: 2.3.2
@@ -70,6 +73,7 @@ dependencies:
   react-scripts: 4.0.3_8ffc885aea5855d927196666bcb3cecc
   react-use-websocket: 2.9.1_react-dom@17.0.2+react@17.0.2
   redux: 4.1.1
+  redux-persist: 6.0.0_redux@4.1.1
   styled-components: 5.3.3_react-dom@17.0.2+react@17.0.2
   web-vitals: 2.1.2
   yaml: 1.10.2
@@ -2853,6 +2857,25 @@ packages:
       source-map: 0.7.3
       webpack: 4.44.2
       webpack-dev-server: 3.11.1_webpack@4.44.2
+    dev: false
+
+  /@reduxjs/toolkit/1.6.2_react-redux@7.2.5+react@17.0.2:
+    resolution: {integrity: sha512-HbfI/hOVrAcMGAYsMWxw3UJyIoAS9JTdwddsjlr5w3S50tXhWb+EMyhIw+IAvCVCLETkzdjgH91RjDSYZekVBA==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0
+      react-redux: ^7.2.1
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-redux:
+        optional: true
+    dependencies:
+      immer: 9.0.6
+      react: 17.0.2
+      react-redux: 7.2.5_react-dom@17.0.2+react@17.0.2
+      redux: 4.1.1
+      redux-thunk: 2.4.0_redux@4.1.1
+      reselect: 4.1.4
     dev: false
 
   /@rollup/plugin-node-resolve/7.1.3_rollup@1.32.1:
@@ -7516,6 +7539,10 @@ packages:
     resolution: {integrity: sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==}
     dev: false
 
+  /immer/9.0.6:
+    resolution: {integrity: sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==}
+    dev: false
+
   /import-cwd/2.1.0:
     resolution: {integrity: sha1-qmzzbnInYShcs3HsZRn1PiQ1sKk=}
     engines: {node: '>=4'}
@@ -11093,6 +11120,22 @@ packages:
       strip-indent: 3.0.0
     dev: true
 
+  /redux-persist/6.0.0_redux@4.1.1:
+    resolution: {integrity: sha512-71LLMbUq2r02ng2We9S215LtPu3fY0KgaGE0k8WRgl6RkqxtGfl7HUozz1Dftwsb0D/5mZ8dwAaPbtnzfvbEwQ==}
+    peerDependencies:
+      redux: '>4.0.0'
+    dependencies:
+      redux: 4.1.1
+    dev: false
+
+  /redux-thunk/2.4.0_redux@4.1.1:
+    resolution: {integrity: sha512-/y6ZKQNU/0u8Bm7ROLq9Pt/7lU93cT0IucYMrubo89ENjxPa7i8pqLKu6V4X7/TvYovQ6x01unTeyeZ9lgXiTA==}
+    peerDependencies:
+      redux: ^4
+    dependencies:
+      redux: 4.1.1
+    dev: false
+
   /redux/4.1.1:
     resolution: {integrity: sha512-hZQZdDEM25UY2P493kPYuKqviVwZ58lEmGQNeQ+gXa+U0gYPUBf7NKYazbe3m+bs/DzM/ahN12DbF+NG8i0CWw==}
     dependencies:
@@ -11206,6 +11249,10 @@ packages:
 
   /requires-port/1.0.0:
     resolution: {integrity: sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8=}
+    dev: false
+
+  /reselect/4.1.4:
+    resolution: {integrity: sha512-i1LgXw8DKSU5qz1EV0ZIKz4yIUHJ7L3bODh+Da6HmVSm9vdL/hG7IpbgzQ3k2XSirzf8/eI7OMEs81gb1VV2fQ==}
     dev: false
 
   /resolve-cwd/2.0.0:

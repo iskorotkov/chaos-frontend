@@ -33,18 +33,18 @@ const workflows = <WorkflowStatus[]>[
 ]
 
 const targets = <Target[]>[
-  { type: 'deployment', name: 'nginx', count: 3 },
-  { type: 'deployment', name: 'my-cool-service', count: 5 }
+  { id: 'deploy/nginx', type: 'deployment', name: 'nginx', count: 3 },
+  { id: 'deploy/my-cool-service', type: 'deployment', name: 'my-cool-service', count: 5 }
 ]
 
 const failures = <Failure[]>[
-  { type: 'network', name: 'network delay', severity: 'low', scale: 'deployment' },
-  { type: 'crash', name: 'pod delete', severity: 'critical', scale: 'deployment part' }
+  { id: 'network/network delay', type: 'network', name: 'network delay', severity: 'low', scale: 'deployment' },
+  { id: 'crash/pod delete', type: 'crash', name: 'pod delete', severity: 'critical', scale: 'deployment part' }
 ]
 
 const namespaces = <Namespace[]>[
-  { name: 'ns1' },
-  { name: 'ns2' }
+  { id: 'ns1', name: 'ns1' },
+  { id: 'ns2', name: 'ns2' }
 ]
 
 const server = http.createServer((req, res) => {
