@@ -118,8 +118,14 @@ export const WorkflowsCreationForm = () => {
   useEffect(() => {
     axios(`${backendAddress()}/api/v1/namespaces`)
       .then(res => res.data as Namespace[])
-      .then(setSupportedNamespaces)
+      .then(namespaces => {
+        setSupportedNamespaces(namespaces)
+        if (namespaces.length === 1 || namespaces.findIndex(_ => _.name === namespace) === -1) {
+          dispatch(setNamespace(namespaces[0].name))
+        }
+      })
       .catch(console.error)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const groupedTargets = new Map<string, Target[]>()
