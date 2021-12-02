@@ -21,7 +21,6 @@ import { Namespace } from '../types/namespaces'
 import { Failure } from '../types/failures'
 import { backendAddress } from '../../config'
 import axios from 'axios'
-import plur from 'plur'
 import { BackLink, PreviewLink, RunLink } from '../../lib/components/Link'
 import { useAppDispatch, useAppSelector } from '../../store'
 import {
@@ -71,14 +70,6 @@ const CheckboxCard = (props: { checked: boolean, title: string, onToggled: (valu
     </CompactFormField>
   </GridCard>
 )
-
-const toFirstUpperCase = (s: string) => {
-  if (s.length !== 0) {
-    s = s[0].toUpperCase() + s.slice(1)
-  }
-
-  return s
-}
 
 const clamp = (x: number, min: number, max: number) => x < min
   ? min
@@ -270,14 +261,14 @@ export const WorkflowsCreationForm = () => {
                     checked={failures.every(f => enabledFailures.some(_ => _ === f.id))}
                     onToggled={() => onFailureGroupToggled(group, failures)}
                     indeterminate={!failures.every(f => enabledFailures.some(_ => _ === f.id)) && failures.some(f => enabledFailures.some(_ => _ === f.id))}/>
-                  <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
+                  <FormLabel>{group}</FormLabel>
                 </FormField>
 
                 <Grid>
                   {failures.map(f => (
                     <CheckboxCard key={f.name}
                                   checked={enabledFailures.some(_ => _ === f.id)}
-                                  title={toFirstUpperCase(f.name) + ' (' + f.scale + ' / ' + f.severity + ')'}
+                                  title={f.name + ' (' + f.scale + ' / ' + f.severity + ')'}
                                   onToggled={value => onFailureToggled(f, value)}/>
                   ))}
                 </Grid>
@@ -295,7 +286,7 @@ export const WorkflowsCreationForm = () => {
                     checked={targets.every(t => enabledTargets.some(_ => _ === t.id))}
                     onToggled={() => onTargetGroupToggled(group, targets)}
                     indeterminate={!targets.every(t => enabledTargets.some(_ => _ === t.id)) && targets.some(t => enabledTargets.some(_ => _ === t.id))}/>
-                  <FormLabel>{plur(toFirstUpperCase(group), 2)}</FormLabel>
+                  <FormLabel>{group}</FormLabel>
                 </FormField>
 
                 <Grid>
