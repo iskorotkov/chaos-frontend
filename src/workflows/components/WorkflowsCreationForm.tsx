@@ -94,9 +94,15 @@ export const WorkflowsCreationForm = () => {
       .then(res => res.data as Target[])
       .then(targets => {
         setSupportedTargets(targets)
-        if (enabledTargets.length === 0) {
-          dispatch(setTargetsIds(targets.map(_ => _.id)))
+
+        let intersected = enabledTargets
+          .filter(_ => targets
+            .findIndex(__ => __.id === _) !== -1)
+        if (intersected.length === 0) {
+          intersected = targets.map(_ => _.id)
         }
+
+        dispatch(setTargetsIds(intersected))
       })
       .catch(console.error)
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,9 +113,15 @@ export const WorkflowsCreationForm = () => {
       .then(res => res.data as Failure[])
       .then(failures => {
         setSupportedFailures(failures)
-        if (enabledFailures.length === 0) {
-          dispatch(setFailuresById(failures.map(_ => _.id)))
+
+        let intersected = enabledFailures
+          .filter(_ => failures
+            .findIndex(__ => __.id === _) !== -1)
+        if (intersected.length === 0) {
+          intersected = failures.map(_ => _.id)
         }
+
+        dispatch(setFailuresById(intersected))
       })
       .catch(console.error)
     // eslint-disable-next-line react-hooks/exhaustive-deps
