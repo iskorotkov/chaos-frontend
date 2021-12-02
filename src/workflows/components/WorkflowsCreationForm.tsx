@@ -284,7 +284,7 @@ export const WorkflowsCreationForm = () => {
 
                 <Grid>
                   {failures.map(f => (
-                    <CheckboxCard key={f.name}
+                    <CheckboxCard key={f.id}
                                   checked={enabledFailures.some(_ => _ === f.id)}
                                   title={f.name + ' (' + f.scale + ' / ' + f.severity + ')'}
                                   onToggled={value => onFailureToggled(f, value)}/>
@@ -309,7 +309,7 @@ export const WorkflowsCreationForm = () => {
 
                 <Grid>
                   {targets.map(t => (
-                    <CheckboxCard key={t.name}
+                    <CheckboxCard key={t.id}
                                   checked={enabledTargets.some(_ => _ === t.id)}
                                   title={t.name + ' (' + t.count + ')'}
                                   onToggled={value => onTargetToggled(t, value)}/>
