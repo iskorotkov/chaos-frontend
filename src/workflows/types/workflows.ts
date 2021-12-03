@@ -1,53 +1,27 @@
-// Preview.
-
-import { Target } from './targets'
-import { Failure } from './failures'
-
-export interface WorkflowPreview {
-  stages: StagePreview[]
-}
-
-export interface StagePreview {
-  actions: ActionPreview[]
-  duration: number
-}
-
-export interface ActionPreview extends Failure {
-  target: Target
-}
-
-// Running.
-
-export interface RunningWorkflow {
+export type Workflow = {
   name: string
   namespace: string
+  startedAt: string
+  finishedAt: string
+  type?: string
   status: string
-  startedAt: Date
-  finishedAt: Date
-  stages: RunningStage[]
+  stages: Stage[]
 }
 
-export interface RunningStage {
+export type Stage = {
   status: string
-  duration: number
-  startedAt: Date
-  finishedAt: Date
-  actions: RunningAction[]
+  startedAt: string
+  finishedAt: string
+  steps: Step[]
 }
 
-export interface RunningAction extends Failure {
-  target: Target
-  status: string
-  startedAt: Date
-  finishedAt: Date
-}
-
-// Status.
-
-export interface WorkflowStatus {
+export type Step = {
   name: string
-  namespace: string
+  type: string
+  severity: string
+  scale: string
   status: string
-  startedAt: Date
-  finishedAt: Date
+  version: string
+  startedAt: string
+  finishedAt: string
 }

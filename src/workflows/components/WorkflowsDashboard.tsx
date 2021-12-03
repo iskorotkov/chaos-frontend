@@ -5,8 +5,8 @@ import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import axios from 'axios'
 import { backendAddress } from '../../config'
 import { WorkflowCard } from './WorkflowCard'
-import { WorkflowStatus } from '../types/workflows'
 import { CreateLink } from '../../lib/components/Link'
+import { Workflow } from '../types/workflows'
 
 const ActionsRow = styled.div`
   display: flex;
@@ -19,7 +19,7 @@ const Workflows = styled.ul`
   padding: 0;
 `
 
-const matchWorkflow = (workflow: WorkflowStatus, re: RegExp) => {
+const matchWorkflow = (workflow: Workflow, re: RegExp) => {
   return re.test(workflow.namespace) ||
     re.test(workflow.name) ||
     re.test(workflow.status) ||
@@ -28,19 +28,12 @@ const matchWorkflow = (workflow: WorkflowStatus, re: RegExp) => {
 }
 
 export const WorkflowsDashboard = () => {
-  const [workflows, setWorkflows] = useState<WorkflowStatus[]>([])
+  const [workflows, setWorkflows] = useState<Workflow[]>([])
   const [query, setQuery] = useState('')
 
   useEffect(() => {
     axios(`${backendAddress()}/api/v1/workflows`)
-      .then(res => res.data as WorkflowStatus[])
-      .then(workflows => workflows.map(w => {
-        return {
-          ...w,
-          createdAt: new Date(w.startedAt),
-          finishedAt: new Date(w.finishedAt)
-        }
-      }))
+      .then(res => res.data as Workflow[])
       .then(setWorkflows)
       .catch(console.error)
   }, [])

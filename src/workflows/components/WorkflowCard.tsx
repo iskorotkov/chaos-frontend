@@ -9,10 +9,10 @@ import {
 import { CancelButton, PauseButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
-import { WorkflowStatus } from '../types/workflows'
 import { theme } from '../../theme'
 import moment from 'moment'
 import { ViewLink } from '../../lib/components/Link'
+import { Workflow } from '../types/workflows'
 
 const WorkflowProperties = styled.ul`
   list-style: none;
@@ -40,12 +40,12 @@ const ElapsedSpan = styled.span`
   color: ${theme.colors.text.muted};
 `
 
-const formatTime = (datetime: Date) => {
+const formatTime = (datetime: string) => {
   const elapsed = moment.duration(new Date().valueOf() - new Date(datetime).valueOf())
 
   return (
     <span>
-      <DatetimeSpan>{datetime.toLocaleString()}</DatetimeSpan> <ElapsedSpan>({elapsed.humanize()} ago)</ElapsedSpan>
+      <DatetimeSpan>{new Date(datetime).toLocaleString()}</DatetimeSpan> <ElapsedSpan>({elapsed.humanize()} ago)</ElapsedSpan>
     </span>
   )
 }
@@ -54,9 +54,15 @@ const indicatorForStatus = (status: string) => {
   switch (status) {
     case 'running':
       return <ChangeIndicatorIcon/>
+    case 'pending':
+      return <ChangeIndicatorIcon/>
     case 'succeeded':
       return <SuccessIndicatorIcon/>
     case 'failed':
+      return <DangerIndicatorIcon/>
+    case 'error':
+      return <DangerIndicatorIcon/>
+    case 'canceled':
       return <DangerIndicatorIcon/>
     default:
       console.error(`unknown status: ${status}`)
@@ -64,7 +70,7 @@ const indicatorForStatus = (status: string) => {
   }
 }
 
-export const WorkflowCard = (props: { workflow: WorkflowStatus }) => (
+export const WorkflowCard = (props: { workflow: Workflow }) => (
   <Card>
     <CardTitle>Workflow {props.workflow.name}</CardTitle>
 
@@ -73,10 +79,13 @@ export const WorkflowCard = (props: { workflow: WorkflowStatus }) => (
     </Indicator>
 
     <WorkflowProperties>
-      <WorkflowProperty>Namespace: {props.workflow.namespace}</WorkflowProperty>
       <WorkflowProperty>Started at: {formatTime(props.workflow.startedAt)}</WorkflowProperty>
       {props.workflow.finishedAt &&
           <WorkflowProperty>Finished at: {formatTime(props.workflow.finishedAt)}</WorkflowProperty>}
+      <WorkflowProperty>Stages: {props.workflow.stages.length}</WorkflowProperty>
+      <WorkflowProperty>Steps: {props.workflow.stages
+        .map(_ => _.steps.length)
+        .reduce((prev, cur) => prev + cur, 0)}</WorkflowProperty>
     </WorkflowProperties>
 
     <WorkflowActions>
