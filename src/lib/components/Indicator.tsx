@@ -1,5 +1,7 @@
 import styled from 'styled-components'
 import React from 'react'
+import { ChangeIndicatorIcon, DangerIndicatorIcon, PrimaryIndicatorIcon, SuccessIndicatorIcon } from './IndicatorIcon'
+import { Status } from '../../workflows/types/workflows'
 
 const IndicatorWrapper = styled.div`
   position: absolute;
@@ -18,3 +20,23 @@ export const Indicator = (props: { children: React.ReactNode, text: string }) =>
     <div>{props.text}</div>
   </IndicatorWrapper>
 )
+
+export const StatusIndicatorIcon = ({ status }: { status: Status }) => {
+  switch (status) {
+    case 'running':
+      return <ChangeIndicatorIcon/>
+    case 'pending':
+      return <ChangeIndicatorIcon/>
+    case 'succeeded':
+      return <SuccessIndicatorIcon/>
+    case 'failed':
+      return <DangerIndicatorIcon/>
+    case 'error':
+      return <DangerIndicatorIcon/>
+    case 'cancelled':
+      return <DangerIndicatorIcon/>
+    default:
+      console.error(`unknown status: ${status}`)
+      return <PrimaryIndicatorIcon/>
+  }
+}

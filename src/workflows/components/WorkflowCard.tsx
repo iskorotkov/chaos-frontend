@@ -1,11 +1,5 @@
 import { Card, CardTitle } from '../../lib/components/Card'
-import { Indicator } from '../../lib/components/Indicator'
-import {
-  ChangeIndicatorIcon,
-  DangerIndicatorIcon,
-  PrimaryIndicatorIcon,
-  SuccessIndicatorIcon
-} from '../../lib/components/IndicatorIcon'
+import { Indicator, StatusIndicatorIcon } from '../../lib/components/Indicator'
 import { CancelButton, PauseButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
@@ -50,47 +44,43 @@ const formatTime = (datetime: string) => {
   )
 }
 
-const indicatorForStatus = (status: string) => {
-  switch (status) {
-    case 'running':
-      return <ChangeIndicatorIcon/>
-    case 'pending':
-      return <ChangeIndicatorIcon/>
-    case 'succeeded':
-      return <SuccessIndicatorIcon/>
-    case 'failed':
-      return <DangerIndicatorIcon/>
-    case 'error':
-      return <DangerIndicatorIcon/>
-    case 'canceled':
-      return <DangerIndicatorIcon/>
-    default:
-      console.error(`unknown status: ${status}`)
-      return <PrimaryIndicatorIcon/>
-  }
-}
-
-export const WorkflowCard = (props: { workflow: Workflow }) => (
+export const WorkflowCard = ({ workflow }: { workflow: Workflow }) => (
   <Card>
-    <CardTitle>Workflow {props.workflow.name}</CardTitle>
+    <CardTitle>{workflow.name}</CardTitle>
 
-    <Indicator text={props.workflow.status}>
-      {indicatorForStatus(props.workflow.status)}
+    <Indicator text={workflow.status}>
+      <StatusIndicatorIcon status={workflow.status}/>
     </Indicator>
 
     <WorkflowProperties>
-      <WorkflowProperty>Started at: {formatTime(props.workflow.startedAt)}</WorkflowProperty>
-      {props.workflow.finishedAt &&
-          <WorkflowProperty>Finished at: {formatTime(props.workflow.finishedAt)}</WorkflowProperty>}
-      <WorkflowProperty>Stages: {props.workflow.stages.length}</WorkflowProperty>
-      <WorkflowProperty>Steps: {props.workflow.stages
+      <WorkflowProperty>
+        Namespace: {workflow.namespace}
+      </WorkflowProperty>
+
+      <WorkflowProperty>
+        Started at: {formatTime(workflow.startedAt)}
+      </WorkflowProperty>
+
+      {workflow.finishedAt &&
+          <WorkflowProperty>Finished at: {formatTime(workflow.finishedAt)}</WorkflowProperty>}
+
+      <WorkflowProperty>
+        Stages: {workflow.stages.length}
+      </WorkflowProperty>
+
+      <WorkflowProperty>
+        Steps: {workflow.stages
         .map(_ => _.steps.length)
-        .reduce((prev, cur) => prev + cur, 0)}</WorkflowProperty>
+        .reduce((prev, cur) => prev + cur, 0)}
+      </WorkflowProperty>
     </WorkflowProperties>
 
     <WorkflowActions>
-      <li><ViewLink href="/view/x/y">View <i className="fas fa-arrow-right"/></ViewLink></li>
-      {props.workflow.status === 'running' && <>
+      <li><ViewLink href={`/view/${workflow.namespace}/${workflow.name}`}>
+        View <i className="fas fa-arrow-right"/>
+      </ViewLink></li>
+
+      {workflow.status === 'running' && <>
           <li><PauseButton>Pause <i className="fas fa-pause"/></PauseButton></li>
           <li><CancelButton>Cancel <i className="fas fa-times"/></CancelButton></li>
       </>}

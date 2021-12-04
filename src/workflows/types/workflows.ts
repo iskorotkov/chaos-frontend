@@ -1,15 +1,17 @@
+export type Status = 'running' | 'pending' | 'succeeded' | 'failed' | 'error' | 'cancelled'
+
 export type Workflow = {
   name: string
   namespace: string
   startedAt: string
   finishedAt: string
   type?: string
-  status: string
+  status: Status
   stages: Stage[]
 }
 
 export type Stage = {
-  status: string
+  status: Status
   startedAt: string
   finishedAt: string
   steps: Step[]
@@ -20,7 +22,7 @@ export type Step = {
   type: string
   severity: string
   scale: string
-  status: string
+  status: Status
   version: string
   startedAt: string
   finishedAt: string

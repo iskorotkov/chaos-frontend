@@ -1,13 +1,16 @@
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useParams } from 'react-router'
 import { Card, CardTitle } from '../../lib/components/Card'
 import { Section, SectionTitle } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
-import { ChangeIndicatorIcon } from '../../lib/components/IndicatorIcon'
 import { CancelButton, PauseButton } from '../../lib/components/Button'
 import { BackLink, RunLink } from '../../lib/components/Link'
+import axios from 'axios'
+import { BACKEND_URL } from '../../config'
+import { Workflow } from '../types/workflows'
+import { StatusIndicatorIcon } from '../../lib/components/Indicator'
 
 const ActionsRowForPreview = styled.div`
   display: flex;
@@ -35,33 +38,17 @@ const IndicatorWrapper = styled.div`
   margin-left: auto;
 `
 
-const IndicatorCard = () => (
-  <GridCard>
-    network latency
-    <IndicatorWrapper>
-      <ChangeIndicatorIcon/>
-    </IndicatorWrapper>
-  </GridCard>
-)
-
 export const ViewWorkflow = (props: { preview: boolean }) => {
-  const { name } = useParams<{ namespace: string, name: string }>()
+  const { namespace, name } = useParams<{ namespace: string, name: string }>()
+  const [workflow, setWorkflow] = useState<Workflow>()
+
+  useEffect(() => {
+    axios(`${BACKEND_URL}/api/v1/workflows/${namespace}/${name}`)
+      .then(resp => setWorkflow(resp.data as Workflow))
+      .catch(err => console.log(`error getting workflow info: ${err}`))
+  }, [namespace, name])
 
   const pageName = props.preview ? 'Preview workflow' : 'View workflow'
-
-  const actionsRow =
-    props.preview
-      ? <ActionsRowForPreview>
-        <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
-        <RunLink href="/view/x/y">Run <i className="fas fa-caret-right"/></RunLink>
-      </ActionsRowForPreview>
-      : <ActionsRowForView>
-        <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
-        <PauseButton>Pause <i className="fas fa-pause"/></PauseButton>
-        <CancelButton>Cancel <i className="fas fa-times"/></CancelButton>
-      </ActionsRowForView>
-
-  const StepCard = () => props.preview ? <GridCard>network latency</GridCard> : <IndicatorCard/>
 
   return (
     <Page>
@@ -70,52 +57,55 @@ export const ViewWorkflow = (props: { preview: boolean }) => {
       </Header>
 
       <Main>
-        {actionsRow}
+        {props.preview
+          ? <ActionsRowForPreview>
+            <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
+            <RunLink href={`/view/${namespace}/${name}`}>Run <i className="fas fa-caret-right"/></RunLink>
+          </ActionsRowForPreview>
+          : <ActionsRowForView>
+            <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
+            <PauseButton>Pause <i className="fas fa-pause"/></PauseButton>
+            <CancelButton>Cancel <i className="fas fa-times"/></CancelButton>
+          </ActionsRowForView>}
 
         <Card>
-          <CardTitle>Workflow {name}</CardTitle>
+          <CardTitle>{name}</CardTitle>
 
           <Section>
             <SectionTitle>General info</SectionTitle>
 
             <WorkflowInfo>
-              {!props.preview && <WorkflowInfoLine>Started at: 2021-01-01 10:00:00</WorkflowInfoLine>}
-              <WorkflowInfoLine>Namespace: app</WorkflowInfoLine>
-              <WorkflowInfoLine>Seed: 123</WorkflowInfoLine>
+              <WorkflowInfoLine>Namespace: {namespace}</WorkflowInfoLine>
+              {!props.preview &&
+                  <WorkflowInfoLine>
+                      Started at: {workflow ? new Date(workflow.startedAt).toLocaleString() : '-'}
+                  </WorkflowInfoLine>}
+              {!props.preview &&
+                  <WorkflowInfoLine>
+                      Finished at: {workflow ? new Date(workflow.finishedAt).toLocaleString() : '-'}
+                  </WorkflowInfoLine>}
             </WorkflowInfo>
           </Section>
 
-          <Section>
-            <SectionTitle>Stage 1</SectionTitle>
+          {workflow && workflow.stages.map((stage, stageIndex) => (
+            <Section key={stageIndex}>
+              <SectionTitle>Stage {stageIndex + 1}</SectionTitle>
 
-            <Grid>
-              <StepCard/>
-              <StepCard/>
-              <StepCard/>
-              <StepCard/>
-              <StepCard/>
-            </Grid>
-          </Section>
+              <Grid>
+                {stage.steps.map((step, stepIndex) => (
+                  <GridCard key={stepIndex}>
+                    {step.name}
 
-          <Section>
-            <SectionTitle>Stage 2</SectionTitle>
-
-            <Grid>
-              <StepCard/>
-              <StepCard/>
-              <StepCard/>
-            </Grid>
-          </Section>
-
-          <Section>
-            <SectionTitle>Stage 3</SectionTitle>
-
-            <Grid>
-              <StepCard/>
-              <StepCard/>
-              <StepCard/>
-            </Grid>
-          </Section>
+                    {!props.preview &&
+                        <IndicatorWrapper>
+                            <StatusIndicatorIcon status={step.status}/>
+                        </IndicatorWrapper>
+                    }
+                  </GridCard>
+                ))}
+              </Grid>
+            </Section>
+          ))}
         </Card>
       </Main>
     </Page>

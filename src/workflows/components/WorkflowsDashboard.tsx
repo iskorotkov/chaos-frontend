@@ -3,7 +3,7 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import axios from 'axios'
-import { backendAddress } from '../../config'
+import { BACKEND_URL } from '../../config'
 import { WorkflowCard } from './WorkflowCard'
 import { CreateLink } from '../../lib/components/Link'
 import { Workflow } from '../types/workflows'
@@ -32,19 +32,13 @@ export const WorkflowsDashboard = () => {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    axios(`${backendAddress()}/api/v1/workflows`)
+    axios(`${BACKEND_URL}/api/v1/workflows`)
       .then(res => res.data as Workflow[])
       .then(setWorkflows)
       .catch(console.error)
   }, [])
 
   const onSearchInput = (e: FormEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)
-
-  const workflowsCards = workflows
-    .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
-    .map(w => (
-      <li key={`${w.namespace}-${w.name}`}><WorkflowCard workflow={w}/></li>
-    ))
 
   return (
     <Page>
@@ -60,7 +54,11 @@ export const WorkflowsDashboard = () => {
         </ActionsRow>
 
         <Workflows>
-          {workflowsCards}
+          {workflows
+            .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
+            .map(w => (
+              <li key={`${w.namespace}/${w.name}`}><WorkflowCard workflow={w}/></li>
+            ))}
         </Workflows>
       </Main>
     </Page>
