@@ -15,6 +15,7 @@ import { selectCreateWorkflowForm } from '../reducers/createWorkflowForm'
 import { useAppSelector } from '../../store'
 import { theme } from '../../theme'
 import useWebSocket from 'react-use-websocket'
+import { Loading } from '../../lib/components/Loading'
 
 const ActionsRowForPreview = styled.div`
   display: flex;
@@ -42,18 +43,6 @@ const IndicatorWrapper = styled.div`
   margin-left: auto;
 `
 
-const CenterText = styled.p`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: ${theme.colors.text.dark};
-`
-
-const Loading = ({ text }: { text: string }) => (
-  <CenterText>{text}</CenterText>
-)
-
 const CardContent = styled.div`
   display: flex;
   flex-flow: column nowrap;
@@ -77,7 +66,7 @@ export const WatchWorkflow = () => {
     retryOnError: true
   })
 
-  const workflow = lastJsonMessage as Workflow
+  const workflow = lastJsonMessage as Workflow | undefined
 
   const onCancel = () => {
     axios(`${WORKFLOWS_URL}/api/v1/workflows/${namespace}/${name}/cancel`, {
@@ -87,21 +76,21 @@ export const WatchWorkflow = () => {
       .catch(err => console.error(`error getting workflow preview: ${err}`))
   }
 
-  return !workflow
-    ? <Loading text="Workflow is loading..."/>
-    : <Page>
-      <Header>
-        <PageName>Chaos Framework / View workflow</PageName>
-      </Header>
+  return <Page>
+    <Header>
+      <PageName>Chaos Framework / View workflow</PageName>
+    </Header>
 
-      <Main>
-        <ActionsRowForView>
-          <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
-          {workflow.status === 'running' &&
-              <CancelButton onClick={onCancel}>Cancel <i className="fas fa-times"/></CancelButton>}
-        </ActionsRowForView>
+    <Main>
+      <ActionsRowForView>
+        <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
+        {workflow?.status === 'running' &&
+            <CancelButton onClick={onCancel}>Cancel <i className="fas fa-times"/></CancelButton>}
+      </ActionsRowForView>
 
-        <Card>
+      {!workflow
+        ? <Loading text="Workflow is loading..."/>
+        : <Card>
           <CardTitle>{workflow.name}</CardTitle>
 
           <Section>
@@ -140,8 +129,9 @@ export const WatchWorkflow = () => {
             </Section>
           ))}
         </Card>
-      </Main>
-    </Page>
+      }
+    </Main>
+  </Page>
 }
 
 export const PreviewWorkflow = () => {
@@ -170,20 +160,20 @@ export const PreviewWorkflow = () => {
       .catch(e => console.error(e))
   }
 
-  return !workflow
-    ? <Loading text="Generating a workflow..."/>
-    : <Page>
-      <Header>
-        <PageName>Chaos Framework / Preview workflow</PageName>
-      </Header>
+  return <Page>
+    <Header>
+      <PageName>Chaos Framework / Preview workflow</PageName>
+    </Header>
 
-      <Main>
-        <ActionsRowForPreview>
-          <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
-          <RunButton onClick={onRun}>Run <i className="fas fa-caret-right"/></RunButton>
-        </ActionsRowForPreview>
+    <Main>
+      <ActionsRowForPreview>
+        <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
+        <RunButton onClick={onRun}>Run <i className="fas fa-caret-right"/></RunButton>
+      </ActionsRowForPreview>
 
-        <Card>
+      {!workflow
+        ? <Loading text="Generating a workflow..."/>
+        : <Card>
           <CardTitle>Previewing a workflow</CardTitle>
 
           <Section>
@@ -213,6 +203,7 @@ export const PreviewWorkflow = () => {
             </Section>
           ))}
         </Card>
-      </Main>
-    </Page>
+      }
+    </Main>
+  </Page>
 }

@@ -7,6 +7,7 @@ import { WORKFLOWS_URL } from '../../config'
 import { WorkflowCard } from './WorkflowCard'
 import { CreateLink } from '../../lib/components/Link'
 import { Workflow } from '../types/workflows'
+import { Loading } from '../../lib/components/Loading'
 
 const ActionsRow = styled.div`
   display: flex;
@@ -28,7 +29,7 @@ const matchWorkflow = (workflow: Workflow, re: RegExp) => {
 }
 
 export const WorkflowsDashboard = () => {
-  const [workflows, setWorkflows] = useState<Workflow[]>([])
+  const [workflows, setWorkflows] = useState<Workflow[]>()
   const [query, setQuery] = useState('')
 
   useEffect(() => {
@@ -53,13 +54,15 @@ export const WorkflowsDashboard = () => {
           <CreateLink href="/create">New <i className="fas fa-plus"/></CreateLink>
         </ActionsRow>
 
-        <Workflows>
-          {workflows
-            .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
-            .map(w => (
-              <li key={`${w.namespace}/${w.name}`}><WorkflowCard workflow={w}/></li>
-            ))}
-        </Workflows>
+        {!workflows
+          ? <Loading text="Loading workflows..."/>
+          : <Workflows>
+            {workflows
+              .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
+              .map(w => (
+                <li key={`${w.namespace}/${w.name}`}><WorkflowCard workflow={w}/></li>
+              ))}
+          </Workflows>}
       </Main>
     </Page>
   )

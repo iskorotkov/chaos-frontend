@@ -43,6 +43,7 @@ import {
   Stages
 } from '../reducers/createWorkflowForm'
 import { useHistory } from 'react-router'
+import { Loading } from '../../lib/components/Loading'
 
 const stagesRange = {
   min: 0,
@@ -80,9 +81,9 @@ const clamp = (x: number, min: number, max: number) => x < min
     : x
 
 export const WorkflowsCreationForm = () => {
-  const [supportedTargets, setSupportedTargets] = useState<Target[]>([])
-  const [supportedFailures, setSupportedFailures] = useState<Failure[]>([])
-  const [supportedNamespaces, setSupportedNamespaces] = useState<Namespace[]>([])
+  const [supportedTargets, setSupportedTargets] = useState<Target[]>()
+  const [supportedFailures, setSupportedFailures] = useState<Failure[]>()
+  const [supportedNamespaces, setSupportedNamespaces] = useState<Namespace[]>()
 
   const seeds = useAppSelector(selectSeeds)
   const namespace = useAppSelector(selectNamespace)
@@ -143,22 +144,26 @@ export const WorkflowsCreationForm = () => {
   }, [])
 
   const groupedTargets = new Map<string, Target[]>()
-  for (const target of supportedTargets) {
-    const group = groupedTargets.get(target.type)
-    if (group) {
-      group.push(target)
-    } else {
-      groupedTargets.set(target.type, [target])
+  if (supportedTargets) {
+    for (const target of supportedTargets) {
+      const group = groupedTargets.get(target.type)
+      if (group) {
+        group.push(target)
+      } else {
+        groupedTargets.set(target.type, [target])
+      }
     }
   }
 
   const groupedFailures = new Map<string, Failure[]>()
-  for (const failure of supportedFailures) {
-    const group = groupedFailures.get(failure.type)
-    if (group) {
-      group.push(failure)
-    } else {
-      groupedFailures.set(failure.type, [failure])
+  if (supportedFailures) {
+    for (const failure of supportedFailures) {
+      const group = groupedFailures.get(failure.type)
+      if (group) {
+        group.push(failure)
+      } else {
+        groupedFailures.set(failure.type, [failure])
+      }
     }
   }
 
@@ -285,63 +290,70 @@ export const WorkflowsCreationForm = () => {
             </FormField>
           </Card>
 
-          <Card>
-            <CardTitle>Failures</CardTitle>
+          {!supportedFailures
+            ? <Loading text="Loading failures..."/>
+            : <Card>
+              <CardTitle>Failures</CardTitle>
 
-            {Array.from(groupedFailures.entries()).map(([group, failures]) => (
-              <Section key={group}>
-                <FormField>
-                  <Checkbox
-                    checked={failures.every(f => enabledFailures.some(_ => _ === f.id))}
-                    onToggled={() => onFailureGroupToggled(group, failures)}
-                    indeterminate={!failures.every(f => enabledFailures.some(_ => _ === f.id)) && failures.some(f => enabledFailures.some(_ => _ === f.id))}/>
-                  <FormLabel>{group}</FormLabel>
-                </FormField>
+              {Array.from(groupedFailures.entries()).map(([group, failures]) => (
+                <Section key={group}>
+                  <FormField>
+                    <Checkbox
+                      checked={failures.every(f => enabledFailures.some(_ => _ === f.id))}
+                      onToggled={() => onFailureGroupToggled(group, failures)}
+                      indeterminate={!failures.every(f => enabledFailures.some(_ => _ === f.id)) && failures.some(f => enabledFailures.some(_ => _ === f.id))}/>
+                    <FormLabel>{group}</FormLabel>
+                  </FormField>
 
-                <Grid>
-                  {failures.map(f => (
-                    <CheckboxCard key={f.id}
-                                  checked={enabledFailures.some(_ => _ === f.id)}
-                                  title={f.name + ' (' + f.scale + ' / ' + f.severity + ')'}
-                                  onToggled={value => onFailureToggled(f, value)}/>
-                  ))}
-                </Grid>
-              </Section>
-            ))}
-          </Card>
+                  <Grid>
+                    {failures.map(f => (
+                      <CheckboxCard key={f.id}
+                                    checked={enabledFailures.some(_ => _ === f.id)}
+                                    title={f.name + ' (' + f.scale + ' / ' + f.severity + ')'}
+                                    onToggled={value => onFailureToggled(f, value)}/>
+                    ))}
+                  </Grid>
+                </Section>
+              ))}
+            </Card>}
 
-          <Card>
-            <CardTitle>Targets</CardTitle>
+          {!supportedTargets
+            ? <Loading text="Loading targets..."/>
+            : <Card>
+              <CardTitle>Targets</CardTitle>
 
-            {Array.from(groupedTargets.entries()).map(([group, targets]) => (
-              <Section key={group}>
-                <FormField>
-                  <Checkbox
-                    checked={targets.every(t => enabledTargets.some(_ => _ === t.id))}
-                    onToggled={() => onTargetGroupToggled(group, targets)}
-                    indeterminate={!targets.every(t => enabledTargets.some(_ => _ === t.id)) && targets.some(t => enabledTargets.some(_ => _ === t.id))}/>
-                  <FormLabel>{group}</FormLabel>
-                </FormField>
+              {Array.from(groupedTargets.entries()).map(([group, targets]) => (
+                <Section key={group}>
+                  <FormField>
+                    <Checkbox
+                      checked={targets.every(t => enabledTargets.some(_ => _ === t.id))}
+                      onToggled={() => onTargetGroupToggled(group, targets)}
+                      indeterminate={!targets.every(t => enabledTargets.some(_ => _ === t.id)) && targets.some(t => enabledTargets.some(_ => _ === t.id))}/>
+                    <FormLabel>{group}</FormLabel>
+                  </FormField>
 
-                <Grid>
-                  {targets.map(t => (
-                    <CheckboxCard key={t.id}
-                                  checked={enabledTargets.some(_ => _ === t.id)}
-                                  title={t.name + ' (' + t.count + ')'}
-                                  onToggled={value => onTargetToggled(t, value)}/>
-                  ))}
-                </Grid>
-              </Section>
-            ))}
-          </Card>
+                  <Grid>
+                    {targets.map(t => (
+                      <CheckboxCard key={t.id}
+                                    checked={enabledTargets.some(_ => _ === t.id)}
+                                    title={t.name + ' (' + t.count + ')'}
+                                    onToggled={value => onTargetToggled(t, value)}/>
+                    ))}
+                  </Grid>
+                </Section>
+              ))}
+            </Card>
+          }
         </form>
       </Main>
 
-      <datalist id="namespaces">
-        {supportedNamespaces.map(ns => (
-          <option key={ns.name}>{ns.name}</option>
-        ))}
-      </datalist>
+      {supportedNamespaces &&
+          <datalist id="namespaces">
+            {supportedNamespaces.map(ns => (
+              <option key={ns.name}>{ns.name}</option>
+            ))}
+          </datalist>
+      }
     </Page>
   )
 }
