@@ -74,8 +74,7 @@
     "build": "BUILD_PATH='./dist' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "preinstall": "npx only-allow pnpm",
-    "start-mock": "NODE_OPTIONS=\"--loader ts-node/esm\" ts-node src/mock/index.ts"
+    "preinstall": "npx only-allow pnpm"
   },
   "browserslist": {
     "production": [
