@@ -10,7 +10,7 @@ import { BackLink } from '../../lib/components/Link'
 import { Workflow, WorkflowPreview } from '../types/workflows'
 import { StatusIndicatorIcon } from '../../lib/components/Indicator'
 import axios from 'axios'
-import { BACKEND_URL, BACKEND_WS_URL } from '../../config'
+import { SCHEDULER_URL, WORKFLOWS_URL, WORKFLOWS_WS_URL } from '../../config'
 import { selectCreateWorkflowForm } from '../reducers/createWorkflowForm'
 import { useAppSelector } from '../../store'
 import { theme } from '../../theme'
@@ -56,7 +56,7 @@ const Loading = ({ text }: { text: string }) => (
 
 export const WatchWorkflow = () => {
   const { namespace, name } = useParams<{ namespace: string, name: string }>()
-  const { lastJsonMessage } = useWebSocket(`${BACKEND_WS_URL}/api/v1/workflows/${namespace}/${name}/watch`, {
+  const { lastJsonMessage } = useWebSocket(`${WORKFLOWS_WS_URL}/api/v1/workflows/${namespace}/${name}/watch`, {
     reconnectAttempts: 1000,
     reconnectInterval: 5000,
     retryOnError: true
@@ -65,7 +65,7 @@ export const WatchWorkflow = () => {
   const workflow = lastJsonMessage as Workflow
 
   const onCancel = () => {
-    axios(`${BACKEND_URL}/api/v1/workflows/${namespace}/${name}/cancel`, {
+    axios(`${WORKFLOWS_URL}/api/v1/workflows/${namespace}/${name}/cancel`, {
       method: 'POST'
     })
       .then(resp => console.log('cancelled workflow with response', resp.data))
@@ -130,7 +130,7 @@ export const PreviewWorkflow = () => {
   const workflowReq = useAppSelector(selectCreateWorkflowForm)
 
   useEffect(() => {
-    axios(`${BACKEND_URL}/api/v1/workflows/preview`, {
+    axios(`${SCHEDULER_URL}/api/v1/workflows/preview`, {
       method: 'POST',
       data: workflowReq
     })
@@ -140,7 +140,7 @@ export const PreviewWorkflow = () => {
 
   const history = useHistory()
   const onRun = () => {
-    axios(`${BACKEND_URL}/api/v1/workflows`, {
+    axios(`${SCHEDULER_URL}/api/v1/workflows`, {
       method: 'POST',
       data: workflowReq
     })

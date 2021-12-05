@@ -8,7 +8,7 @@ import moment from 'moment'
 import { ViewLink } from '../../lib/components/Link'
 import { Workflow } from '../types/workflows'
 import axios from 'axios'
-import { BACKEND_URL } from '../../config'
+import { WORKFLOWS_URL } from '../../config'
 
 const WorkflowProperties = styled.ul`
   list-style: none;
@@ -48,7 +48,7 @@ const formatTime = (datetime: string) => {
 
 export const WorkflowCard = ({ workflow }: { workflow: Workflow }) => {
   const onCancel = () => {
-    axios(`${BACKEND_URL}/api/v1/workflows/${workflow.namespace}/${workflow.name}/cancel`, {
+    axios(`${WORKFLOWS_URL}/api/v1/workflows/${workflow.namespace}/${workflow.name}/cancel`, {
       method: 'POST'
     })
       .then(resp => console.log('cancelled workflow with response', resp.data))

@@ -3,7 +3,7 @@ import React, { FormEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import axios from 'axios'
-import { BACKEND_URL } from '../../config'
+import { WORKFLOWS_URL } from '../../config'
 import { WorkflowCard } from './WorkflowCard'
 import { CreateLink } from '../../lib/components/Link'
 import { Workflow } from '../types/workflows'
@@ -32,7 +32,7 @@ export const WorkflowsDashboard = () => {
   const [query, setQuery] = useState('')
 
   useEffect(() => {
-    axios(`${BACKEND_URL}/api/v1/workflows`)
+    axios(`${WORKFLOWS_URL}/api/v1/workflows`)
       .then(res => res.data as Workflow[])
       .then(setWorkflows)
       .catch(console.error)

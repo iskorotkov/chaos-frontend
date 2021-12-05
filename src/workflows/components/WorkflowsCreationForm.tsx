@@ -19,7 +19,7 @@ import { Grid, GridCard } from '../../lib/components/Grid'
 import { Target } from '../types/targets'
 import { Namespace } from '../types/namespaces'
 import { Failure } from '../types/failures'
-import { BACKEND_URL } from '../../config'
+import { SCHEDULER_URL } from '../../config'
 import axios from 'axios'
 import { BackLink, PreviewLink } from '../../lib/components/Link'
 import { useAppDispatch, useAppSelector } from '../../store'
@@ -92,7 +92,7 @@ export const WorkflowsCreationForm = () => {
   const dispatch = useAppDispatch()
 
   useEffect(() => {
-    axios(`${BACKEND_URL}/api/v1/targets`)
+    axios(`${SCHEDULER_URL}/api/v1/targets`)
       .then(res => res.data as Target[])
       .then(targets => {
         setSupportedTargets(targets)
@@ -111,7 +111,7 @@ export const WorkflowsCreationForm = () => {
   }, [])
 
   useEffect(() => {
-    axios(`${BACKEND_URL}/api/v1/failures`)
+    axios(`${SCHEDULER_URL}/api/v1/failures`)
       .then(res => res.data as Failure[])
       .then(failures => {
         setSupportedFailures(failures)
@@ -130,7 +130,7 @@ export const WorkflowsCreationForm = () => {
   }, [])
 
   useEffect(() => {
-    axios(`${BACKEND_URL}/api/v1/namespaces`)
+    axios(`${SCHEDULER_URL}/api/v1/namespaces`)
       .then(res => res.data as Namespace[])
       .then(namespaces => {
         setSupportedNamespaces(namespaces)
@@ -206,7 +206,7 @@ export const WorkflowsCreationForm = () => {
   const history = useHistory()
   const createWorkflowForm = useAppSelector(selectCreateWorkflowForm)
   const onRun = () => {
-    axios(`${BACKEND_URL}/api/v1/workflows`, {
+    axios(`${SCHEDULER_URL}/api/v1/workflows`, {
       method: 'POST',
       data: createWorkflowForm
     })

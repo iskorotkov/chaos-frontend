@@ -24,7 +24,7 @@ export const Indicator = (props: { children: React.ReactNode, text: string }) =>
 export const StatusIndicatorIcon = ({ status }: { status: Status }) => {
   switch (status) {
     case 'running':
-      return <ChangeIndicatorIcon/>
+      return <PrimaryIndicatorIcon/>
     case 'pending':
       return <ChangeIndicatorIcon/>
     case 'succeeded':
