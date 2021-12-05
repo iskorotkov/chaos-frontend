@@ -9,9 +9,8 @@ It's a frontend for Chaos Framework — a resilience testing platform. This web 
 ## Structure
 
 - /src — all source files
-  - /model — entities and business logic.
-  - /dto — Data Transfer Objects.
-  - /components — React components, pages, and their stylesheets.
+  - /lib - common files used across entire project
+  - /workflows - workflow-specific files
 
 ## Config
 
