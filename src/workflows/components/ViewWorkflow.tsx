@@ -54,6 +54,21 @@ const Loading = ({ text }: { text: string }) => (
   <CenterText>{text}</CenterText>
 )
 
+const CardContent = styled.div`
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1;
+`
+
+const CardContentRow = styled.p`
+  padding: 0;
+  margin: 0;
+
+  &:not(:first-of-type) {
+    color: ${theme.colors.text.muted};
+  }
+`
+
 export const WatchWorkflow = () => {
   const { namespace, name } = useParams<{ namespace: string, name: string }>()
   const { lastJsonMessage } = useWebSocket(`${WORKFLOWS_WS_URL}/api/v1/workflows/${namespace}/${name}/watch`, {
@@ -110,7 +125,11 @@ export const WatchWorkflow = () => {
               <Grid>
                 {stage.steps.map((step, stepIndex) => (
                   <GridCard key={stepIndex}>
-                    {step.name}
+                    <CardContent>
+                      <CardContentRow>{step.name}</CardContentRow>
+                      <CardContentRow>severity: {step.severity}</CardContentRow>
+                      <CardContentRow>scale: {step.scale}</CardContentRow>
+                    </CardContent>
 
                     <IndicatorWrapper>
                       <StatusIndicatorIcon status={step.status}/>
@@ -182,7 +201,12 @@ export const PreviewWorkflow = () => {
               <Grid>
                 {stage.steps.map((step, stepIndex) => (
                   <GridCard key={stepIndex}>
-                    {step.name}
+                    <CardContent>
+                      <CardContentRow>{step.name}</CardContentRow>
+                      <CardContentRow>target: {step.target.appLabelValue}</CardContentRow>
+                      <CardContentRow>severity: {step.severity}</CardContentRow>
+                      <CardContentRow>scale: {step.scale}</CardContentRow>
+                    </CardContent>
                   </GridCard>
                 ))}
               </Grid>
