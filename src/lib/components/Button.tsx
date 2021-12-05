@@ -10,6 +10,7 @@ const Button = (props: { type: ColorType, filled: boolean }) => styled.button.at
   width: 6em;
   border: 0.15em solid ${theme.colors.type[props.type]};
   border-radius: ${theme.borders.radius.primary};
+  cursor: pointer;
   ${props.filled
     ? css`background-color: ${theme.colors.type[props.type]};
             color: ${theme.colors.text.light};`

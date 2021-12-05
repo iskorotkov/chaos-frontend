@@ -1,12 +1,12 @@
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useParams } from 'react-router'
+import { useHistory, useParams } from 'react-router'
 import { Card, CardTitle } from '../../lib/components/Card'
 import { Section, SectionTitle } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
-import { CancelButton, PauseButton } from '../../lib/components/Button'
-import { BackLink, RunLink } from '../../lib/components/Link'
+import { CancelButton, PauseButton, RunButton } from '../../lib/components/Button'
+import { BackLink } from '../../lib/components/Link'
 import { Workflow, WorkflowPreview } from '../types/workflows'
 import { StatusIndicatorIcon } from '../../lib/components/Indicator'
 import axios from 'axios'
@@ -130,6 +130,19 @@ export const PreviewWorkflow = () => {
       .catch(err => console.log(`error getting workflow preview: ${err}`))
   }, [workflowReq])
 
+  const history = useHistory()
+  const onRun = () => {
+    axios(`${BACKEND_URL}/api/v1/workflows`, {
+      method: 'POST',
+      data: workflowReq
+    })
+      .then(resp => {
+        const { name, namespace } = resp.data as { namespace: string, name: string }
+        history.push(`/view/${namespace}/${name}`)
+      })
+      .catch(e => console.error(e))
+  }
+
   return !workflow
     ? <Loading text="Generating a workflow..."/>
     : <Page>
@@ -140,8 +153,7 @@ export const PreviewWorkflow = () => {
       <Main>
         <ActionsRowForPreview>
           <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
-          <RunLink href={`/view/${workflow.namespace}/?`}>Run <i
-            className="fas fa-caret-right"/></RunLink>
+          <RunButton onClick={onRun}>Run <i className="fas fa-caret-right"/></RunButton>
         </ActionsRowForPreview>
 
         <Card>

@@ -1,7 +1,7 @@
 import { Header, Main, Page, PageName } from '../../lib/components/Page'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { RefreshButton } from '../../lib/components/Button'
+import { RefreshButton, RunButton } from '../../lib/components/Button'
 import { Input } from '../../lib/components/Input'
 import { Card, CardTitle } from '../../lib/components/Card'
 import {
@@ -21,7 +21,7 @@ import { Namespace } from '../types/namespaces'
 import { Failure } from '../types/failures'
 import { BACKEND_URL } from '../../config'
 import axios from 'axios'
-import { BackLink, PreviewLink, RunLink } from '../../lib/components/Link'
+import { BackLink, PreviewLink } from '../../lib/components/Link'
 import { useAppDispatch, useAppSelector } from '../../store'
 import {
   addFailureById,
@@ -29,6 +29,7 @@ import {
   removeFailureById,
   removeTargetById,
   Seeds,
+  selectCreateWorkflowForm,
   selectFailures,
   selectNamespace,
   selectSeeds,
@@ -41,6 +42,7 @@ import {
   setTargetsIds,
   Stages
 } from '../reducers/createWorkflowForm'
+import { useHistory } from 'react-router'
 
 const stagesRange = {
   min: 0,
@@ -167,27 +169,27 @@ export const WorkflowsCreationForm = () => {
 
   const onSeedChanged = (e: ChangeEvent, key: keyof Seeds) => {
     const value = (e.target as HTMLInputElement).value
-    if (value.match(/[0-9]+/)) {
-      dispatch(setSeeds({
-        ...seeds,
-        [key]: parseInt(value)
-      }))
-    }
+    dispatch(setSeeds({
+      ...seeds,
+      [key]: value.match(/[0-9]+/) ? parseInt(value) : 0
+    }))
   }
 
   const onStageCountChanged = (e: ChangeEvent, key: keyof Stages) => {
     const value = (e.target as HTMLInputElement).value
-    if (value.match(/[0-9]+/)) {
-      dispatch(setStages({
-        ...stages,
-        [key]: clamp(parseInt(value), stagesRange.min, stagesRange.max)
-      }))
-    }
+    dispatch(setStages({
+      ...stages,
+      [key]: value.match(/[0-9]+/) ? clamp(parseInt(value), stagesRange.min, stagesRange.max) : 0
+    }))
   }
 
-  const onFailureToggled = (failure: Failure, value: boolean) => dispatch(value ? addFailureById(failure.id) : removeFailureById(failure.id))
+  const onFailureToggled = (failure: Failure, value: boolean) => dispatch(value
+    ? addFailureById(failure.id)
+    : removeFailureById(failure.id))
 
-  const onTargetToggled = (target: Target, value: boolean) => dispatch(value ? addTargetById(target.id) : removeTargetById(target.id))
+  const onTargetToggled = (target: Target, value: boolean) => dispatch(value
+    ? addTargetById(target.id)
+    : removeTargetById(target.id))
 
   const onFailureGroupToggled = (group: string, failures: Failure[]) => {
     for (const failure of failures) {
@@ -199,6 +201,20 @@ export const WorkflowsCreationForm = () => {
     for (const target of targets) {
       onTargetToggled(target, !targets.every(t => enabledTargets.some(_ => _ === t.id)))
     }
+  }
+
+  const history = useHistory()
+  const createWorkflowForm = useAppSelector(selectCreateWorkflowForm)
+  const onRun = () => {
+    axios(`${BACKEND_URL}/api/v1/workflows`, {
+      method: 'POST',
+      data: createWorkflowForm
+    })
+      .then(resp => {
+        const { name, namespace } = resp.data as { namespace: string, name: string }
+        history.push(`/view/${namespace}/${name}`)
+      })
+      .catch(e => console.error(e))
   }
 
   return (
@@ -213,7 +229,7 @@ export const WorkflowsCreationForm = () => {
             <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
           </ActionsRowGroup>
           <PreviewLink href="/preview">Preview <i className="fas fa-search"/></PreviewLink>
-          <RunLink href="/view/x/y">Run <i className="fas fa-caret-right"/></RunLink>
+          <RunButton onClick={onRun}>Run <i className="fas fa-caret-right"/></RunButton>
         </ActionsRow>
 
         <form>
@@ -229,7 +245,7 @@ export const WorkflowsCreationForm = () => {
 
             <FormField>
               <FormLabelFixed htmlFor="random-seed-input">Random seed for targets</FormLabelFixed>
-              <Input id="random-seed-input" type="number" value={seeds.targets}
+              <Input id="random-seed-input" type="number" value={seeds.targets} min={0}
                      onChange={e => onSeedChanged(e, 'targets')}/>
 
               <RefreshButton onClick={() => randomizeSeed('targets')}>Random <i
@@ -238,7 +254,7 @@ export const WorkflowsCreationForm = () => {
 
             <FormField>
               <FormLabelFixed htmlFor="random-seed-input">Random seed for failures</FormLabelFixed>
-              <Input id="random-seed-input" type="number" value={seeds.failures}
+              <Input id="random-seed-input" type="number" value={seeds.failures} min={0}
                      onChange={e => onSeedChanged(e, 'failures')}/>
 
               <RefreshButton onClick={() => randomizeSeed('failures')}>Random <i
@@ -249,20 +265,20 @@ export const WorkflowsCreationForm = () => {
               <FormLabelFixed>Number of stages</FormLabelFixed>
 
               <FormVerticalBlock>
-                <StagesNumberField id="stages-with-single-failure-input" value={stages.single}
+                <StagesNumberField id="stages-with-single-failure-input" value={stages.single} min={0}
                                    onChange={e => onStageCountChanged(e, 'single')}/>
                 <FormLabelMuted htmlFor="stages-with-single-failure-input">stages with single failure</FormLabelMuted>
               </FormVerticalBlock>
 
               <FormVerticalBlock>
-                <StagesNumberField id="stages-with-similar-failures-input" value={stages.similar}
+                <StagesNumberField id="stages-with-similar-failures-input" value={stages.similar} min={0}
                                    onChange={e => onStageCountChanged(e, 'similar')}/>
                 <FormLabelMuted htmlFor="stages-with-similar-failures-input">stages with similar
                   failures</FormLabelMuted>
               </FormVerticalBlock>
 
               <FormVerticalBlock>
-                <StagesNumberField id="stages-with-mixed-failures-input" value={stages.mixed}
+                <StagesNumberField id="stages-with-mixed-failures-input" value={stages.mixed} min={0}
                                    onChange={e => onStageCountChanged(e, 'mixed')}/>
                 <FormLabelMuted htmlFor="stages-with-mixed-failures-input">stages with mixed failures</FormLabelMuted>
               </FormVerticalBlock>
