@@ -27,3 +27,37 @@ export type Step = {
   startedAt: string
   finishedAt: string
 }
+
+export type WorkflowPreview = {
+  namespace: string
+  stages: StagePreview[]
+}
+
+export type StagePreview = {
+  steps: StepPreview[]
+}
+
+export type StepPreview = {
+  name: string
+  type: string
+  severity: string
+  scale: string
+  engine: Engine
+  target: Target
+}
+
+export type Engine = {
+  apiVersion: string
+  kind: string
+}
+
+export type Target = {
+  pod: string
+  node: string
+  mainContainer: string
+  containers: string[]
+  appLabel: string
+  appLabelValue: string
+  labels: string[]
+  annotations: string[]
+}

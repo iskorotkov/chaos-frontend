@@ -3,26 +3,26 @@ import { Redirect, Route, Switch } from 'react-router'
 import { BrowserRouter } from 'react-router-dom'
 import { WorkflowsDashboard } from './workflows/components/WorkflowsDashboard'
 import { WorkflowsCreationForm } from './workflows/components/WorkflowsCreationForm'
-import { ViewWorkflow } from './workflows/components/ViewWorkflow'
+import { PreviewWorkflow, WatchWorkflow } from './workflows/components/ViewWorkflow'
 
 export function App () {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
-          <WorkflowsDashboard />
+          <WorkflowsDashboard/>
         </Route>
         <Route exact path="/create">
-          <WorkflowsCreationForm />
+          <WorkflowsCreationForm/>
         </Route>
         <Route exact path="/preview">
-          <ViewWorkflow preview={true} />
+          <PreviewWorkflow/>
         </Route>
         <Route exact path="/view/:namespace/:name">
-          <ViewWorkflow preview={false} />
+          <WatchWorkflow/>
         </Route>
         <Route>
-          <Redirect to="/" />
+          <Redirect to="/"/>
         </Route>
       </Switch>
     </BrowserRouter>

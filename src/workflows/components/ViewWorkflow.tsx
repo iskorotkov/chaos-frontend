@@ -7,10 +7,14 @@ import { Section, SectionTitle } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
 import { CancelButton, PauseButton } from '../../lib/components/Button'
 import { BackLink, RunLink } from '../../lib/components/Link'
-import axios from 'axios'
-import { BACKEND_URL } from '../../config'
-import { Workflow } from '../types/workflows'
+import { Workflow, WorkflowPreview } from '../types/workflows'
 import { StatusIndicatorIcon } from '../../lib/components/Indicator'
+import axios from 'axios'
+import { BACKEND_URL, BACKEND_WS_URL } from '../../config'
+import { selectCreateWorkflowForm } from '../reducers/createWorkflowForm'
+import { useAppSelector } from '../../store'
+import { theme } from '../../theme'
+import useWebSocket from 'react-use-websocket'
 
 const ActionsRowForPreview = styled.div`
   display: flex;
@@ -38,52 +42,56 @@ const IndicatorWrapper = styled.div`
   margin-left: auto;
 `
 
-export const ViewWorkflow = (props: { preview: boolean }) => {
+const CenterText = styled.p`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: ${theme.colors.text.dark};
+`
+
+const Loading = ({ text }: { text: string }) => (
+  <CenterText>{text}</CenterText>
+)
+
+export const WatchWorkflow = () => {
   const { namespace, name } = useParams<{ namespace: string, name: string }>()
-  const [workflow, setWorkflow] = useState<Workflow>()
+  const { lastJsonMessage } = useWebSocket(`${BACKEND_WS_URL}/api/v1/workflows/${namespace}/${name}/watch`, {
+    reconnectAttempts: 1000,
+    reconnectInterval: 5000,
+    retryOnError: true
+  })
 
-  useEffect(() => {
-    axios(`${BACKEND_URL}/api/v1/workflows/${namespace}/${name}`)
-      .then(resp => setWorkflow(resp.data as Workflow))
-      .catch(err => console.log(`error getting workflow info: ${err}`))
-  }, [namespace, name])
+  const workflow = lastJsonMessage as Workflow
 
-  const pageName = props.preview ? 'Preview workflow' : 'View workflow'
-
-  return (
-    <Page>
+  return !workflow
+    ? <Loading text="Workflow is loading..."/>
+    : <Page>
       <Header>
-        <PageName>Chaos Framework / {pageName}</PageName>
+        <PageName>Chaos Framework / View workflow</PageName>
       </Header>
 
       <Main>
-        {props.preview
-          ? <ActionsRowForPreview>
-            <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
-            <RunLink href={`/view/${namespace}/${name}`}>Run <i className="fas fa-caret-right"/></RunLink>
-          </ActionsRowForPreview>
-          : <ActionsRowForView>
-            <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
-            <PauseButton>Pause <i className="fas fa-pause"/></PauseButton>
-            <CancelButton>Cancel <i className="fas fa-times"/></CancelButton>
-          </ActionsRowForView>}
+        <ActionsRowForView>
+          <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
+          <PauseButton>Pause <i className="fas fa-pause"/></PauseButton>
+          <CancelButton>Cancel <i className="fas fa-times"/></CancelButton>
+        </ActionsRowForView>
 
         <Card>
-          <CardTitle>{name}</CardTitle>
+          <CardTitle>{workflow.name}</CardTitle>
 
           <Section>
             <SectionTitle>General info</SectionTitle>
 
             <WorkflowInfo>
-              <WorkflowInfoLine>Namespace: {namespace}</WorkflowInfoLine>
-              {!props.preview &&
-                  <WorkflowInfoLine>
-                      Started at: {workflow ? new Date(workflow.startedAt).toLocaleString() : '-'}
-                  </WorkflowInfoLine>}
-              {!props.preview &&
-                  <WorkflowInfoLine>
-                      Finished at: {workflow ? new Date(workflow.finishedAt).toLocaleString() : '-'}
-                  </WorkflowInfoLine>}
+              <WorkflowInfoLine>Namespace: {workflow.namespace}</WorkflowInfoLine>
+              <WorkflowInfoLine>
+                Started at: {workflow ? new Date(workflow.startedAt).toLocaleString() : '-'}
+              </WorkflowInfoLine>
+              <WorkflowInfoLine>
+                Finished at: {workflow ? new Date(workflow.finishedAt).toLocaleString() : '-'}
+              </WorkflowInfoLine>
             </WorkflowInfo>
           </Section>
 
@@ -96,11 +104,9 @@ export const ViewWorkflow = (props: { preview: boolean }) => {
                   <GridCard key={stepIndex}>
                     {step.name}
 
-                    {!props.preview &&
-                        <IndicatorWrapper>
-                            <StatusIndicatorIcon status={step.status}/>
-                        </IndicatorWrapper>
-                    }
+                    <IndicatorWrapper>
+                      <StatusIndicatorIcon status={step.status}/>
+                    </IndicatorWrapper>
                   </GridCard>
                 ))}
               </Grid>
@@ -109,5 +115,60 @@ export const ViewWorkflow = (props: { preview: boolean }) => {
         </Card>
       </Main>
     </Page>
-  )
+}
+
+export const PreviewWorkflow = () => {
+  const [workflow, setWorkflow] = useState<WorkflowPreview>()
+  const workflowReq = useAppSelector(selectCreateWorkflowForm)
+
+  useEffect(() => {
+    axios(`${BACKEND_URL}/api/v1/workflows/preview`, {
+      method: 'POST',
+      data: workflowReq
+    })
+      .then(resp => setWorkflow(resp.data as WorkflowPreview))
+      .catch(err => console.log(`error getting workflow preview: ${err}`))
+  }, [workflowReq])
+
+  return !workflow
+    ? <Loading text="Generating a workflow..."/>
+    : <Page>
+      <Header>
+        <PageName>Chaos Framework / Preview workflow</PageName>
+      </Header>
+
+      <Main>
+        <ActionsRowForPreview>
+          <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
+          <RunLink href={`/view/${workflow.namespace}/?`}>Run <i
+            className="fas fa-caret-right"/></RunLink>
+        </ActionsRowForPreview>
+
+        <Card>
+          <CardTitle>Previewing a workflow</CardTitle>
+
+          <Section>
+            <SectionTitle>General info</SectionTitle>
+
+            <WorkflowInfo>
+              <WorkflowInfoLine>Namespace: {workflow.namespace}</WorkflowInfoLine>
+            </WorkflowInfo>
+          </Section>
+
+          {workflow && workflow.stages.map((stage, stageIndex) => (
+            <Section key={stageIndex}>
+              <SectionTitle>Stage {stageIndex + 1}</SectionTitle>
+
+              <Grid>
+                {stage.steps.map((step, stepIndex) => (
+                  <GridCard key={stepIndex}>
+                    {step.name}
+                  </GridCard>
+                ))}
+              </Grid>
+            </Section>
+          ))}
+        </Card>
+      </Main>
+    </Page>
 }

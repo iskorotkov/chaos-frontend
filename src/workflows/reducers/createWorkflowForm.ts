@@ -5,14 +5,22 @@ export type Seeds = { targets: number, failures: number }
 
 export type Stages = { single: number, similar: number, mixed: number }
 
+export type CreateWorkflowForm = {
+  namespace: string
+  seeds: Seeds
+  stages: Stages
+  targets: string[]
+  failures: string[]
+}
+
 export const slice = createSlice({
   name: 'workflow',
   initialState: {
     namespace: '',
     seeds: { targets: 0, failures: 0 },
     stages: { single: 3, similar: 3, mixed: 3 },
-    targets: <string[]>[],
-    failures: <string[]>[]
+    targets: [] as string[],
+    failures: [] as string[]
   },
   reducers: {
     setNamespace: (state, action: PayloadAction<string>) => {
@@ -45,6 +53,7 @@ export const slice = createSlice({
   }
 })
 
+export const selectCreateWorkflowForm = (state: RootState): CreateWorkflowForm => state.createWorkflowForm
 export const selectNamespace = (state: RootState): string => state.createWorkflowForm.namespace
 export const selectSeeds = (state: RootState): Seeds => state.createWorkflowForm.seeds
 export const selectStages = (state: RootState): Stages => state.createWorkflowForm.stages
