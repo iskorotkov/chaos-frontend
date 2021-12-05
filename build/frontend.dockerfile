@@ -1,16 +1,19 @@
-FROM nginx:alpine as base
+FROM nginx:1.21-alpine as base
 
-FROM node:14 as build
+FROM node:16.12-alpine as build
 WORKDIR /app
 
-COPY ["package.json", "yarn.lock", "./"]
-RUN yarn install --immutable
+RUN npm i -g pnpm
+
+COPY ["package.json", "pnpm-lock.yaml", "./"]
+COPY [".prod.env", ".env"]
+RUN pnpm i
 
 COPY . .
-RUN yarn run build
+RUN pnpm build
 
 FROM base as run
-COPY --from=build /app/build /usr/share/nginx/html/
+COPY --from=build /app/dist /usr/share/nginx/html/
 
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

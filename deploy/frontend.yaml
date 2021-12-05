@@ -25,7 +25,8 @@ data:
       access_log /var/log/nginx/host.access.log main;
 
       # Scheduler backend API
-      location ~* /api/v\d+/workflows/(create|preview) {
+      location /scheduler {
+        rewrite ^/scheduler/(.*)$ /$1 break;
         proxy_pass http://scheduler;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -34,7 +35,8 @@ data:
       }
 
       # Workflows backend API
-      location ~* /api/v\d+/workflows/watch {
+      location /workflows {
+        rewrite ^/workflows/(.*)$ /$1 break;
         proxy_pass http://workflows;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
@@ -74,7 +76,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: iskorotkov/chaos-frontend:v0.4.0
+          image: iskorotkov/chaos-frontend:v0.4.1
           resources:
             limits:
               cpu: 100m

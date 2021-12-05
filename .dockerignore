@@ -1,5 +1,5 @@
 .eslintcache
-.eslintrc.js
+.eslintrc.cjs
 .stylelintrc.json
 .gitignore
 README.md
@@ -8,6 +8,8 @@ README.md
 .github
 .idea
 .vscode
+.env
 build
 deploy
 node_modules
+dist
