@@ -1,12 +1,14 @@
 import { Card, CardTitle } from '../../lib/components/Card'
 import { Indicator, StatusIndicatorIcon } from '../../lib/components/Indicator'
-import { CancelButton, PauseButton } from '../../lib/components/Button'
+import { CancelButton } from '../../lib/components/Button'
 import React from 'react'
 import styled from 'styled-components'
 import { theme } from '../../theme'
 import moment from 'moment'
 import { ViewLink } from '../../lib/components/Link'
 import { Workflow } from '../types/workflows'
+import axios from 'axios'
+import { BACKEND_URL } from '../../config'
 
 const WorkflowProperties = styled.ul`
   list-style: none;
@@ -44,46 +46,55 @@ const formatTime = (datetime: string) => {
   )
 }
 
-export const WorkflowCard = ({ workflow }: { workflow: Workflow }) => (
-  <Card>
-    <CardTitle>{workflow.name}</CardTitle>
+export const WorkflowCard = ({ workflow }: { workflow: Workflow }) => {
+  const onCancel = () => {
+    axios(`${BACKEND_URL}/api/v1/workflows/${workflow.namespace}/${workflow.name}/cancel`, {
+      method: 'POST'
+    })
+      .then(resp => console.log('cancelled workflow with response', resp.data))
+      .catch(err => console.error(`error getting workflow preview: ${err}`))
+  }
 
-    <Indicator text={workflow.status}>
-      <StatusIndicatorIcon status={workflow.status}/>
-    </Indicator>
+  return (
+    <Card>
+      <CardTitle>{workflow.name}</CardTitle>
 
-    <WorkflowProperties>
-      <WorkflowProperty>
-        Namespace: {workflow.namespace}
-      </WorkflowProperty>
+      <Indicator text={workflow.status}>
+        <StatusIndicatorIcon status={workflow.status}/>
+      </Indicator>
 
-      <WorkflowProperty>
-        Started at: {formatTime(workflow.startedAt)}
-      </WorkflowProperty>
+      <WorkflowProperties>
+        <WorkflowProperty>
+          Namespace: {workflow.namespace}
+        </WorkflowProperty>
 
-      {workflow.finishedAt &&
-          <WorkflowProperty>Finished at: {formatTime(workflow.finishedAt)}</WorkflowProperty>}
+        <WorkflowProperty>
+          Started at: {formatTime(workflow.startedAt)}
+        </WorkflowProperty>
 
-      <WorkflowProperty>
-        Stages: {workflow.stages.length}
-      </WorkflowProperty>
+        {workflow.finishedAt &&
+            <WorkflowProperty>Finished at: {formatTime(workflow.finishedAt)}</WorkflowProperty>}
 
-      <WorkflowProperty>
-        Steps: {workflow.stages
-        .map(_ => _.steps.length)
-        .reduce((prev, cur) => prev + cur, 0)}
-      </WorkflowProperty>
-    </WorkflowProperties>
+        <WorkflowProperty>
+          Stages: {workflow.stages.length}
+        </WorkflowProperty>
 
-    <WorkflowActions>
-      <li><ViewLink href={`/view/${workflow.namespace}/${workflow.name}`}>
-        View <i className="fas fa-arrow-right"/>
-      </ViewLink></li>
+        <WorkflowProperty>
+          Steps: {workflow.stages
+          .map(_ => _.steps.length)
+          .reduce((prev, cur) => prev + cur, 0)}
+        </WorkflowProperty>
+      </WorkflowProperties>
 
-      {workflow.status === 'running' && <>
-          <li><PauseButton>Pause <i className="fas fa-pause"/></PauseButton></li>
-          <li><CancelButton>Cancel <i className="fas fa-times"/></CancelButton></li>
-      </>}
-    </WorkflowActions>
-  </Card>
-)
+      <WorkflowActions>
+        <li><ViewLink href={`/view/${workflow.namespace}/${workflow.name}`}>
+          View <i className="fas fa-arrow-right"/>
+        </ViewLink></li>
+
+        {workflow.status === 'running' && <>
+            <li><CancelButton onClick={onCancel}>Cancel <i className="fas fa-times"/></CancelButton></li>
+        </>}
+      </WorkflowActions>
+    </Card>
+  )
+}

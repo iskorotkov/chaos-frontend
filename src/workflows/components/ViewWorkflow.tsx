@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router'
 import { Card, CardTitle } from '../../lib/components/Card'
 import { Section, SectionTitle } from '../../lib/components/Section'
 import { Grid, GridCard } from '../../lib/components/Grid'
-import { CancelButton, PauseButton, RunButton } from '../../lib/components/Button'
+import { CancelButton, RunButton } from '../../lib/components/Button'
 import { BackLink } from '../../lib/components/Link'
 import { Workflow, WorkflowPreview } from '../types/workflows'
 import { StatusIndicatorIcon } from '../../lib/components/Indicator'
@@ -64,6 +64,14 @@ export const WatchWorkflow = () => {
 
   const workflow = lastJsonMessage as Workflow
 
+  const onCancel = () => {
+    axios(`${BACKEND_URL}/api/v1/workflows/${namespace}/${name}/cancel`, {
+      method: 'POST'
+    })
+      .then(resp => console.log('cancelled workflow with response', resp.data))
+      .catch(err => console.error(`error getting workflow preview: ${err}`))
+  }
+
   return !workflow
     ? <Loading text="Workflow is loading..."/>
     : <Page>
@@ -74,8 +82,8 @@ export const WatchWorkflow = () => {
       <Main>
         <ActionsRowForView>
           <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
-          <PauseButton>Pause <i className="fas fa-pause"/></PauseButton>
-          <CancelButton>Cancel <i className="fas fa-times"/></CancelButton>
+          {workflow.status === 'running' &&
+              <CancelButton onClick={onCancel}>Cancel <i className="fas fa-times"/></CancelButton>}
         </ActionsRowForView>
 
         <Card>
@@ -127,7 +135,7 @@ export const PreviewWorkflow = () => {
       data: workflowReq
     })
       .then(resp => setWorkflow(resp.data as WorkflowPreview))
-      .catch(err => console.log(`error getting workflow preview: ${err}`))
+      .catch(err => console.error(`error getting workflow preview: ${err}`))
   }, [workflowReq])
 
   const history = useHistory()
