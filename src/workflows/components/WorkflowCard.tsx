@@ -52,7 +52,10 @@ export const WorkflowCard = ({ workflow }: { workflow: Workflow }) => {
       method: 'POST'
     })
       .then(resp => console.log('cancelled workflow with response', resp.data))
-      .catch(err => console.error(`error getting workflow preview: ${err}`))
+      .catch(e => {
+        console.error(`error getting workflow preview: ${e}`)
+        alert('Error getting workflow preview')
+      })
   }
 
   return (

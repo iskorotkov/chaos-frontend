@@ -75,7 +75,10 @@ export const WatchWorkflow = () => {
     })
       .then(resp => console.log('cancelled workflow with response', resp.data))
       .then(() => history.goBack())
-      .catch(err => console.error(`error getting workflow preview: ${err}`))
+      .catch(e => {
+        console.error(`error getting workflow preview: ${e}`)
+        alert('Error cancelling workflow')
+      })
   }
 
   return <Page>
@@ -146,7 +149,10 @@ export const PreviewWorkflow = () => {
       data: workflowReq
     })
       .then(resp => setWorkflow(resp.data as WorkflowPreview))
-      .catch(err => console.error(`error getting workflow preview: ${err}`))
+      .catch(e => {
+        console.error(`error getting workflow preview: ${e}`)
+        alert('Error getting workflow preview')
+      })
   }, [workflowReq])
 
   const history = useHistory()
@@ -159,7 +165,10 @@ export const PreviewWorkflow = () => {
         const { name, namespace } = resp.data as { namespace: string, name: string }
         history.push(`/view/${namespace}/${name}`)
       })
-      .catch(e => console.error(e))
+      .catch(e => {
+        console.error(e)
+        alert('Error running workflow')
+      })
   }
 
   return <Page>

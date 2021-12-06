@@ -10,6 +10,16 @@ const CenterText = styled.p`
   color: ${theme.colors.text.dark};
 `
 
+const CenterTextInline = styled.p`
+  margin-left: auto;
+  margin-right: auto;
+  color: ${theme.colors.text.dark};
+`
+
 export const Loading = ({ text }: { text: string }) => (
   <CenterText>{text}</CenterText>
+)
+
+export const LoadingInline = ({ text }: { text: string }) => (
+  <CenterTextInline>{text}</CenterTextInline>
 )

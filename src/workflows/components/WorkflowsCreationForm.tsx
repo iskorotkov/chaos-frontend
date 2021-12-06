@@ -43,7 +43,7 @@ import {
   Stages
 } from '../reducers/createWorkflowForm'
 import { useHistory } from 'react-router'
-import { Loading } from '../../lib/components/Loading'
+import { LoadingInline } from '../../lib/components/Loading'
 
 const stagesRange = {
   min: 0,
@@ -107,7 +107,10 @@ export const WorkflowsCreationForm = () => {
 
         dispatch(setTargetsIds(intersected))
       })
-      .catch(console.error)
+      .catch(e => {
+        console.error(e)
+        alert('Error getting targets')
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -126,7 +129,10 @@ export const WorkflowsCreationForm = () => {
 
         dispatch(setFailuresById(intersected))
       })
-      .catch(console.error)
+      .catch(e => {
+        console.error(e)
+        alert('Error getting failures')
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -139,7 +145,10 @@ export const WorkflowsCreationForm = () => {
           dispatch(setNamespace(namespaces[0].name))
         }
       })
-      .catch(console.error)
+      .catch(e => {
+        console.error(e)
+        alert('Error getting namespaces')
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -219,7 +228,10 @@ export const WorkflowsCreationForm = () => {
         const { name, namespace } = resp.data as { namespace: string, name: string }
         history.push(`/view/${namespace}/${name}`)
       })
-      .catch(e => console.error(e))
+      .catch(e => {
+        console.error(e)
+        alert('Error running workflow')
+      })
   }
 
   return (
@@ -291,7 +303,7 @@ export const WorkflowsCreationForm = () => {
           </Card>
 
           {!supportedFailures
-            ? <Loading text="Loading failures..."/>
+            ? <LoadingInline text="Loading failures..."/>
             : <Card>
               <CardTitle>Failures</CardTitle>
 
@@ -318,7 +330,7 @@ export const WorkflowsCreationForm = () => {
             </Card>}
 
           {!supportedTargets
-            ? <Loading text="Loading targets..."/>
+            ? <LoadingInline text="Loading targets..."/>
             : <Card>
               <CardTitle>Targets</CardTitle>
 

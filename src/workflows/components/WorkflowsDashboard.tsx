@@ -34,9 +34,12 @@ export const WorkflowsDashboard = () => {
 
   useEffect(() => {
     axios(`${WORKFLOWS_URL}/api/v1/workflows`)
-      .then(res => res.data as Workflow[])
+      .then(res => res.data !== null ? res.data as Workflow[] : [])
       .then(setWorkflows)
-      .catch(console.error)
+      .catch(e => {
+        console.error(e)
+        alert('Error getting list of workflows')
+      })
   }, [])
 
   const onSearchInput = (e: FormEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)
