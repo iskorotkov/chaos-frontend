@@ -68,11 +68,13 @@ export const WatchWorkflow = () => {
 
   const workflow = lastJsonMessage as Workflow | undefined
 
+  const history = useHistory()
   const onCancel = () => {
     axios(`${WORKFLOWS_URL}/api/v1/workflows/${namespace}/${name}/cancel`, {
       method: 'POST'
     })
       .then(resp => console.log('cancelled workflow with response', resp.data))
+      .then(() => history.goBack())
       .catch(err => console.error(`error getting workflow preview: ${err}`))
   }
 
