@@ -21,10 +21,11 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'jest', 'prettier'],
   rules: {
-    'no-use-before-define': 'off',
-    '@typescript-eslint/no-use-before-define': 'error',
-    'no-useless-constructor': 'off',
     'prettier/prettier': 'error',
+    'no-use-before-define': 'off',
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-use-before-define': 'error',
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   settings: {
     react: {

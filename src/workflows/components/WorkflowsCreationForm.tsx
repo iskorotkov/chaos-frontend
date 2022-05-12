@@ -68,6 +68,7 @@ const StagesNumberField = styled(Input).attrs(() => ({
 const CheckboxCard = (props: {
   checked: boolean
   title: string
+  // eslint-disable-next-line no-unused-vars
   onToggled: (value: boolean) => void
 }) => (
   <GridCard>
