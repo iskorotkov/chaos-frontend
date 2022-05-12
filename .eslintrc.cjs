@@ -2,34 +2,33 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    'jest/globals': true
+    'jest/globals': true,
   },
   extends: [
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
-    'standard'
+    'plugin:@typescript-eslint/recommended',
+    'eslint:recommended',
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 12,
-    sourceType: 'module'
+    sourceType: 'module',
   },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-    'jest'
-  ],
+  plugins: ['react', '@typescript-eslint', 'jest', 'prettier'],
   rules: {
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
-    'no-useless-constructor': 'off'
+    'no-useless-constructor': 'off',
+    'prettier/prettier': 'error',
   },
   settings: {
     react: {
-      version: 'detect'
-    }
-  }
+      version: 'detect',
+    },
+  },
 }
