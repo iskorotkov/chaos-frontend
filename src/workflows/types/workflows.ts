@@ -1,4 +1,10 @@
-export type Status = 'running' | 'pending' | 'succeeded' | 'failed' | 'error' | 'cancelled'
+export type Status =
+  | 'running'
+  | 'pending'
+  | 'succeeded'
+  | 'failed'
+  | 'error'
+  | 'cancelled'
 
 export type Workflow = {
   name: string

@@ -1,7 +1,7 @@
 import { ColorType, theme } from '../../theme'
 import styled, { css } from 'styled-components'
 
-const Link = (props: { type: ColorType, filled: boolean }) => styled.a`
+const Link = (props: { type: ColorType; filled: boolean }) => styled.a`
   box-shadow: ${theme.shadows.primary};
   padding: 0.25em;
   width: 6em;
@@ -13,11 +13,14 @@ const Link = (props: { type: ColorType, filled: boolean }) => styled.a`
   text-decoration: none;
 
   ${props.filled
-          ? css`background-color: ${theme.colors.type[props.type]};
-            color: ${theme.colors.text.light};`
-          : css`background-color: transparent;
-            color: ${theme.colors.type[props.type]};`
-  }
+    ? css`
+        background-color: ${theme.colors.type[props.type]};
+        color: ${theme.colors.text.light};
+      `
+    : css`
+        background-color: transparent;
+        color: ${theme.colors.type[props.type]};
+      `}
   &:focus {
     outline: solid ${theme.outline.width} ${theme.colors.type[props.type]};
     outline-offset: 0;

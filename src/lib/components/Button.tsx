@@ -1,8 +1,11 @@
 import { ColorType, theme } from '../../theme'
 import styled, { css } from 'styled-components'
 
-const Button = (props: { type: ColorType, filled: boolean }) => styled.button.attrs(() => ({
-  type: 'button'
+const Button = (props: {
+  type: ColorType
+  filled: boolean
+}) => styled.button.attrs(() => ({
+  type: 'button',
 }))`
   box-shadow: ${theme.shadows.primary};
   padding: 0.25em;
@@ -12,11 +15,14 @@ const Button = (props: { type: ColorType, filled: boolean }) => styled.button.at
   border-radius: ${theme.borders.radius.primary};
   cursor: pointer;
   ${props.filled
-    ? css`background-color: ${theme.colors.type[props.type]};
-            color: ${theme.colors.text.light};`
-    : css`background-color: transparent;
-            color: ${theme.colors.type[props.type]};`
-  }
+    ? css`
+        background-color: ${theme.colors.type[props.type]};
+        color: ${theme.colors.text.light};
+      `
+    : css`
+        background-color: transparent;
+        color: ${theme.colors.type[props.type]};
+      `}
 
   &:focus {
     outline: solid ${theme.outline.width} ${theme.colors.type[props.type]};

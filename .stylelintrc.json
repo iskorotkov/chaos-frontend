@@ -3,8 +3,5 @@
   "rules": {
     "selector-class-pattern": "^[a-z][A-Za-z0-9]*$"
   },
-  "ignoreFiles": [
-    "public/**",
-    "./*.json"
-  ]
+  "ignoreFiles": ["public/**", "./*.json"]
 }

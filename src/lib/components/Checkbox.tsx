@@ -7,7 +7,10 @@ const Container = styled.div`
   display: inline-block;
 `
 
-const ClickableBox = styled.button<{ indeterminate: boolean, checked: boolean }>`
+const ClickableBox = styled.button<{
+  indeterminate: boolean
+  checked: boolean
+}>`
   display: block;
   width: 1.5em;
   height: 1.5em;
@@ -27,9 +30,12 @@ const ClickableBox = styled.button<{ indeterminate: boolean, checked: boolean }>
   }
 
   // Checkbox is disabled.
-  ${props => !props.indeterminate && !props.checked && css`
-    background-color: ${theme.colors.background.muted};
-  `}
+  ${(props) =>
+    !props.indeterminate &&
+    !props.checked &&
+    css`
+      background-color: ${theme.colors.background.muted};
+    `}
 `
 
 const CheckboxIcon = styled.i`
@@ -40,21 +46,33 @@ const CheckboxIcon = styled.i`
 `
 
 // TODO: Add outline to native checkbox.
-export const Checkbox = (props: { checked?: boolean, indeterminate?: boolean, readOnly?: boolean, onToggled?: (value: boolean) => void }) => {
+export const Checkbox = (props: {
+  checked?: boolean
+  indeterminate?: boolean
+  readOnly?: boolean
+  // eslint-disable-next-line no-unused-vars
+  onToggled?: (value: boolean) => void
+}) => {
   const onClick = () => props.onToggled?.call(null, !props.checked)
 
   return (
     <Container>
-      <ClickableBox type="button"
+      <ClickableBox
+        type='button'
         disabled={props.readOnly ?? false}
         checked={props.checked ?? false}
         indeterminate={props.indeterminate ?? false}
-        onClick={onClick}>
-        <CheckboxIcon className={props.indeterminate
-          ? 'fas fa-minus'
-          : props.checked
-            ? 'fas fa-check'
-            : ''} />
+        onClick={onClick}
+      >
+        <CheckboxIcon
+          className={
+            props.indeterminate
+              ? 'fas fa-minus'
+              : props.checked
+              ? 'fas fa-check'
+              : ''
+          }
+        />
       </ClickableBox>
     </Container>
   )

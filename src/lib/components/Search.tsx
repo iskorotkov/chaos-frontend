@@ -30,13 +30,22 @@ const SearchIcon = styled.i`
   transform: translate(-50%, -50%);
 `
 
-export const Search = (props: { value: string, onInput: FormEventHandler<HTMLInputElement>, placeholder?: string }) => {
+export const Search = (props: {
+  value: string
+  onInput: FormEventHandler<HTMLInputElement>
+  placeholder?: string
+}) => {
   const onInput = (e: FormEvent<HTMLInputElement>) => props.onInput(e)
 
   return (
     <Container>
-      <SearchIcon className="fas fa-search"/>
-      <SearchInput type="text" value={props.value} placeholder={props.placeholder} onInput={onInput}/>
+      <SearchIcon className='fas fa-search' />
+      <SearchInput
+        type='text'
+        value={props.value}
+        placeholder={props.placeholder}
+        onInput={onInput}
+      />
     </Container>
   )
 }

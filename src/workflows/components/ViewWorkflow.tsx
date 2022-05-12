@@ -59,84 +59,108 @@ const CardContentRow = styled.p`
 `
 
 export const WatchWorkflow = () => {
-  const { namespace, name } = useParams<{ namespace: string, name: string }>()
-  const { lastJsonMessage } = useWebSocket(`${WORKFLOWS_WS_URL}/api/v1/workflows/${namespace}/${name}/watch`, {
-    reconnectAttempts: 1000,
-    reconnectInterval: 5000,
-    retryOnError: true
-  })
+  const { namespace, name } = useParams<{ namespace: string; name: string }>()
+  const { lastJsonMessage } = useWebSocket(
+    `${WORKFLOWS_WS_URL}/api/v1/workflows/${namespace}/${name}/watch`,
+    {
+      reconnectAttempts: 1000,
+      reconnectInterval: 5000,
+      retryOnError: true,
+    },
+  )
 
   const workflow = lastJsonMessage as Workflow | undefined
 
   const history = useHistory()
   const onCancel = () => {
     axios(`${WORKFLOWS_URL}/api/v1/workflows/${namespace}/${name}/cancel`, {
-      method: 'POST'
+      method: 'POST',
     })
-      .then(resp => console.log('cancelled workflow with response', resp.data))
+      .then((resp) =>
+        console.log('cancelled workflow with response', resp.data),
+      )
       .then(() => history.goBack())
-      .catch(e => {
+      .catch((e) => {
         console.error(`error getting workflow preview: ${e}`)
         alert('Error cancelling workflow')
       })
   }
 
-  return <Page>
-    <Header>
-      <PageName>Chaos Framework / View workflow</PageName>
-    </Header>
+  return (
+    <Page>
+      <Header>
+        <PageName>Chaos Framework / View workflow</PageName>
+      </Header>
 
-    <Main>
-      <ActionsRowForView>
-        <BackLink href="/"><i className="fas fa-arrow-left"/> Back</BackLink>
-        {workflow?.status === 'running' &&
-            <CancelButton onClick={onCancel}>Cancel <i className="fas fa-times"/></CancelButton>}
-      </ActionsRowForView>
+      <Main>
+        <ActionsRowForView>
+          <BackLink href='/'>
+            <i className='fas fa-arrow-left' /> Back
+          </BackLink>
+          {workflow?.status === 'running' && (
+            <CancelButton onClick={onCancel}>
+              Cancel <i className='fas fa-times' />
+            </CancelButton>
+          )}
+        </ActionsRowForView>
 
-      {!workflow
-        ? <Loading text="Workflow is loading..."/>
-        : <Card>
-          <CardTitle>{workflow.name}</CardTitle>
+        {!workflow ? (
+          <Loading text='Workflow is loading...' />
+        ) : (
+          <Card>
+            <CardTitle>{workflow.name}</CardTitle>
 
-          <Section>
-            <SectionTitle>General info</SectionTitle>
+            <Section>
+              <SectionTitle>General info</SectionTitle>
 
-            <WorkflowInfo>
-              <WorkflowInfoLine>Namespace: {workflow.namespace}</WorkflowInfoLine>
-              <WorkflowInfoLine>
-                Started at: {workflow ? new Date(workflow.startedAt).toLocaleString() : '-'}
-              </WorkflowInfoLine>
-              <WorkflowInfoLine>
-                Finished at: {workflow ? new Date(workflow.finishedAt).toLocaleString() : '-'}
-              </WorkflowInfoLine>
-            </WorkflowInfo>
-          </Section>
-
-          {workflow && workflow.stages.map((stage, stageIndex) => (
-            <Section key={stageIndex}>
-              <SectionTitle>Stage {stageIndex + 1}</SectionTitle>
-
-              <Grid>
-                {stage.steps.map((step, stepIndex) => (
-                  <GridCard key={stepIndex}>
-                    <CardContent>
-                      <CardContentRow>{step.name}</CardContentRow>
-                      <CardContentRow>severity: {step.severity}</CardContentRow>
-                      <CardContentRow>scale: {step.scale}</CardContentRow>
-                    </CardContent>
-
-                    <IndicatorWrapper>
-                      <StatusIndicatorIcon status={step.status}/>
-                    </IndicatorWrapper>
-                  </GridCard>
-                ))}
-              </Grid>
+              <WorkflowInfo>
+                <WorkflowInfoLine>
+                  Namespace: {workflow.namespace}
+                </WorkflowInfoLine>
+                <WorkflowInfoLine>
+                  Started at:{' '}
+                  {workflow
+                    ? new Date(workflow.startedAt).toLocaleString()
+                    : '-'}
+                </WorkflowInfoLine>
+                <WorkflowInfoLine>
+                  Finished at:{' '}
+                  {workflow
+                    ? new Date(workflow.finishedAt).toLocaleString()
+                    : '-'}
+                </WorkflowInfoLine>
+              </WorkflowInfo>
             </Section>
-          ))}
-        </Card>
-      }
-    </Main>
-  </Page>
+
+            {workflow &&
+              workflow.stages.map((stage, stageIndex) => (
+                <Section key={stageIndex}>
+                  <SectionTitle>Stage {stageIndex + 1}</SectionTitle>
+
+                  <Grid>
+                    {stage.steps.map((step, stepIndex) => (
+                      <GridCard key={stepIndex}>
+                        <CardContent>
+                          <CardContentRow>{step.name}</CardContentRow>
+                          <CardContentRow>
+                            severity: {step.severity}
+                          </CardContentRow>
+                          <CardContentRow>scale: {step.scale}</CardContentRow>
+                        </CardContent>
+
+                        <IndicatorWrapper>
+                          <StatusIndicatorIcon status={step.status} />
+                        </IndicatorWrapper>
+                      </GridCard>
+                    ))}
+                  </Grid>
+                </Section>
+              ))}
+          </Card>
+        )}
+      </Main>
+    </Page>
+  )
 }
 
 export const PreviewWorkflow = () => {
@@ -146,10 +170,10 @@ export const PreviewWorkflow = () => {
   useEffect(() => {
     axios(`${SCHEDULER_URL}/api/v1/workflows/preview`, {
       method: 'POST',
-      data: workflowReq
+      data: workflowReq,
     })
-      .then(resp => setWorkflow(resp.data as WorkflowPreview))
-      .catch(e => {
+      .then((resp) => setWorkflow(resp.data as WorkflowPreview))
+      .catch((e) => {
         console.error(`error getting workflow preview: ${e}`)
         alert('Error getting workflow preview')
       })
@@ -159,62 +183,79 @@ export const PreviewWorkflow = () => {
   const onRun = () => {
     axios(`${SCHEDULER_URL}/api/v1/workflows`, {
       method: 'POST',
-      data: workflowReq
+      data: workflowReq,
     })
-      .then(resp => {
-        const { name, namespace } = resp.data as { namespace: string, name: string }
+      .then((resp) => {
+        const { name, namespace } = resp.data as {
+          namespace: string
+          name: string
+        }
         history.push(`/view/${namespace}/${name}`)
       })
-      .catch(e => {
+      .catch((e) => {
         console.error(e)
         alert('Error running workflow')
       })
   }
 
-  return <Page>
-    <Header>
-      <PageName>Chaos Framework / Preview workflow</PageName>
-    </Header>
+  return (
+    <Page>
+      <Header>
+        <PageName>Chaos Framework / Preview workflow</PageName>
+      </Header>
 
-    <Main>
-      <ActionsRowForPreview>
-        <BackLink href="/create"><i className="fas fa-arrow-left"/> Back</BackLink>
-        <RunButton onClick={onRun}>Run <i className="fas fa-caret-right"/></RunButton>
-      </ActionsRowForPreview>
+      <Main>
+        <ActionsRowForPreview>
+          <BackLink href='/create'>
+            <i className='fas fa-arrow-left' /> Back
+          </BackLink>
+          <RunButton onClick={onRun}>
+            Run <i className='fas fa-caret-right' />
+          </RunButton>
+        </ActionsRowForPreview>
 
-      {!workflow
-        ? <Loading text="Generating a workflow..."/>
-        : <Card>
-          <CardTitle>Previewing a workflow</CardTitle>
+        {!workflow ? (
+          <Loading text='Generating a workflow...' />
+        ) : (
+          <Card>
+            <CardTitle>Previewing a workflow</CardTitle>
 
-          <Section>
-            <SectionTitle>General info</SectionTitle>
+            <Section>
+              <SectionTitle>General info</SectionTitle>
 
-            <WorkflowInfo>
-              <WorkflowInfoLine>Namespace: {workflow.namespace}</WorkflowInfoLine>
-            </WorkflowInfo>
-          </Section>
-
-          {workflow && workflow.stages.map((stage, stageIndex) => (
-            <Section key={stageIndex}>
-              <SectionTitle>Stage {stageIndex + 1}</SectionTitle>
-
-              <Grid>
-                {stage.steps.map((step, stepIndex) => (
-                  <GridCard key={stepIndex}>
-                    <CardContent>
-                      <CardContentRow>{step.name}</CardContentRow>
-                      <CardContentRow>target: {step.target.appLabelValue}</CardContentRow>
-                      <CardContentRow>severity: {step.severity}</CardContentRow>
-                      <CardContentRow>scale: {step.scale}</CardContentRow>
-                    </CardContent>
-                  </GridCard>
-                ))}
-              </Grid>
+              <WorkflowInfo>
+                <WorkflowInfoLine>
+                  Namespace: {workflow.namespace}
+                </WorkflowInfoLine>
+              </WorkflowInfo>
             </Section>
-          ))}
-        </Card>
-      }
-    </Main>
-  </Page>
+
+            {workflow &&
+              workflow.stages.map((stage, stageIndex) => (
+                <Section key={stageIndex}>
+                  <SectionTitle>Stage {stageIndex + 1}</SectionTitle>
+
+                  <Grid>
+                    {stage.steps.map((step, stepIndex) => (
+                      <GridCard key={stepIndex}>
+                        <CardContent>
+                          <CardContentRow>{step.name}</CardContentRow>
+                          <CardContentRow>
+                            target: {step.target.appLabelValue}
+                          </CardContentRow>
+                          <CardContentRow>
+                            severity: {step.severity}
+                          </CardContentRow>
+                          <CardContentRow>scale: {step.scale}</CardContentRow>
+                        </CardContent>
+                      </GridCard>
+                    ))}
+                  </Grid>
+                </Section>
+              ))}
+          </Card>
+        )}
+      </Main>
+    </Page>
+  )
 }

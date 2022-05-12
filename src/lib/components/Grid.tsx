@@ -25,8 +25,6 @@ const CardWrapper = styled(CompactCard)`
 
 export const GridCard = (props: { children: React.ReactNode }) => (
   <GridItem>
-    <CardWrapper>
-      {props.children}
-    </CardWrapper>
+    <CardWrapper>{props.children}</CardWrapper>
   </GridItem>
 )

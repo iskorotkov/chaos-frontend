@@ -21,11 +21,13 @@ const Workflows = styled.ul`
 `
 
 const matchWorkflow = (workflow: Workflow, re: RegExp) => {
-  return re.test(workflow.namespace) ||
+  return (
+    re.test(workflow.namespace) ||
     re.test(workflow.name) ||
     re.test(workflow.status) ||
     re.test(workflow.startedAt.toLocaleString()) ||
     (workflow.finishedAt && re.test(workflow.finishedAt.toLocaleString()))
+  )
 }
 
 export const WorkflowsDashboard = () => {
@@ -34,15 +36,16 @@ export const WorkflowsDashboard = () => {
 
   useEffect(() => {
     axios(`${WORKFLOWS_URL}/api/v1/workflows`)
-      .then(res => res.data !== null ? res.data as Workflow[] : [])
+      .then((res) => (res.data !== null ? (res.data as Workflow[]) : []))
       .then(setWorkflows)
-      .catch(e => {
+      .catch((e) => {
         console.error(e)
         alert('Error getting list of workflows')
       })
   }, [])
 
-  const onSearchInput = (e: FormEvent<HTMLInputElement>) => setQuery((e.target as HTMLInputElement).value)
+  const onSearchInput = (e: FormEvent<HTMLInputElement>) =>
+    setQuery((e.target as HTMLInputElement).value)
 
   return (
     <Page>
@@ -52,20 +55,30 @@ export const WorkflowsDashboard = () => {
 
       <Main>
         <ActionsRow>
-          <Search value={query} placeholder="type to search..." onInput={onSearchInput}/>
+          <Search
+            value={query}
+            placeholder='type to search...'
+            onInput={onSearchInput}
+          />
 
-          <CreateLink href="/create">New <i className="fas fa-plus"/></CreateLink>
+          <CreateLink href='/create'>
+            New <i className='fas fa-plus' />
+          </CreateLink>
         </ActionsRow>
 
-        {!workflows
-          ? <Loading text="Loading workflows..."/>
-          : <Workflows>
+        {!workflows ? (
+          <Loading text='Loading workflows...' />
+        ) : (
+          <Workflows>
             {workflows
-              .filter(w => matchWorkflow(w, new RegExp(query, 'ig')))
-              .map(w => (
-                <li key={`${w.namespace}/${w.name}`}><WorkflowCard workflow={w}/></li>
+              .filter((w) => matchWorkflow(w, new RegExp(query, 'ig')))
+              .map((w) => (
+                <li key={`${w.namespace}/${w.name}`}>
+                  <WorkflowCard workflow={w} />
+                </li>
               ))}
-          </Workflows>}
+          </Workflows>
+        )}
       </Main>
     </Page>
   )

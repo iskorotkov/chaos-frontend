@@ -1,6 +1,11 @@
 import styled from 'styled-components'
 import React from 'react'
-import { ChangeIndicatorIcon, DangerIndicatorIcon, PrimaryIndicatorIcon, SuccessIndicatorIcon } from './IndicatorIcon'
+import {
+  ChangeIndicatorIcon,
+  DangerIndicatorIcon,
+  PrimaryIndicatorIcon,
+  SuccessIndicatorIcon,
+} from './IndicatorIcon'
 import { Status } from '../../workflows/types/workflows'
 
 const IndicatorWrapper = styled.div`
@@ -14,7 +19,10 @@ const IndicatorWrapper = styled.div`
   gap: 0.3em;
 `
 
-export const Indicator = (props: { children: React.ReactNode, text: string }) => (
+export const Indicator = (props: {
+  children: React.ReactNode
+  text: string
+}) => (
   <IndicatorWrapper>
     {props.children}
     <div>{props.text}</div>
@@ -24,19 +32,19 @@ export const Indicator = (props: { children: React.ReactNode, text: string }) =>
 export const StatusIndicatorIcon = ({ status }: { status: Status }) => {
   switch (status) {
     case 'running':
-      return <PrimaryIndicatorIcon/>
+      return <PrimaryIndicatorIcon />
     case 'pending':
-      return <ChangeIndicatorIcon/>
+      return <ChangeIndicatorIcon />
     case 'succeeded':
-      return <SuccessIndicatorIcon/>
+      return <SuccessIndicatorIcon />
     case 'failed':
-      return <DangerIndicatorIcon/>
+      return <DangerIndicatorIcon />
     case 'error':
-      return <DangerIndicatorIcon/>
+      return <DangerIndicatorIcon />
     case 'cancelled':
-      return <DangerIndicatorIcon/>
+      return <DangerIndicatorIcon />
     default:
       console.error(`unknown status: ${status}`)
-      return <PrimaryIndicatorIcon/>
+      return <PrimaryIndicatorIcon />
   }
 }
