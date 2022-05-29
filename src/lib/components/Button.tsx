@@ -31,6 +31,7 @@ const Button = (props: {
 `
 
 export const CreateButton = Button({ type: 'success', filled: true })
+export const AddButton = Button({ type: 'success', filled: false })
 export const ViewButton = Button({ type: 'primary', filled: true })
 export const CancelButton = Button({ type: 'danger', filled: false })
 export const PauseButton = Button({ type: 'change', filled: false })

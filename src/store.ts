@@ -3,12 +3,17 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import createWorkflowForm from './workflows/reducers/createWorkflowForm'
+import editWorkflowForm from './workflows/reducers/editWorkflowForm'
 
 export const store = configureStore({
   reducer: {
     createWorkflowForm: persistReducer(
       { key: 'create-workflow-form', storage },
       createWorkflowForm,
+    ),
+    editWorkflowForm: persistReducer(
+      { key: 'edit-workflow-form', storage },
+      editWorkflowForm,
     ),
   },
 })

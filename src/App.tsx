@@ -7,6 +7,7 @@ import {
   PreviewWorkflow,
   WatchWorkflow,
 } from './workflows/components/ViewWorkflow'
+import { EditWorkflow } from './workflows/components/EditWorkflow'
 
 export function App() {
   return (
@@ -17,6 +18,9 @@ export function App() {
         </Route>
         <Route exact path='/create'>
           <WorkflowsCreationForm />
+        </Route>
+        <Route exact path='/create/edit'>
+          <EditWorkflow />
         </Route>
         <Route exact path='/preview'>
           <PreviewWorkflow />
